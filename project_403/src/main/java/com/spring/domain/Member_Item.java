@@ -1,5 +1,5 @@
 package com.spring.domain;
 
-public class dtoooo {
+public class Member_Item {
 
 }
