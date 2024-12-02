@@ -1,0 +1,41 @@
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+    <!-- Root Context (공유되는 객체의 저장소)를 설정하는 파일의 위치를 지정 -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/spring/root-context.xml
+        </param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+  
+      <!-- Servlet Context(각각 개별적으로 유저에게 지급되는 저장소)를 설정하는 파일의 위치 -->
+    <servlet>
+        <servlet-name>appServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+   
+    <servlet-mapping>
+        <servlet-name>appServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>  
+    <!-- 인코딩 필터 -->
+  	<filter>
+  		<filter-name>encodingFilter</filter-name>
+  		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+  		<init-param>
+  			<param-name>encoding</param-name>
+  			<param-value>UTF-8</param-value>
+  		</init-param>
+  	</filter>
+  	<filter-mapping>
+  		<filter-name>encodingFilter</filter-name>
+  		<url-pattern>/*</url-pattern>
+  	</filter-mapping>
+</web-app>
