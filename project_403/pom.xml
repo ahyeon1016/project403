@@ -55,7 +55,7 @@
        <groupId>org.springframework</groupId>
        <artifactId>spring-webmvc</artifactId>
        <version>${org.springframework-version}</version>
-    </dependency>    
+    </dependency>
     
     <!-- JSON -->
     <dependency>
