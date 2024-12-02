@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+   xmlns="http://www.springframework.org/schema/mvc"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:beans="http://www.springframework.org/schema/beans"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:webflow="http://www.springframework.org/schema/webflow-config"
+   xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+				       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+				       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+   <!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+   
+   <!-- 1. 핸들러매핑과 핸들러아답터를 자동으로 객체생성함
+       2. @annotation 객체 생성
+    -->
+   <!-- 매트릭스 변수 허용 -->
+   <annotation-driven enable-matrix-variables="true" validator="validator"/>
+
+   <!-- css,image,js와 같은 공유되는 파일의 위치를 정하고 MVC외 처리를 실시함 
+       Dispatcher Servlet은 관여하지 말과 그냥 통과시켜라.
+       http://localhost:8080/ch0201/resources/images/p1234.jsp
+   -->
+   <resources mapping="/resources/**" location="/resources/" />
+
+   <!-- 뷰리졸브 객체 add라는 문자열을 받으면 /WEB-INF/views/add.jsp 라는 경로를 반환해준다 -->
+   <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <beans:property name="prefix" value="/WEB-INF/views/" />
+      <beans:property name="suffix" value=".jsp" />
+   </beans:bean>
+   
+   
+   <!-- com.springmvc.* 아라고 표시하면 해당 패키지의 모든 클래스의 객체를 만들어서 보관 후 자동주입함 -->
+   <context:component-scan base-package="com.spring.*" />
+   
+   <!-- 생성하는 객체
+       1. 핸들러매핑
+       2. 뷰리졸브
+       3. com.springmvc.conroller.HomeController / 왜 만들어지는가? : @Controller
+    -->
+   <resources location="/resources/" mapping="/resources/**"/>
+   
+   <!-- 파일 업로드 객체 생성-->
+                <!-- 참조변수 -->
+   <beans:bean id="multipartResolver" 
+             class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> <!-- 클래스 -->
+      <!-- 생성자의 파라미터로 사용할 변수 -->
+      <!-- 업로드 파일의 최대 크기를 설정 -->
+      <beans:property name="maxUploadSize" value="10000000000000"/>
+   </beans:bean>   
+   
+   
+</beans:beans>
