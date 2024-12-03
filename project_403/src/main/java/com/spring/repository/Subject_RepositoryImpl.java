@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Repository;
 
@@ -77,4 +78,55 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		}
 		return value;
 	}
+
+	
+	//Subject 테이블의 모든 데이터를 ArrayList에 담에 리턴하는 함수(Read)
+	@Override
+	public ArrayList<Subject> getAllSub() {
+		ArrayList<Subject> sub_all = new ArrayList<Subject>();
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.dbconn();
+			//쿼리 전송
+			String SQL = "SELECT * FROM Subject ORDER BY sub_name ASC";
+			pstmt = conn.prepareStatement(SQL);
+			//ResultSet에 데이터를 담아 처리
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Subject sub = new Subject();
+				
+				sub.setSub_code(rs.getInt(1));
+				sub.setSub_name(rs.getString(2));
+				sub.setSub_chap(rs.getString(3));
+				sub.setSub_num(rs.getInt(4));
+				
+				sub_all.add(sub);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			//사용한 객체 닫기
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		System.out.println("리파지토리 | sub_all의 크기 : "+sub_all.size());
+		return sub_all;
+	}
+
+	
+
+
+
+
+
+
+
+
+
+
 }

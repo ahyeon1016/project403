@@ -9,5 +9,6 @@
 <body>
 	HELLO SUBJECT
 	<p><a href="sub/sub_form">Subject작성폼 페이지 이동</a>
+	<p><a href="sub/sub_all">Subject 목록</a>
 </body>
 </html>

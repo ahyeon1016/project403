@@ -1,5 +1,7 @@
 package com.spring.controller;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +21,7 @@ public class Subject_Controller {
 	@Autowired
 	private Subject_Service subjectService;
 	
-	
+	//기본 매핑
 	@RequestMapping
 	public String Sub_main() {
 		return "Subject_main";
@@ -27,7 +29,7 @@ public class Subject_Controller {
 	
 	//Subject 작성 폼 페이지로 이동
 	@GetMapping("/sub_form")
-	public String Sub_Form(@ModelAttribute Subject subject) {
+	public String Sub_form(@ModelAttribute Subject subject) {
 		System.out.println("컨트롤러 | Subject 폼 페이지로 이동");
 		return "Subject_form";
 	}
@@ -42,6 +44,15 @@ public class Subject_Controller {
 		model.addAttribute("name", subject.getSub_name());
 		model.addAttribute("chap", subject.getSub_chap());
 		return "Subject_view";
+	}
+	
+	//Subject 테이블의 목록을 ArrayList로 가져오는 함수
+	@RequestMapping("/sub_all")
+	public String Sub_all(Model model) {
+		System.out.println("컨트롤러 | Sub_all 함수 호출");
+		ArrayList<Subject> sub_all = subjectService.getAllSub();
+		model.addAttribute("sub_all", sub_all);
+		return "Subject_all";
 	}
 	
 }
