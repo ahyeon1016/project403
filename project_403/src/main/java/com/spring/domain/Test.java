@@ -2,18 +2,30 @@ package com.spring.domain;
 
 public class Test 
 {
-
-	private String test_num; // 문제번호
-	private String mem_id; // 유저 아이디
-	private String test_name; // 시험지명
+	private int test_num; // 문제번호
+	private String mem_id; // 유저 아이디	
 	private String test_time; // 걸린 시간
 	private String test_date; // 문제푼날짜
+	private String test_name; // 시험지명
+	
+	// 기본 생성자
+	public Test() 
+	{
+		
+	}
+
+	// 일반 생성자
+	public Test(String mem_id, String test_name) 
+	{
+		this.mem_id = mem_id;
+		this.test_name = test_name;
+	}
 	
 	// getter + setter
-	public String getTest_num() {
+	public int getTest_num() {
 		return test_num;
 	}
-	public void setTest_num(String test_num) {
+	public void setTest_num(int test_num) {
 		this.test_num = test_num;
 	}
 	public String getMem_id() {

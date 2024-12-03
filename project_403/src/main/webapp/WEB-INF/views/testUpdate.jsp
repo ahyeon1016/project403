@@ -6,6 +6,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-시험지 만들기
+testUpdate 페이지
 </body>
 </html>

@@ -1,10 +1,10 @@
-package com.spring.service;
+package com.spring.repository;
 
 import java.util.List;
 
 import com.spring.domain.Test;
 
-public interface TestService 
+public interface TestRepository 
 {
 	List<Test> getAllTestList();
 	
