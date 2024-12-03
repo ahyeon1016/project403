@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.spring.domain.Subject;
 import com.spring.service.Subject_Service;
@@ -55,4 +56,13 @@ public class Subject_Controller {
 		return "Subject_all";
 	}
 	
+	//Subject 테이블에서 특정 sub_name을 가진 행을 ArrayList로 가져오는 함수
+	@GetMapping("/getSubByName")
+	public String getSubByName(@RequestParam String sub_name, Model model) {
+		System.out.println("컨트롤러 | sub_name_search() 호출");
+		System.out.println(sub_name);
+		ArrayList<Subject> sub_name_arr = subjectService.getSubByName(sub_name);
+		model.addAttribute("sub_name_arr", sub_name_arr);
+		return "Subject_name_search_view";
+	}
 }

@@ -27,4 +27,10 @@ public class Subject_ServiceImpl implements Subject_Service {
 		return subjectRepository.getAllSub();
 	}
 
+	@Override
+	public ArrayList<Subject> getSubByName(String sub_name) {
+		System.out.println("서비스 | Repository의 getSubByName() 호출");
+		return subjectRepository.getSubByName(sub_name);
+	}
+
 }
