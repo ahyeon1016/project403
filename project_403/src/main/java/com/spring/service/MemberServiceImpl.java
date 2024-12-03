@@ -23,5 +23,8 @@ public class MemberServiceImpl implements MemberService {
 	public void addMember(Member member) {
 		memberRepository.addMember(member);
 	}
-	
+	@Override
+	public Member member_login(Member member) {
+		return memberRepository.member_login(member);
+	}
 }

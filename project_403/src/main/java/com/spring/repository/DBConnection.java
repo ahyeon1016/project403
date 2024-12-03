@@ -11,7 +11,7 @@ public class DBConnection {
 		
 		Connection conn = null;		
 	
-		String url = "jdbc:mysql://localhost:3306/project403";
+		String url = "jdbc:mysql://localhost:3306/project403?useUnicode=true&characterEncoding=utf8";
 		String user = "root";
 		String password = "1234";
 

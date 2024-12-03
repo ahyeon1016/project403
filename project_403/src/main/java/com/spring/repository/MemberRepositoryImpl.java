@@ -26,6 +26,8 @@ public class MemberRepositoryImpl implements MemberRepository {
 		pstmt.setString(3, member.getMem_nickName());
 		pstmt.executeUpdate();
 		
+		pstmt.close();
+		conn.close();
 		}catch (Exception e) {e.printStackTrace();}
 	}
 	//read one 쿼리문
@@ -47,8 +49,12 @@ public class MemberRepositoryImpl implements MemberRepository {
 			member.setMem_nickName(rs.getString(3));
 			member.setMem_point(rs.getInt(4));
 			member.setMem_exp(rs.getInt(5));
+			pstmt.close();
+			conn.close();
 			}else {
 				System.out.println("그딴거 없는뎅?");
+				pstmt.close();
+				conn.close();
 				return null;}
 			
 		} catch (Exception e) {
@@ -58,4 +64,27 @@ public class MemberRepositoryImpl implements MemberRepository {
 		return member;
 	}
 	
+	//로그인 기능
+	@Override
+	public Member member_login(Member member) {
+		
+		try{conn=DBConnection.getConnection();
+		String sql="select mem_id,mem_nickName from member where mem_id=? and mem_pw=?";
+		pstmt=conn.prepareStatement(sql);
+		pstmt.setString(1, member.getMem_id());
+		pstmt.setString(2, member.getMem_pw());
+		rs=pstmt.executeQuery();
+		if(rs.next()) {
+			member.setMem_id(rs.getString(1));
+			member.setMem_nickName(rs.getString(2));
+			
+		}else {
+			return null;
+		}
+		pstmt.close();
+		conn.close();
+		}catch(Exception e) {e.printStackTrace();}
+		return member;
+	}
+		
 }

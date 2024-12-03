@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="javax.servlet.http.HttpSession" %>
+<%@ page import="com.spring.domain.Member" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +9,12 @@
 <title>MyPage</title>
 </head>
 <body>
-${member.getMem_nickName()}님 환영합니다.
-<a href="./">뒤로가기</a>
+<%session = request.getSession(false); 
+	Member member=(Member)session.getAttribute("member");%>
+	
+	${member.getMem_nickName()}님 환영합니다.
+<a href="member?mem_id=${member.getMem_id()}">정보조회</a>
+<a href="logout">로그아웃</a>
+<a href="./">홈으로</a>
 </body>
 </html>

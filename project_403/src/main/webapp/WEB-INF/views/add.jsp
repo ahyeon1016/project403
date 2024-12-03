@@ -17,7 +17,7 @@
 
 
 <script>
-
+//ajax로 아이디 중복검사를 실행하는 함수 만들기
 document.querySelector("#check_id").addEventListener("click",memck);
 function memck(){
 	console.log("memck함수 실행");
@@ -27,7 +27,7 @@ function memck(){
 		url:"check",
 		type:"post",
 		data:JSON.stringify({"mem_id":mem_id}),
-		contentType:"application/json",
+		contentType:"application/json; charset=UTF-8",
 		success:function(data){
 			alert(data);
 		},
