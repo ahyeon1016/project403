@@ -3,7 +3,6 @@ package com.spring.domain;
 import java.util.Date;
 
 public class QnA {
-	private int test_num;	//문제 번호
 	private String comment_title;	//제목
 	private String comment_inner;	//질문내용
 	private Date comment_date;	//작성날짜
@@ -12,12 +11,6 @@ public class QnA {
 	private int comment_good;	//추천수
 	
 	//Getter(), Setter()
-	public int getTest_num() {
-		return test_num;
-	}
-	public void setTest_num(int test_num) {
-		this.test_num = test_num;
-	}
 	public String getComment_title() {
 		return comment_title;
 	}
