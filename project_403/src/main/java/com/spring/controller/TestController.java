@@ -50,18 +50,20 @@ public class TestController {
 	
 	// 시험지 수정하기 양식 제공
 	@GetMapping("/testUpdate")
-	public String testUpdateForm(@ModelAttribute("updateBook") Test test, @RequestParam("Num") Integer test_num, Model model) {
+	public String testUpdateForm(@ModelAttribute("UpdateTest") Test test, @RequestParam("Num") Integer test_num, Model model) {
 		
+		Test testByNum = testService.getTestByNum(test_num);
 		
+		model.addAttribute("test", testByNum);
 		
-		return "redirect:/test/testUpdate";
+		return "testUpdate";
 	}
 	
 	// 시험지 수정하기 DB 연결
 	@PostMapping("/testUpdate")
-	public String testUpdateSubmit(@RequestParam("Num") Integer test_num) {
+	public String testUpdateSubmit(@ModelAttribute("UpdateTest") Test test) {
 		
-		
+		testService.setUpdateTest(test);
 		
 		return "redirect:/test/testAll";
 	}

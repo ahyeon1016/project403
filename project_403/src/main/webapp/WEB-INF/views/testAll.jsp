@@ -8,6 +8,7 @@
 </head>
 
 <body>
+testAll 페이지
 <p><a href="home">Home</a>
 <div>
 <c:forEach items="${List}" var="test">
@@ -17,8 +18,8 @@
 		<p>${test.test_time}
 		<p>${test.test_date}
 		<p>${test.test_name}
-		<p><a href="testUpdate?Num=${test.test_num}">Test Update</a>
-		<p><a href="testDelete?Num=${test.test_num}">Test Delete</a>
+		<p><a href="testUpdate?Num=${test.test_num}">수정</a>
+		<p><a href="testDelete?Num=${test.test_num}">삭제</a>
 	</div>
 </c:forEach>
 </div>

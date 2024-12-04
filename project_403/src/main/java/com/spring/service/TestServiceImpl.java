@@ -31,6 +31,20 @@ public class TestServiceImpl implements TestService {
 		
 		testRepository.setDeleteTest(test_num);
 	}
+
+	@Override
+	public Test getTestByNum(Integer test_num) {
+		
+		Test testByNum = testRepository.getTestByNum(test_num);
+		
+		return testByNum;
+	}
+
+	@Override
+	public void setUpdateTest(Test test) {
+		
+		testRepository.setUpdateTest(test);
+	}
 	
 	
 	

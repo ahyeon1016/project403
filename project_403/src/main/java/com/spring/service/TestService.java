@@ -11,4 +11,8 @@ public interface TestService
 	void setNewTest(Test test);
 	
 	void setDeleteTest(Integer test_num);
+	
+	Test getTestByNum(Integer test_num);
+	
+	void setUpdateTest(Test test);
 }
