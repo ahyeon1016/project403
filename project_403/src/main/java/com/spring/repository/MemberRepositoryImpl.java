@@ -43,7 +43,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 			pstmt.setString(1, mem_id);
 			rs=pstmt.executeQuery();
 			if(rs.next()) {
-			System.out.println("호호이");
+			System.out.println("member에 select한 데이터 넣기");
 			member.setMem_id(rs.getString(1));
 			member.setMem_pw(rs.getString(2));
 			member.setMem_nickName(rs.getString(3));
@@ -68,7 +68,8 @@ public class MemberRepositoryImpl implements MemberRepository {
 	@Override
 	public Member member_login(Member member) {
 		
-		try{conn=DBConnection.getConnection();
+		try{
+		conn=DBConnection.getConnection();
 		String sql="select mem_id,mem_nickName from member where mem_id=? and mem_pw=?";
 		pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, member.getMem_id());

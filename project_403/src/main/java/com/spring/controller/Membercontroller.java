@@ -31,7 +31,7 @@ public class Membercontroller {
 	//home
 	@GetMapping
 	public String home(){
-		return "home";
+		return "member_home";
 	}
 	
 	//회원가입 페이지로 이동
@@ -39,40 +39,66 @@ public class Membercontroller {
 	public String add(@ModelAttribute Member member,Model model)
 	{	
 		model.addAttribute("member",member);
-		return "add";
+		return "member_add";
 	}
 	//아이디 중복검사
 	@ResponseBody
 	@PostMapping("/check")
-	public String check_mem(@RequestBody HashMap<String,Object> map) {
+	public HashMap<String,Object> check_mem(@RequestBody HashMap<String,Object> map) {
+		HashMap<String,Object> returnmap=new HashMap<String,Object>();
+		String value=null;
+		Boolean isavail=false;
 		System.out.println(map.get("mem_id"));
 		Member member=memberservice.getMyPage((String)map.get("mem_id"));
 		if(member==null) {
-			String a="사용 가능한 아이디입니다.";
-			return a;
+			 value="사용 가능한 아이디입니다.";
+			 isavail=true;
 		}else {
-			String a="중복된 아이디입니다.";
-			return a;
+			 value="중복된 아이디입니다.";
+			 isavail=false;
 		}
-			
+		returnmap.put("key", value);
+		returnmap.put("isavail", isavail);
+		return returnmap;	
 	}
+	//회원가입을 누를 시 중복 검사
+		@ResponseBody
+		@PostMapping("/finalck")
+		public HashMap<String,Object> final_check(@RequestBody HashMap<String,Object> map) {
+			HashMap<String,Object> returnmap=new HashMap<String,Object>();
+			String value=null;
+			Boolean isavail=false;
+			System.out.println(map.get("mem_id"));
+			Member member2=memberservice.getMyPage((String)map.get("mem_id"));
+			if(member2==null) {
+				 value="회원가입 성공!";
+				 isavail=true;
+				 Member member=new Member();
+				 member.setMem_id((String)map.get("mem_id"));
+				 member.setMem_pw((String)map.get("mem_pw"));
+				 member.setMem_nickName((String)map.get("mem_nick"));
+				 memberservice.addMember(member);
+			}else {
+				 value="중복된 아이디입니다.";
+				 isavail=false;
+			}
+			returnmap.put("key", value);
+			returnmap.put("isavail", isavail);
+			return returnmap;	
+		}
 	
 	//회원가입 C
 	@PostMapping("/new")
 	public String addMember(@ModelAttribute("member") Member member,Model model) {
-		Member member2=memberservice.member_login(member);
-		if(member.getMem_id()==member2.getMem_id()) {
-			
-		}
 		memberservice.addMember(member);
 		model.addAttribute(member);
-		return "My_page";
+		return "member_home";
 	}
 	//로그인
 	@GetMapping("/login")
 	public String Login_page(@ModelAttribute("member") Member member,Model model) {
 		model.addAttribute("member",member);				
-		return "login";
+		return "member_login";
 	}
 	//세션에 멤버 정보 담으며 로그인하기.
 	@PostMapping("/login")
@@ -82,10 +108,10 @@ public class Membercontroller {
 		if(member!=null) {
 			System.out.println("logiiiiiiiiiiiiiiiiiiiiin"+member.getMem_nickName());
 			session.setAttribute("member", member);
-			return "My_page";
+			return "member_My_page";
 		}
 		else {
-			return "login_fail";
+			return "member_login_fail";
 		}
 		
 	}
@@ -101,13 +127,13 @@ public class Membercontroller {
 	//마이페이지로 이동
 	@GetMapping("/mypage")
 	public String My_page() {
-		return "My_page";
+		return "member_My_page";
 	}
 	//로그아웃
 	@GetMapping("logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "home";
+		return "member_home";
 	}
-	
+	//정보 수정
 }
