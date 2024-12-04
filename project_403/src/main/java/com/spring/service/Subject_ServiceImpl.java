@@ -33,4 +33,10 @@ public class Subject_ServiceImpl implements Subject_Service {
 		return subjectRepository.getSubByName(sub_name);
 	}
 
+	@Override
+	public Subject getSubByChap(Subject subject) {
+		System.out.println("서비스 | Repository의 getSubByChap() 호출");
+		return subjectRepository.getSubByChap(subject);
+	}
+
 }
