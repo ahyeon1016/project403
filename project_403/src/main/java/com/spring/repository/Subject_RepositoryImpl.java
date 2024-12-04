@@ -131,7 +131,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//DB연결
 			conn = DBConnection.dbconn();
 			//쿼리 전송
-			String SQL = "SELECT * FROM Subject WHERE sub_name=? ORDER BY sub_code ASC";
+			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? ORDER BY sub_code ASC";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, sub_name);
 			//ResultSet에 데이터를 담아 처리
@@ -154,7 +154,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
 			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 		}
-		System.out.println("리파지토리 | sub_name_arr의 크기 : "+sub_name_arr.size());
+		System.out.println("리파지토리 | "+sub_name+"와(과) 일치한 DTO를 담은 sub_name_arr의 크기 : "+sub_name_arr.size());
 		return sub_name_arr;
 	}
 
