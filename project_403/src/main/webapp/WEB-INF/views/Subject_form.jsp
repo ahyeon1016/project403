@@ -11,8 +11,12 @@
 	<form:form modelAttribute="subject" method="POST" action="sub_form">
 		<!-- 추후에 ajax로 검색 가능하게 처리할 것임. -->
 		<p>과목 이름 : <form:input path="sub_name"/>
-		<p>과목 챕터 : <form:input path="sub_chap"/>
+		<p>과목 챕터 : <form:input path="sub_chap" id="sub_chap"/>
 		<input type="submit" value="전송">
 	</form:form>
+	
+	<script type="text/javascript">
+		var	
+	</script>
 </body>
 </html>

@@ -12,11 +12,11 @@ import com.spring.domain.Subject;
 
 @Repository
 public class Subject_RepositoryImpl implements Subject_Repository{
-	
 	//Subject 추가(Create)
 	@Override
 	public void addSub(Subject subject) {
 		System.out.println("리파지토리 | addSub() 도착");
+
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -83,7 +83,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 	public ArrayList<Subject> getSubByName(String sub_name) {
 		System.out.println("리파지토리 | getSubByName() 호출");
 		ArrayList<Subject> sub_name_arr = new ArrayList<Subject>();
-		
+
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -124,6 +124,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 	public Subject getSubByChap(Subject subject) {
 		System.out.println("리파지토리 | getSubByChap() 도착");
 		Subject subByChap = new Subject();
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -162,6 +163,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 	//이 함수를 사용한 함수 : getSubByChap()
 	private String subChapValue(Subject subject) {
 		String chap = null;
+
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -193,6 +195,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 	private int subCodeValue(Subject subject) {
 		System.out.println("리파지토리 | subCodeValue() 호출");
 		int value = 0;
+
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -200,7 +203,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//DB연결
 			conn = DBConnection.dbconn();
 			//쿼리 전송
-			String SQL = "SELECT sub_code FROM Subject WHERE sub_name=?";
+			String SQL = "SELECT MAX(sub_code) FROM Subject WHERE sub_name=?";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, subject.getSub_name());
 			System.out.println("쿼리 전송");
