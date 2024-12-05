@@ -10,7 +10,7 @@
 <body>
 <!-- 시험지 작성 공간 -->
 testAdd 페이지
-<p><a href="testAll">Home</a>
+<p><a href="../">Home</a>
 <form:form modelAttribute="NewTest" action="./testAdd">
 	<fieldset>
 		<div>

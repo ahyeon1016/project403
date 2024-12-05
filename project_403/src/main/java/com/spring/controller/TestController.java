@@ -1,5 +1,6 @@
 package com.spring.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.spring.domain.Test;
 import com.spring.service.TestService;
 
+import page.Repository;
+
 @Controller
 @RequestMapping("/test")
 public class TestController {
@@ -23,7 +26,37 @@ public class TestController {
 	
 	// 시험지 전체보기
 	@GetMapping("/testAll")
-	public String testAll(Model model) {
+	public String testAll(@RequestParam(value = "pageNum", required = false) Integer pageNum, Model model) {	
+		//페이징 테스트코드		
+		int limit = 5;
+		
+		if(pageNum == null)
+		{
+			pageNum = 1;
+		}
+		
+		Repository rrr = new Repository();
+		int total_record = rrr.getListCount();
+		ArrayList<Test> boardlist = new ArrayList<Test>();
+		boardlist = rrr.getBoardList(pageNum, limit);
+		
+		int total_page;
+		
+		if (total_record % limit == 0){     
+	     	total_page = total_record/limit;
+	     	Math.floor(total_page);  
+		}
+		else{
+		   total_page = total_record/limit;
+		   Math.floor(total_page); 
+		   total_page =  total_page + 1; 
+		}
+		
+		model.addAttribute("pageNum", pageNum);
+		model.addAttribute("total_page", total_page);
+		model.addAttribute("total_record",total_record);
+		model.addAttribute("boardlist", boardlist);
+		//페이징 테스트코드
 		
 		List<Test> arr = testService.getAllTestList();
 		

@@ -133,7 +133,7 @@ public class TestRepositoryImpl implements TestRepository {
 			String sql = "SELECT * FROM Test WHERE test_num=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1,test_num);
-			rs = pstmt.executeQuery();			
+			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
 				test.setTest_num(rs.getInt(1));
@@ -181,8 +181,6 @@ public class TestRepositoryImpl implements TestRepository {
 			e.printStackTrace();
 		}	
 	}
-	
-	
 	
 	
 }
