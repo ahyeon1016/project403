@@ -1,6 +1,7 @@
 package com.spring.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,8 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.protobuf.Service;
 import com.spring.domain.Subject;
@@ -81,5 +84,14 @@ public class Subject_Controller {
 		model.addAttribute("subByChap", subByChap);
 		model.addAttribute("inputSub",subject);
 		return "Subject_chap_search_view";
+	}
+
+	//Subject 작성 폼에서 ajax로 필드에 입력된 값을 받아 DB에 저장된 sub_chap값과 중복되는지 확인하는 함수
+	@ResponseBody
+	@PostMapping("/subChapCheck")
+	public HashMap<String, Object> subChapCheck(@RequestBody HashMap<String, Object> map) {
+		HashMap<String, Object> sum = subjectService.subChapCheck(map);
+		System.out.println(sum.get("check"));
+		return sum;
 	}
 }
