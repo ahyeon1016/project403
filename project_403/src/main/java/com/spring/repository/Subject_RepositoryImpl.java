@@ -60,7 +60,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			while(rs.next()) {
 				Subject sub = new Subject();
 				
-				sub.setSub_code(rs.getInt(1));
+				sub.setSub_chap_code(rs.getInt(1));
 				sub.setSub_name(rs.getString(2));
 				sub.setSub_chap(rs.getString(3));
 				sub.setSub_num(rs.getInt(4));
@@ -100,7 +100,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			while(rs.next()) {
 				Subject sub = new Subject();
 				
-				sub.setSub_code(rs.getInt(1));
+				sub.setSub_chap_code(rs.getInt(1));
 				sub.setSub_name(rs.getString(2));
 				sub.setSub_chap(rs.getString(3));
 				sub.setSub_num(rs.getInt(4));
@@ -139,7 +139,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			rs = pstmt.executeQuery();
 			String chap = subChapValue(subject);
 			while(rs.next()) {
-				subByChap.setSub_code(rs.getInt(1));
+				subByChap.setSub_chap_code(rs.getInt(1));
 				subByChap.setSub_name(rs.getString(2));
 				subByChap.setSub_chap(chap);
 				subByChap.setSub_num(rs.getInt(4));
@@ -154,7 +154,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		}
 		System.out.println("리파지토리 | sub_name : "+subByChap.getSub_name());
 		System.out.println("리파지토리 | sub_chap : "+subByChap.getSub_chap());
-		System.out.println("리파지토리 | sub_code : "+subByChap.getSub_code());
+		System.out.println("리파지토리 | sub_code : "+subByChap.getSub_chap_code());
 		return subByChap;
 	}
 

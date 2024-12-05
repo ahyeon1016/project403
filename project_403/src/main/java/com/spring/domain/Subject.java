@@ -1,18 +1,30 @@
 package com.spring.domain;
 
 public class Subject {
-	private int sub_code;	//문제코드
-	private String sub_name;	//과목이름
-	private String sub_chap;	//과목챕터
 	private int sub_num;	//과정 번호(AUTO_INCREMENT)
-	private String sub_serial;	//고유 번호
+	private int sub_name_code;	//과목코드
+	private int sub_chap_code;	//챕터코드
+	private String sub_name;	//과목이름
+	private String sub_chap;	//챕터이름
 	
 	//Getter(), Setter()
-	public int getSub_code() {
-		return sub_code;
+	public int getSub_num() {
+		return sub_num;
 	}
-	public void setSub_code(int sub_code) {
-		this.sub_code = sub_code;
+	public void setSub_num(int sub_num) {
+		this.sub_num = sub_num;
+	}
+	public int getSub_name_code() {
+		return sub_name_code;
+	}
+	public void setSub_name_code(int sub_name_code) {
+		this.sub_name_code = sub_name_code;
+	}
+	public int getSub_chap_code() {
+		return sub_chap_code;
+	}
+	public void setSub_chap_code(int sub_chap_code) {
+		this.sub_chap_code = sub_chap_code;
 	}
 	public String getSub_name() {
 		return sub_name;
@@ -26,18 +38,4 @@ public class Subject {
 	public void setSub_chap(String sub_chap) {
 		this.sub_chap = sub_chap;
 	}
-	public int getSub_num() {
-		return sub_num;
-	}
-	public void setSub_num(int sub_num) {
-		this.sub_num = sub_num;
-	}
-	public String getSub_serial() {
-		return sub_serial;
-	}
-	public void setSub_serial(String sub_serial) {
-		this.sub_serial = sub_serial;
-	}
-	
-	
 }
