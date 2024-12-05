@@ -16,7 +16,7 @@
     <button type="submit">로그인</button>
 </form>    
 <%}else{ %>
-<form action="/project_403/mypage" method="get">
+<form action="/project_403/mypage" method="post">
 	<button type="submit">마이페이지</button>	
 </form>
 <%} %>
