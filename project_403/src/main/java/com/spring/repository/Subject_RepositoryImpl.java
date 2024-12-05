@@ -184,7 +184,40 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		return subByChap;
 	}
 
-	//Subject 작성 폼에서 입력된 값이 DB에 존재하는지 확인하는 함수
+	//Subject 작성 폼에서 입력된 sub_name이 DB에 존재하는지 확인하는 함수
+	@Override
+	public HashMap<String, Object> subNameCheck(HashMap<String, Object> map) {
+		HashMap<String, Object> sum = new HashMap<String, Object>();
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.dbconn();
+			//쿼리 전송
+			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=?";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, (String)map.get("input_name"));
+			//ResultSet에 데이터를 담아 처리
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				sum.put("check", "true");
+			}else if(!rs.next()){
+				sum.put("check", "false");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			//사용한 객체 닫기
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		return sum;
+	}
+	
+	//Subject 작성 폼에서 입력된 sub_chap이 DB에 존재하는지 확인하는 함수
 	@Override
 	public HashMap<String, Object> subChapCheck(HashMap<String, Object> map) {
 		HashMap<String, Object> sum = new HashMap<String, Object>();
@@ -217,7 +250,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		}
 		return sum;
 	}
-	
+
 	//
 	private int subNameCodeValue() {
 		System.out.println("리파지토리 | subNameCodeValue() 호출");
@@ -254,39 +287,6 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		return value;
 	}
 	
-	//Subject 테이블의 sub_name과 sub_chap의 유효성 검사를 위해 
-	//sub_name에 일치하는 sub_chap이 테이블에 없다면 null을 반환하는 함수
-	//이 함수를 사용한 함수 : getSubByChap()
-	private String subChapValue(Subject subject) {
-		String chap = null;
-
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			//DB연결
-			conn = DBConnection.dbconn();
-			//쿼리 전송
-			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? AND sub_chap=?";
-			pstmt = conn.prepareStatement(SQL);
-			pstmt.setString(1, subject.getSub_name());
-			pstmt.setString(2, subject.getSub_chap());
-			//ResultSet에 데이터를 담아 처리
-			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				chap = rs.getString(5);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			//사용한 객체 닫기
-			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
-			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
-			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
-		}
-		return chap;
-	}
-
 	//sub_code 변수 값 설정 함수 | 이 함수를 사용한 함수 : addChapSub()
 	private int subChapCodeValue(Subject subject) {
 		System.out.println("리파지토리 | subChapCodeValue() 호출");
@@ -327,4 +327,38 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		return value;
 	}
 	
+	
+	//Subject 테이블의 sub_name과 sub_chap의 유효성 검사를 위해 
+	//sub_name에 일치하는 sub_chap이 테이블에 없다면 null을 반환하는 함수
+	//이 함수를 사용한 함수 : getSubByChap()
+	private String subChapValue(Subject subject) {
+		String chap = null;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.dbconn();
+			//쿼리 전송
+			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? AND sub_chap=?";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, subject.getSub_name());
+			pstmt.setString(2, subject.getSub_chap());
+			//ResultSet에 데이터를 담아 처리
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				chap = rs.getString(5);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			//사용한 객체 닫기
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		return chap;
+	}
+
 }

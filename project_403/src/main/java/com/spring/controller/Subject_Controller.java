@@ -59,6 +59,15 @@ public class Subject_Controller {
 		return "Subject_view";
 	}
 	
+	//Subject name 중복 확인
+	@ResponseBody
+	@PostMapping("/subNameCheck")
+	public HashMap<String, Object> subNameCheck(@RequestBody HashMap<String, Object> map) {
+		HashMap<String, Object> sum = subjectService.subNameCheck(map);
+		System.out.println(sum.get("check"));
+		return sum;
+	}
+	
 	//Subject chap 작성 폼 페이지로 이동
 	@GetMapping("/sub_chap_form")
 	public String Sub_chap_form(@ModelAttribute Subject subject) {
@@ -76,6 +85,15 @@ public class Subject_Controller {
 		model.addAttribute("name", subject.getSub_name());
 		model.addAttribute("chap", subject.getSub_chap());
 		return "Subject_view";
+	}
+	
+	//Subject_chap 중복 확인
+	@ResponseBody
+	@PostMapping("/subChapCheck")
+	public HashMap<String, Object> subChapCheck(@RequestBody HashMap<String, Object> map) {
+		HashMap<String, Object> sum = subjectService.subChapCheck(map);
+		System.out.println(sum.get("check"));
+		return sum;
 	}
 	
 	//Subject 테이블의 목록을 ArrayList로 가져오는 함수
@@ -106,13 +124,6 @@ public class Subject_Controller {
 		model.addAttribute("inputSub",subject);
 		return "Subject_chap_search_view";
 	}
-
 	//Subject 작성 폼에서 ajax로 필드에 입력된 값을 받아 DB에 저장된 sub_chap값과 중복되는지 확인하는 함수
-	@ResponseBody
-	@PostMapping("/subChapCheck")
-	public HashMap<String, Object> subChapCheck(@RequestBody HashMap<String, Object> map) {
-		HashMap<String, Object> sum = subjectService.subChapCheck(map);
-		System.out.println(sum.get("check"));
-		return sum;
-	}
+
 }

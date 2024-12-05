@@ -7,9 +7,10 @@ import com.spring.domain.Subject;
 
 public interface Subject_Service {
 	void addSubName(String name);
+	HashMap<String, Object> subNameCheck(HashMap<String, Object> map); 
 	void addSubChap(Subject subject);
+	HashMap<String, Object> subChapCheck(HashMap<String, Object> map); 
 	ArrayList<Subject> getAllSub();
 	ArrayList<Subject> getSubByName(String sub_name);
 	Subject getSubByChap(Subject subject);
-	HashMap<String, Object> subChapCheck(HashMap<String, Object> map); 
 }

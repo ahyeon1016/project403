@@ -23,9 +23,19 @@ public class Subject_ServiceImpl implements Subject_Service {
 	}
 
 	@Override
+	public HashMap<String, Object> subNameCheck(HashMap<String, Object> map) {
+		return subjectRepository.subNameCheck(map);
+	}
+
+	@Override
 	public void addSubChap(Subject subject) {
 		System.out.println("서비스 | Repository의 addSubChap()호출");
 		subjectRepository.addSubChap(subject);
+	}
+	
+	@Override
+	public HashMap<String, Object> subChapCheck(HashMap<String, Object> map) {
+		return subjectRepository.subChapCheck(map);
 	}
 
 	@Override
@@ -46,9 +56,5 @@ public class Subject_ServiceImpl implements Subject_Service {
 		return subjectRepository.getSubByChap(subject);
 	}
 
-	@Override
-	public HashMap<String, Object> subChapCheck(HashMap<String, Object> map) {
-		return subjectRepository.subChapCheck(map);
-	}
 
 }
