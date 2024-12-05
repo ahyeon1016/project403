@@ -17,9 +17,15 @@ public class Subject_ServiceImpl implements Subject_Service {
 	private Subject_Repository subjectRepository;
 	
 	@Override
-	public void addSub(Subject subject) {
-		System.out.println("서비스 | Repository의 addSub()호출");
-		subjectRepository.addSub(subject);;
+	public void addSubName(String name) {
+		System.out.println("서비스 | Repository의 addNameChap()호출");
+		subjectRepository.addSubName(name);
+	}
+
+	@Override
+	public void addSubChap(Subject subject) {
+		System.out.println("서비스 | Repository의 addSubChap()호출");
+		subjectRepository.addSubChap(subject);
 	}
 
 	@Override

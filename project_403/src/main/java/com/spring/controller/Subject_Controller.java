@@ -3,6 +3,8 @@ package com.spring.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,6 +40,25 @@ public class Subject_Controller {
 		return "Subject_main";
 	}
 	
+	//Subject name 작성 폼 페이지로 이동
+	@GetMapping("/sub_name_form")
+	public String Sub_name_form() {
+		System.out.println("컨트롤러 | Subject name 폼 페이지로 이동");		
+		return "Subject_name_form";
+	}
+	
+	//Subject_name_form에서 작성한 내용을 Post 방식으로 받아 처리
+	@PostMapping("/sub_name_form")
+	public String Sub_add_name(HttpServletRequest request) {
+		System.out.println("컨트롤러 | sub_name을 가지고 서비스로 이동");
+		String name = request.getParameter("sub_name");
+		
+		subjectService.addSubName(name);
+		
+		request.setAttribute("name", name);
+		return "Subject_view";
+	}
+	
 	//Subject chap 작성 폼 페이지로 이동
 	@GetMapping("/sub_chap_form")
 	public String Sub_chap_form(@ModelAttribute Subject subject) {
@@ -45,12 +66,12 @@ public class Subject_Controller {
 		return "Subject_chap_form";
 	}
 	
-	//Subject_form에서 작성한 내용을 Post 방식으로 받아 처리
-	@PostMapping("/sub_form")
+	//Subject_chap_form에서 작성한 내용을 Post 방식으로 받아 처리
+	@PostMapping("/sub_chap_form")
 	public String Sub_add_chap(@ModelAttribute Subject subject, Model model) {
-		System.out.println(subject.getSub_name());
+		System.out.println("컨트롤러 | model을 가지고 서비스로 이동");
 		
-		subjectService.addSub(subject);
+		subjectService.addSubChap(subject);
 		
 		model.addAttribute("name", subject.getSub_name());
 		model.addAttribute("chap", subject.getSub_chap());
@@ -59,7 +80,7 @@ public class Subject_Controller {
 	
 	//Subject 테이블의 목록을 ArrayList로 가져오는 함수
 	@RequestMapping("/sub_all")
-	public String Sub_all(Model model) {
+	public String getSubAll(Model model) {
 		System.out.println("컨트롤러 | Sub_all 함수 호출");
 		ArrayList<Subject> sub_all = subjectService.getAllSub();
 		model.addAttribute("sub_all", sub_all);

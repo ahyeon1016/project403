@@ -6,7 +6,8 @@ import java.util.HashMap;
 import com.spring.domain.Subject;
 
 public interface Subject_Repository {
-	void addSub(Subject subject);
+	void addSubName(String name);
+	void addSubChap(Subject subject);
 	ArrayList<Subject> getAllSub();
 	ArrayList<Subject> getSubByName(String sub_name);
 	Subject getSubByChap(Subject subject);
