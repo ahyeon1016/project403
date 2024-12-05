@@ -129,5 +129,5 @@ public class Subject_Controller {
 		return "Subject_chap_search_view";
 	}
 	//Subject 작성 폼에서 ajax로 필드에 입력된 값을 받아 DB에 저장된 sub_chap값과 중복되는지 확인하는 함수
-
+	
 }
