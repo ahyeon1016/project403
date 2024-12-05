@@ -38,16 +38,16 @@ public class Subject_Controller {
 		return "Subject_main";
 	}
 	
-	//Subject 작성 폼 페이지로 이동
-	@GetMapping("/sub_form")
-	public String Sub_form(@ModelAttribute Subject subject) {
-		System.out.println("컨트롤러 | Subject 폼 페이지로 이동");
-		return "Subject_form";
+	//Subject chap 작성 폼 페이지로 이동
+	@GetMapping("/sub_chap_form")
+	public String Sub_chap_form(@ModelAttribute Subject subject) {
+		System.out.println("컨트롤러 | Subject chap 폼 페이지로 이동");
+		return "Subject_chap_form";
 	}
 	
 	//Subject_form에서 작성한 내용을 Post 방식으로 받아 처리
 	@PostMapping("/sub_form")
-	public String Sub_add(@ModelAttribute Subject subject, Model model) {
+	public String Sub_add_chap(@ModelAttribute Subject subject, Model model) {
 		System.out.println(subject.getSub_name());
 		
 		subjectService.addSub(subject);

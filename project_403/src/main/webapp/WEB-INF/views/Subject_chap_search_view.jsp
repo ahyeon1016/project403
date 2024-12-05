@@ -19,7 +19,7 @@
 		<%
 		if(sub_chap.getSub_chap()!=null){
 		%>
-			<p>문제 코드 <%=sub_chap.getSub_code()%>
+			<p>챕터 코드 <%=sub_chap.getSub_chap_code()%>
 			<p>과목 챕터 <%=sub_chap.getSub_chap()%>
 			<p>과목 번호 <%=sub_chap.getSub_num()%>
 		<%

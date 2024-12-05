@@ -17,7 +17,7 @@
 		for(Subject sub : sub_name_arr){ 
 	%>
 		<h3>과목 이름 <%=sub.getSub_name()%></h3>
-		<p>문제 코드 <%=sub.getSub_code()%>
+		<p>챕터 코드 <%=sub.getSub_chap_code()%>
 		<p>과목 챕터 <%=sub.getSub_chap()%>
 		<p>과목 번호 <%=sub.getSub_num()%>
 	<%	} 
