@@ -80,17 +80,18 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//DB연결
 			conn = DBConnection.dbconn();
 			//쿼리 전송
-			String SQL = "SELECT * FROM Subject ORDER BY sub_name ASC";
+			String SQL = "SELECT * FROM Subject WHERE sub_chap IS NOT NULL ORDER BY sub_name ASC";
 			pstmt = conn.prepareStatement(SQL);
 			//ResultSet에 데이터를 담아 처리
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				Subject sub = new Subject();
 				
-				sub.setSub_chap_code(rs.getInt(1));
-				sub.setSub_name(rs.getString(2));
-				sub.setSub_chap(rs.getString(3));
-				sub.setSub_num(rs.getInt(4));
+				sub.setSub_num(rs.getInt(1));
+				sub.setSub_name_code(rs.getInt(2));
+				sub.setSub_chap_code(rs.getInt(3));
+				sub.setSub_name(rs.getString(4));
+				sub.setSub_chap(rs.getString(5));
 				
 				sub_all.add(sub);
 			}
@@ -119,7 +120,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//DB연결
 			conn = DBConnection.dbconn();
 			//쿼리 전송
-			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? ORDER BY sub_code ASC";
+			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? AND sub_chap IS NOT NULL ORDER BY sub_chap_code ASC";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, sub_name);
 			//ResultSet에 데이터를 담아 처리
@@ -127,10 +128,11 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			while(rs.next()) {
 				Subject sub = new Subject();
 				
-				sub.setSub_chap_code(rs.getInt(1));
-				sub.setSub_name(rs.getString(2));
-				sub.setSub_chap(rs.getString(3));
-				sub.setSub_num(rs.getInt(4));
+				sub.setSub_num(rs.getInt(1));
+				sub.setSub_name_code(rs.getInt(2));
+				sub.setSub_chap_code(rs.getInt(3));
+				sub.setSub_name(rs.getString(4));
+				sub.setSub_chap(rs.getString(5));
 				
 				sub_name_arr.add(sub);
 			}
@@ -159,17 +161,18 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//DB연결
 			conn = DBConnection.dbconn();
 			//쿼리 전송
-			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=?";
+			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? AND sub_chap IS NOT NULL";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, subject.getSub_name());
 			//ResultSet에 데이터를 담아 처리
 			rs = pstmt.executeQuery();
 			String chap = subChapValue(subject);
 			while(rs.next()) {
-				subByChap.setSub_chap_code(rs.getInt(1));
-				subByChap.setSub_name(rs.getString(2));
+				subByChap.setSub_num(rs.getInt(1));
+				subByChap.setSub_name_code(rs.getInt(2));
+				subByChap.setSub_chap_code(rs.getInt(3));
+				subByChap.setSub_name(rs.getString(4));
 				subByChap.setSub_chap(chap);
-				subByChap.setSub_num(rs.getInt(4));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -180,8 +183,9 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 		}
 		System.out.println("리파지토리 | sub_name : "+subByChap.getSub_name());
+		System.out.println("리파지토리 | sub_name_code : "+subByChap.getSub_name_code());
 		System.out.println("리파지토리 | sub_chap : "+subByChap.getSub_chap());
-		System.out.println("리파지토리 | sub_code : "+subByChap.getSub_chap_code());
+		System.out.println("리파지토리 | sub_chap_code : "+subByChap.getSub_chap_code());
 		return subByChap;
 	}
 

@@ -25,7 +25,7 @@ import com.spring.service.Subject_Service;
 public class Subject_Controller {
 	
 	/*
-	 * 일단 개발 과정에서 요청을 확인하여 GET방식으로 요청을 받았으나,
+	 * 일단 개발 과정에서 요청 파라미터를 확인 하고 싶어 GET방식으로 요청을 받았으나,
 	 * 이후에 POST방식으로 변경하는 것을 고민해볼 것 
 	 * */
 	
@@ -105,7 +105,9 @@ public class Subject_Controller {
 		return "Subject_all";
 	}
 	
+	//Subject 테이블의 목록에서 sub_name과 일치하는 DTO를 ArrayList로 가져오는 함수	
 	//Subject 테이블에서 특정 sub_name을 가진 행을 ArrayList로 가져오는 함수
+
 	@GetMapping("/getSubByName")
 	public String getSubByName(@RequestParam String sub_name, Model model) {
 		System.out.println("컨트롤러 | sub_name_search() 호출");
@@ -114,6 +116,8 @@ public class Subject_Controller {
 		model.addAttribute("sub_name_arr", sub_name_arr);
 		return "Subject_name_search_view";
 	}
+	
+	//Subject 테이블의 목록에서 sub_name와 sub_name이 일치하는 DTO를 가져오는 함수
 	
 	//Subject 테이블에서 특정 sub_name과 sub_chap을 가진 행을 DTO로 가져오는 함수
 	@GetMapping("/getSubByChap")

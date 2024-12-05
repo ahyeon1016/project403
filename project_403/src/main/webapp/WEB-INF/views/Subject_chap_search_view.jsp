@@ -19,8 +19,9 @@
 		<%
 		if(sub_chap.getSub_chap()!=null){
 		%>
+			<p>과목 코드 <%=sub_chap.getSub_name_code()%>
+			<p>챕터 이름 <%=sub_chap.getSub_chap()%>
 			<p>챕터 코드 <%=sub_chap.getSub_chap_code()%>
-			<p>과목 챕터 <%=sub_chap.getSub_chap()%>
 			<p>과목 번호 <%=sub_chap.getSub_num()%>
 		<%
 		}else{
