@@ -6,8 +6,16 @@ public class Member {
 	private String mem_nickName;//멤버 닉네임
 	private int mem_point;//멤버 등급 포인트
 	private int mem_exp;//멤버 레벨
+	private boolean mem_admin;
 	
 	
+	
+	public boolean isMem_admin() {
+		return mem_admin;
+	}
+	public void setMem_admin(boolean mem_admin) {
+		this.mem_admin = mem_admin;
+	}
 	public String getMem_id() {
 		return mem_id;
 	}

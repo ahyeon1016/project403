@@ -49,7 +49,7 @@ public class Membercontroller {
 		String value=null;
 		Boolean isavail=false;
 		System.out.println(map.get("mem_id"));
-		Member member=memberservice.getMyPage((String)map.get("mem_id"));
+		Member member=memberservice.getMyInfo((String)map.get("mem_id"));
 		if(member==null) {
 			 value="사용 가능한 아이디입니다.";
 			 isavail=true;
@@ -69,7 +69,7 @@ public class Membercontroller {
 			String value=null;
 			Boolean isavail=false;
 			System.out.println(map.get("mem_id"));
-			Member member2=memberservice.getMyPage((String)map.get("mem_id"));
+			Member member2=memberservice.getMyInfo((String)map.get("mem_id"));
 			if(member2==null) {
 				 value="회원가입 성공!";
 				 isavail=true;
@@ -87,13 +87,13 @@ public class Membercontroller {
 			return returnmap;	
 		}
 	
-	//회원가입 C
-	@PostMapping("/new")
-	public String addMember(@ModelAttribute("member") Member member,Model model) {
-		memberservice.addMember(member);
-		model.addAttribute(member);
-		return "member_home";
-	}
+//	//회원가입 C
+//	@PostMapping("/new")
+//	public String addMember(@ModelAttribute("member") Member member,Model model) {
+//		memberservice.addMember(member);
+//		model.addAttribute(member);
+//		return "member_home";
+//	}
 	//로그인
 	@GetMapping("/login")
 	public String Login_page(@ModelAttribute("member") Member member,Model model) {
@@ -116,16 +116,31 @@ public class Membercontroller {
 		
 	}
 	//회원 정보 확인(Read one)
-	@GetMapping("/member")
+	@PostMapping("/member")
 	public String mem_info(@RequestParam String mem_id,Model model) {
 		System.out.println(mem_id+"받아온 멤버 아이디");
-		Member member=memberservice.getMyPage(mem_id);
+		Member member=memberservice.getMyInfo(mem_id);
 		System.out.println(member.getMem_id());
 		model.addAttribute("member",member);
 		return "member_who";
 	}
+	//정보 수정 페이지 이동
+	@PostMapping("update")
+	public String update_member(@ModelAttribute("member") Member member,@RequestParam String mem_id,Model model) {
+			member=memberservice.getMyInfo(mem_id);
+			model.addAttribute(member);
+			return "member_update";
+	}
+	//정보 수정 기능
+	@PostMapping("update/sequence")
+	public String update_sequence(@ModelAttribute("member")Member member,HttpSession session) {
+		System.out.println(member.getMem_id());
+		memberservice.member_update(member);
+		session.invalidate();
+		return "member_home";
+	}
 	//마이페이지로 이동
-	@GetMapping("/mypage")
+	@PostMapping("/mypage")
 	public String My_page() {
 		return "member_My_page";
 	}
@@ -135,5 +150,5 @@ public class Membercontroller {
 		session.invalidate();
 		return "member_home";
 	}
-	//정보 수정
+	 
 }

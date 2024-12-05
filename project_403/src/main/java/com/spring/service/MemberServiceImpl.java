@@ -13,9 +13,9 @@ public class MemberServiceImpl implements MemberService {
 	
 	
 	@Override
-	public Member getMyPage(String mem_id) {
+	public Member getMyInfo(String mem_id) {
 		System.out.println("서비스접근");
-		return memberRepository.getMyPage(mem_id);
+		return memberRepository.getMyInfo(mem_id);
 	}
 
 
@@ -26,5 +26,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Member member_login(Member member) {
 		return memberRepository.member_login(member);
+	}
+
+
+	@Override
+	public void member_update(Member member) {
+		memberRepository.member_update(member);
 	}
 }

@@ -32,7 +32,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 	}
 	//read one 쿼리문
 	@Override
-	public Member getMyPage(String mem_id) {
+	public Member getMyInfo(String mem_id) {
 		System.out.println("셀렉"+mem_id);
 		Member member=new Member();
 		
@@ -49,6 +49,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 			member.setMem_nickName(rs.getString(3));
 			member.setMem_point(rs.getInt(4));
 			member.setMem_exp(rs.getInt(5));
+			member.setMem_admin(rs.getBoolean(6));
 			pstmt.close();
 			conn.close();
 			}else {
@@ -70,14 +71,14 @@ public class MemberRepositoryImpl implements MemberRepository {
 		
 		try{
 		conn=DBConnection.getConnection();
-		String sql="select mem_id,mem_nickName from member where mem_id=? and mem_pw=?";
+		String sql="select * from member where mem_id=? and mem_pw=?";
 		pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, member.getMem_id());
 		pstmt.setString(2, member.getMem_pw());
 		rs=pstmt.executeQuery();
 		if(rs.next()) {
-			member.setMem_id(rs.getString(1));
-			member.setMem_nickName(rs.getString(2));
+			member.setMem_id(rs.getString("mem_id"));
+			member.setMem_nickName(rs.getString("mem_nickName"));
 			
 		}else {
 			return null;
@@ -87,5 +88,20 @@ public class MemberRepositoryImpl implements MemberRepository {
 		}catch(Exception e) {e.printStackTrace();}
 		return member;
 	}
+	@Override
+	public void member_update(Member member) {
+		try{
+		conn=DBConnection.getConnection();
+		String sql="update Member set mem_pw=?,mem_nickName=? where mem_id=?";
+		pstmt=conn.prepareStatement(sql);
+		pstmt.setString(1, member.getMem_pw());
+		pstmt.setString(2, member.getMem_nickName());
+		pstmt.setString(3, member.getMem_id());
+		pstmt.executeUpdate();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 		
 }

@@ -13,8 +13,12 @@
 	Member member=(Member)session.getAttribute("member");%>
 	
 	${member.getMem_nickName()}님 환영합니다.
-<a href="member?mem_id=${member.getMem_id()}">정보조회</a>
+<form action="member?mem_id=${member.getMem_id()}" method="post">
+<button type="submit">정보조회</button>
+</form>
+
 <a href="logout">로그아웃</a>
 <a href="./">홈으로</a>
+
 </body>
 </html>
