@@ -70,8 +70,8 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		
 	//Subject 테이블의 모든 데이터를 ArrayList에 담에 리턴하는 함수(Read)
 	@Override
-	public ArrayList<Subject> getAllSub() {
-		ArrayList<Subject> sub_all = new ArrayList<Subject>();
+	public ArrayList<Subject> getSubChapAll() {
+		ArrayList<Subject> sub_chap_all = new ArrayList<Subject>();
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -93,7 +93,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 				sub.setSub_name(rs.getString(4));
 				sub.setSub_chap(rs.getString(5));
 				
-				sub_all.add(sub);
+				sub_chap_all.add(sub);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,8 +103,8 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
 			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 		}
-		System.out.println("리파지토리 | sub_all의 크기 : "+sub_all.size());
-		return sub_all;
+		System.out.println("리파지토리 | sub_chap_all의 크기 : "+sub_chap_all.size());
+		return sub_chap_all;
 	}
 
 	//Subject 테이블에서 특정 sub_name을 가진 DTO를 모두 ArrayList에 담아 리턴하는 함수(Read)
@@ -256,6 +256,9 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		return sum;
 	}
 
+	//Subject 테이블에서 sub_name을 모두 가져오는 함수
+	
+	
 	//sub_code 변수 값 설정 함수 | 이 함수를 사용한 함수 : addNameSub()
 	private int subNameCodeValue() {
 		System.out.println("리파지토리 | subNameCodeValue() 호출");

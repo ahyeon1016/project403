@@ -97,12 +97,12 @@ public class Subject_Controller {
 	}
 	
 	//Subject 테이블의 목록을 ArrayList로 가져오는 함수
-	@RequestMapping("/sub_all")
+	@RequestMapping("/sub_chap_all")
 	public String getSubAll(Model model) {
 		System.out.println("컨트롤러 | Sub_all 함수 호출");
-		ArrayList<Subject> sub_all = subjectService.getAllSub();
-		model.addAttribute("sub_all", sub_all);
-		return "Subject_all";
+		ArrayList<Subject> sub_chap_all = subjectService.getSubChapAll();
+		model.addAttribute("sub_chap_all", sub_chap_all);
+		return "Subject_chap_all";
 	}
 	
 	//Subject 테이블의 목록에서 sub_name과 일치하는 DTO를 ArrayList로 가져오는 함수	
