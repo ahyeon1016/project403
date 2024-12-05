@@ -50,12 +50,13 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//DB연결
 			conn = DBConnection.dbconn();
 			//쿼리 전송
-			String SQL = "INSERT INTO Subject(sub_chap_code , sub_name, sub_chap) VALUES(?, ?, ?)";
+			String SQL = "INSERT INTO Subject(sub_name_code, sub_chap_code , sub_name, sub_chap) VALUES(?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(SQL);
 			//sub_code의 값을 지정하는 함수를 호출 후에 리턴 받은 값을 삽입.
-			pstmt.setInt(1, subChapCodeValue(subject));
-			pstmt.setString(2, subject.getSub_name());
-			pstmt.setString(3, subject.getSub_chap());
+			pstmt.setInt(1, getSubNameCodeValue(subject.getSub_name()));
+			pstmt.setInt(2, subChapCodeValue(subject));
+			pstmt.setString(3, subject.getSub_name());
+			pstmt.setString(4, subject.getSub_chap());
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -251,7 +252,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		return sum;
 	}
 
-	//
+	//sub_code 변수 값 설정 함수 | 이 함수를 사용한 함수 : addNameSub()
 	private int subNameCodeValue() {
 		System.out.println("리파지토리 | subNameCodeValue() 호출");
 		int value = 0;
@@ -287,7 +288,38 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		return value;
 	}
 	
-	//sub_code 변수 값 설정 함수 | 이 함수를 사용한 함수 : addChapSub()
+	//sub_name에 해당하는 sub_name_code를 읽어오는 함수 | 이 함수를 사용한 함수 : addChapSub()
+	private int getSubNameCodeValue(String sub_name){
+		System.out.println("리파지토리 | getSubNameCodeValue() 도착");
+		int value = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.dbconn();
+			//쿼리 전송
+			String SQL = "SELECT MAX(sub_name_code) FROM Subject WHERE BINARY sub_name=?";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, sub_name);
+			//ResultSet에 데이터를 담아 처리
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				value = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			//사용한 객체 닫기
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		return value;
+	}
+	
+	//sub_chap_code 변수 값 설정 함수 | 이 함수를 사용한 함수 : addChapSub()
 	private int subChapCodeValue(Subject subject) {
 		System.out.println("리파지토리 | subChapCodeValue() 호출");
 		int value = 0;
@@ -326,7 +358,6 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		}
 		return value;
 	}
-	
 	
 	//Subject 테이블의 sub_name과 sub_chap의 유효성 검사를 위해 
 	//sub_name에 일치하는 sub_chap이 테이블에 없다면 null을 반환하는 함수
