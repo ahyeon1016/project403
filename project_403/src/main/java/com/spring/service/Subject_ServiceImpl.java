@@ -39,9 +39,9 @@ public class Subject_ServiceImpl implements Subject_Service {
 	}
 
 	@Override
-	public ArrayList<Subject> getSubChapAll() {
-		System.out.println("서비스 | Repository의 getSubChapAll()호출");
-		return subjectRepository.getSubChapAll();
+	public ArrayList<Subject> getSubAll() {
+		System.out.println("서비스 | Repository의 getSubAll()호출");
+		return subjectRepository.getSubAll();
 	}
 
 	@Override

@@ -9,9 +9,8 @@
 <body>
 	HELLO SUBJECT
 	<p><a href="sub/sub_name_form">Subject name 작성 폼 페이지 이동</a>
-	<p><a href="sub/sub_name_all">Subject name 목록</a>
 	<p><a href="sub/sub_chap_form">Subject chap 작성 폼 페이지 이동</a>
-	<p><a href="sub/sub_chap_all">Subject chap 목록</a>
+	<p><a href="sub/sub_all">Subject 목록</a>
 	<form:form action="sub/getSubByName" method="get">
 		<h3>찾고싶은 Subject의  sub_name</h3>
 		<p>sub_name : <input type="text" name="sub_name">

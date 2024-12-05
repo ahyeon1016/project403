@@ -10,7 +10,7 @@ public interface Subject_Service {
 	HashMap<String, Object> subNameCheck(HashMap<String, Object> map); 
 	void addSubChap(Subject subject);
 	HashMap<String, Object> subChapCheck(HashMap<String, Object> map); 
-	ArrayList<Subject> getSubChapAll();
+	ArrayList<Subject> getSubAll();
 	ArrayList<Subject> getSubByName(String sub_name);
 	Subject getSubByChap(Subject subject);
 }

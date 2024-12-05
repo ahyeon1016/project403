@@ -2,7 +2,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="com.spring.domain.Subject" %>
 <%
-	ArrayList<Subject> sub_chap_all = (ArrayList<Subject>) request.getAttribute("sub_chap_all");
+	ArrayList<Subject> sub_all = (ArrayList<Subject>) request.getAttribute("sub_all");
 %>
 <!DOCTYPE html>
 <html>
@@ -13,8 +13,8 @@
 <body>
 	HELLO SUBJECT ALL
 	<%
-	if(sub_chap_all.size()!=0){
-		for(Subject sub : sub_chap_all){ 
+	if(sub_all.size()!=0){
+		for(Subject sub : sub_all){ 
 	%>
 		<h3>과목 이름 <%=sub.getSub_name()%></h3>
 		<p>과목 코드 <%=sub.getSub_name_code()%>
