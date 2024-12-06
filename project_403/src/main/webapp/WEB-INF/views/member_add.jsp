@@ -46,7 +46,8 @@ function memck(){
 	
 }
 //회원가입 버튼을 누를시 중복검사하는 함수 실행
-function finalck(){
+function finalck(event){
+	event.preventDefault();
 	console.log("finalck함수 실행");
 	let mem_id=document.querySelector("#mem_id").value;
 	let sub=document.querySelector("#sub");
