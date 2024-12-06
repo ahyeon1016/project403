@@ -234,7 +234,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//DB연결
 			conn = DBConnection.dbconn();
 			//쿼리 전송
-			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? AND sub_chap=?";
+			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? AND BINARY sub_chap=?";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, (String)map.get("input_name"));
 			pstmt.setString(2, (String)map.get("input_chap"));
@@ -265,7 +265,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//DB연결
 			conn = DBConnection.dbconn();
 			//쿼리 전송
-			String SQL = "UPDATE Subject SET sub_name=? WHERE sub_name=?";
+			String SQL = "UPDATE Subject SET sub_name=? WHERE BINARY sub_name=?";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, new_sub_name);
 			pstmt.setString(2, old_sub_name);
@@ -289,7 +289,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//DB연결
 			conn = DBConnection.dbconn();
 			//쿼리 전송
-			String SQL = "UPDATE Subject SET sub_chap=? WHERE sub_name=? AND sub_chap=?";
+			String SQL = "UPDATE Subject SET sub_chap=? WHERE BINARY sub_name=? AND BINARY sub_chap=?";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, new_sub_chap);
 			pstmt.setString(2, sub_name);
@@ -315,7 +315,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//DB연결
 			conn = DBConnection.dbconn();
 			//쿼리 전송
-			String SQL = "DELETE FROM Subject WHERE sub_name=?";
+			String SQL = "DELETE FROM Subject WHERE BINARY sub_name=?";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, sub_name);
 			
@@ -338,7 +338,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//DB연결
 			conn = DBConnection.dbconn();
 			//쿼리 전송
-			String SQL = "DELETE FROM Subject WHERE sub_name=? AND sub_chap=?";
+			String SQL = "DELETE FROM Subject WHERE BINARY sub_name=? AND BINARY sub_chap=?";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, sub_name);
 			pstmt.setString(2, sub_chap);
@@ -365,7 +365,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//DB연결
 			conn = DBConnection.dbconn();
 			//쿼리 전송
-			String SQL = "SELECT MAX(sub_name_code) FROM Subject GROUP BY sub_name";
+			String SQL = "SELECT MAX(sub_name_code) FROM Subject GROUP BY BINARY sub_name";
 			pstmt = conn.prepareStatement(SQL);
 			rs = pstmt.executeQuery();
 			
@@ -473,7 +473,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//DB연결
 			conn = DBConnection.dbconn();
 			//쿼리 전송
-			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? AND sub_chap=?";
+			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? AND BINARY sub_chap=?";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, subject.getSub_name());
 			pstmt.setString(2, subject.getSub_chap());
