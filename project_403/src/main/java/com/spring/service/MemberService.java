@@ -7,4 +7,5 @@ public interface MemberService {
 	void addMember(Member member);
 	Member member_login(Member member);
 	void member_update(Member member);
+	void member_delete(Member member);
 }

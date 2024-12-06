@@ -5,15 +5,18 @@
 <head>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script> <%--아작스 사용을 위한 코오드 --%>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>회원가입 페이지</title>
 </head>
 <body>
-<form method="post">
-아이디<input id="mem_id"/><button type="button" id="check_id">중복 검사</button><br>
-비밀번호<input id="mem_pw" type="password" minlength="3" maxlength="15" placeholder="3~15자 사이의 값이어야 합니다."/>  <br>
-닉네임<input id="mem_nickName"/><br>
+<div>
+<form method="get">
+아이디<input id="mem_id"  maxlength="15"/><button type="button" id="check_id">중복 검사</button><br>
+비밀번호<input id="mem_pw" type="password" maxlength="15" required/> *3~15자 이내의 값을 입력해주세요.  <br>
+닉네임<input id="mem_nickName" maxlength="10"/><br>
+이메일<input type="email" id="mem_email" required/> *아이디@naver.com의 형식으로 써주세요. <br>
 <button type="submit" id="sub" disabled>회원 가입하기</button> <h5>아이디 중복검사 후 활성화됩니다.</h5>
 </form>
+</div>
 
 
 <script>
@@ -43,21 +46,24 @@ function memck(){
 	
 }
 //회원가입 버튼을 누를시 중복검사하는 함수 실행
-function finalck(event){
+function finalck(){
 	console.log("finalck함수 실행");
 	let mem_id=document.querySelector("#mem_id").value;
 	let sub=document.querySelector("#sub");
 	let mem_pw=document.querySelector("#mem_pw").value;
 	let mem_nick=document.querySelector("#mem_nickName").value;
+	let mem_email=document.querySelector("#mem_email").value;
 	$.ajax({
 		url:"finalck",
 		type:"post",
-		data:JSON.stringify({"mem_id":mem_id,"mem_pw":mem_pw,"mem_nick":mem_nick}),
+		data:JSON.stringify({"mem_id":mem_id,"mem_pw":mem_pw,"mem_nick":mem_nick,"mem_email":mem_email}),
 		contentType:"application/json; charset=UTF-8",
 		success:function(data){
 			alert(data.key);
-			window.location.href="./";
-			
+			console.log(data.key);
+			if(data.key=="회원가입 성공!"){
+			window.location.href="/project_403";
+			}
 		},
 		error:function(errorThrown){
 			alert("fail");

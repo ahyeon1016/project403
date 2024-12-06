@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>홈</title>
 </head>
 <body>
 <!-- 세션에 멤버가 있을때/없을때 나타나는 정보 분리. -->

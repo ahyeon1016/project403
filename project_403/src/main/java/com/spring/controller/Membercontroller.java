@@ -2,6 +2,7 @@ package com.spring.controller;
 
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,7 +30,7 @@ public class Membercontroller {
 	MemberService memberservice;
 	
 	//home
-	@GetMapping
+	@GetMapping("/")
 	public String home(){
 		return "member_home";
 	}
@@ -69,6 +70,12 @@ public class Membercontroller {
 			String value=null;
 			Boolean isavail=false;
 			System.out.println(map.get("mem_id"));
+			String email_pattern="^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+			String email=map.get("mem_email").toString();
+			String pw=map.get("mem_pw").toString();
+			int pw_length=pw.length();
+			System.out.println(pw_length);
+			if((pw_length<=15&&pw_length>=3)&&Pattern.matches(email_pattern, email)) {
 			Member member2=memberservice.getMyInfo((String)map.get("mem_id"));
 			if(member2==null) {
 				 value="회원가입 성공!";
@@ -77,12 +84,17 @@ public class Membercontroller {
 				 member.setMem_id((String)map.get("mem_id"));
 				 member.setMem_pw((String)map.get("mem_pw"));
 				 member.setMem_nickName((String)map.get("mem_nick"));
+				 member.setMem_email((String)map.get("mem_email"));
 				 memberservice.addMember(member);
-			}else {
+			}else 
+			{
 				 value="중복된 아이디입니다.";
 				 isavail=false;
 			}
+			}else 
+				value="형식에 맞게 입력하세요.";
 			returnmap.put("key", value);
+			System.out.println(returnmap.get("key"));
 			returnmap.put("isavail", isavail);
 			return returnmap;	
 		}
@@ -139,6 +151,28 @@ public class Membercontroller {
 		session.invalidate();
 		return "member_home";
 	}
+	//회원 탈퇴 페이지 이동
+	@PostMapping("delete")
+	public String byebye_member(@RequestParam String mem_id,Model model) {
+		model.addAttribute("mem_id",mem_id);
+		return "member_bye";
+	}
+	//회원 탈퇴 기능
+	@PostMapping("delete_bye")
+	public String bye(HttpSession session,HttpServletRequest req) {
+		Member member=new Member();
+		Member sesmember=(Member)session.getAttribute("member");
+		String mem_id=sesmember.getMem_id();
+		String mem_pw=req.getParameter("pw");
+		member.setMem_id(mem_id);
+		member.setMem_pw(mem_pw);
+		memberservice.member_delete(member);
+		session.invalidate();
+		return "member_home";
+	}
+	
+	
+	
 	//마이페이지로 이동
 	@PostMapping("/mypage")
 	public String My_page() {

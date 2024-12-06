@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>로그인 실패</title>
 </head>
 <body>
 	로그인에 실패하셨습니다.

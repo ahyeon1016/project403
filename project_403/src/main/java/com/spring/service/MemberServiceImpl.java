@@ -33,4 +33,11 @@ public class MemberServiceImpl implements MemberService {
 	public void member_update(Member member) {
 		memberRepository.member_update(member);
 	}
+
+
+	@Override
+	public void member_delete(Member member) {
+		memberRepository.member_delete(member);
+	}
+	
 }

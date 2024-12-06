@@ -3,6 +3,8 @@ package com.spring.repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Random;
+import java.util.random.RandomGenerator;
 
 import org.springframework.stereotype.Repository;
 
@@ -19,11 +21,16 @@ public class MemberRepositoryImpl implements MemberRepository {
 		System.out.println("회원가입 ");
 		try {
 		conn=DBConnection.getConnection();
-		String sql="insert into member(mem_id,mem_pw,mem_nickName) values (?,?,?)";
+		String sql="insert into member(mem_id,mem_pw,mem_nickName,mem_email,mem_serial) values (?,?,?,?,?)";
 		pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, member.getMem_id());
 		pstmt.setString(2, member.getMem_pw());
 		pstmt.setString(3, member.getMem_nickName());
+		pstmt.setString(4, member.getMem_email());
+		double random=Math.random()*900000;
+		int ran=(int)random;
+		pstmt.setString(5,String.valueOf(ran));
+		System.out.println(ran);
 		pstmt.executeUpdate();
 		
 		pstmt.close();
@@ -88,6 +95,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 		}catch(Exception e) {e.printStackTrace();}
 		return member;
 	}
+	//정보 수정 기능
 	@Override
 	public void member_update(Member member) {
 		try{
@@ -101,6 +109,25 @@ public class MemberRepositoryImpl implements MemberRepository {
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	//회원 탈퇴 기능
+	@Override
+	public void member_delete(Member member) {
+		try {
+			conn=DBConnection.getConnection();
+			String sql="delete from Member where mem_id=? and mem_pw=?";
+			pstmt=conn.prepareStatement(sql);
+			System.out.println(member.getMem_id());
+			System.out.println(member.getMem_pw());
+			pstmt.setString(1, member.getMem_id());
+			pstmt.setString(2, member.getMem_pw());
+			pstmt.executeUpdate();
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 		

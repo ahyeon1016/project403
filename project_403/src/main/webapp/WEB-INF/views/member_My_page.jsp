@@ -16,7 +16,9 @@
 <form action="member?mem_id=${member.getMem_id()}" method="post">
 <button type="submit">정보조회</button>
 </form>
-
+<form action="delete?mem_id=${member.getMem_id()}" method="post">
+<button type="submit">회원 탈퇴</button>
+</form>
 <a href="logout">로그아웃</a>
 <a href="./">홈으로</a>
 
