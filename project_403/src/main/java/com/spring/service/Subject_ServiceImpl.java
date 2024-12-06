@@ -56,5 +56,11 @@ public class Subject_ServiceImpl implements Subject_Service {
 		return subjectRepository.getSubByChap(subject);
 	}
 
+	@Override
+	public void updateSubName(String old_sub_name, String new_sub_name) {
+		System.out.println("서비스 | Repository의 updateSubName() 호출");
+		subjectRepository.updateSubName(old_sub_name, new_sub_name);
+	}
+
 
 }

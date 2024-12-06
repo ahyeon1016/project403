@@ -13,4 +13,5 @@ public interface Subject_Repository {
 	ArrayList<Subject> getSubAll();
 	ArrayList<Subject> getSubByName(String sub_name);
 	Subject getSubByChap(Subject subject);
+	void updateSubName(String old_sub_name, String new_sub_name);
 }

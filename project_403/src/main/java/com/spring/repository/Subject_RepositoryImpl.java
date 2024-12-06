@@ -256,7 +256,30 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		return sum;
 	}
 
-	
+	//Subject 테이블의 sub_name을 수정하는 함수
+	@Override
+	public void updateSubName(String old_sub_name, String new_sub_name) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			//DB연결
+			conn = DBConnection.dbconn();
+			//쿼리 전송
+			String SQL = "UPDATE Subject SET sub_name=? WHERE sub_name=?";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, new_sub_name);
+			pstmt.setString(2, old_sub_name);
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			//사용한 객체 닫기
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+	}
+
 	//sub_code 변수 값 설정 함수 | 이 함수를 사용한 함수 : addNameSub()
 	private int subNameCodeValue() {
 		System.out.println("리파지토리 | subNameCodeValue() 호출");

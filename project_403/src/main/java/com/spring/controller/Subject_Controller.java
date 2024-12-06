@@ -105,9 +105,7 @@ public class Subject_Controller {
 		return "Subject_all";
 	}
 	
-	//Subject 테이블의 목록에서 sub_name과 일치하는 DTO를 ArrayList로 가져오는 함수	
 	//Subject 테이블에서 특정 sub_name을 가진 행을 ArrayList로 가져오는 함수
-
 	@GetMapping("/getSubByName")
 	public String getSubByName(@RequestParam String sub_name, Model model) {
 		System.out.println("컨트롤러 | sub_name_search() 호출");
@@ -116,8 +114,6 @@ public class Subject_Controller {
 		model.addAttribute("sub_name_arr", sub_name_arr);
 		return "Subject_name_search_view";
 	}
-	
-	//Subject 테이블의 목록에서 sub_name와 sub_chap이 일치하는 DTO를 가져오는 함수
 	
 	//Subject 테이블에서 특정 sub_name과 sub_chap을 가진 행을 DTO로 가져오는 함수
 	@GetMapping("/getSubByChap")
@@ -128,6 +124,20 @@ public class Subject_Controller {
 		model.addAttribute("inputSub",subject);
 		return "Subject_chap_search_view";
 	}
-	//Subject 작성 폼에서 ajax로 필드에 입력된 값을 받아 DB에 저장된 sub_chap값과 중복되는지 확인하는 함수
 	
+	//sub_name 수정 폼 페이지로 이동
+	@GetMapping("/updateSubName")
+	public String updateSubNameForm(@RequestParam String sub_name, Model model) {
+		System.out.println("컨트롤러 | sub_name 수정을 위한 폼 페이지로 이동");
+		model.addAttribute("sub_name", sub_name);
+		return "Subject_update_name";
+	}
+	
+	//기존 sub_name과 수정된 sub_name을 파라미터로 받아 처리하는 함수
+	@PostMapping("/updateSubName")
+	public String updateSubName(@RequestParam String old_sub_name, @RequestParam String new_sub_name) {
+		System.out.println("컨트롤러 | old_sub_name : "+old_sub_name+" / new_sub_name : "+new_sub_name);
+		subjectService.updateSubName(old_sub_name, new_sub_name);
+		return "redirect:/sub/sub_all";
+	}
 }
