@@ -39,15 +39,15 @@ public class Question_Controller {
 		
 		//파일 이름 만들기
 		String path = request.getServletContext().getRealPath("/resources/images");
-		String name = question.getQuestion_img().getOriginalFilename();
+		//String name = question.getQuestion_img().getOriginalFilename();
 		
 		long time = System.currentTimeMillis();
 		
-		String savename = name+time;
-		System.out.println(path);
-		System.out.println(savename);
+		//String savename = name+time;
+		//System.out.println(path);
+		//System.out.println(savename);
 		//빈 파일 생성
-		File file = new File(path ,savename);
+		//File file = new File(path ,savename);
 		
 		//빈 파일에 내용 작성
 		

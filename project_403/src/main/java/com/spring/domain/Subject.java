@@ -1,7 +1,7 @@
 package com.spring.domain;
 
 public class Subject {
-	private int sub_num;	//과정 번호(AUTO_INCREMENT)
+	private int sub_num;		//과정 번호(AUTO_INCREMENT)
 	private int sub_name_code;	//과목코드
 	private int sub_chap_code;	//챕터코드
 	private String sub_name;	//과목이름

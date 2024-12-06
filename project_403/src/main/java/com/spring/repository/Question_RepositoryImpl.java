@@ -25,12 +25,12 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//쿼리 전송
 			//AUTO_INCREMENT로 작성된 컬럼은 null값 고정
 			String sql = "INSERT INTO Question VALUES(null, ?, ?, ?, ?, ?, ?)";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, question.getQuestion_inner());
-			pstmt.setString(2, question.getQuestion_ans());
-			pstmt.setString(3, question.getQuestion_img_name());
-			pstmt.setInt(4, question.getQuestion_plus());
-			pstmt.setInt(5, question.getQuestion_count());
+//			pstmt = conn.prepareStatement(sql);
+//			pstmt.setString(1, question.getQuestion_inner());
+//			pstmt.setString(2, question.getQuestion_ans());
+//			pstmt.setString(3, question.getQuestion_img_name());
+//			pstmt.setInt(4, question.getQuestion_plus());
+//			pstmt.setInt(5, question.getQuestion_count());
 			//pstmt.setString(6, question.getQuestion_chap());
 			
 			pstmt.executeUpdate();

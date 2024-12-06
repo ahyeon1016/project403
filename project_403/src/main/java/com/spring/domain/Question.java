@@ -3,14 +3,16 @@ package com.spring.domain;
 import org.springframework.web.multipart.MultipartFile;
 
 public class Question {
-	private int question_num;	//문제번호
-	private String question_inner;	//문제 내용
-	private String question_ans;	//정답
+	private int question_num;			//문제번호(A_I)
+	private String question_content;	//문제 내용
+	private String question_ans;		//정답
 	private MultipartFile question_img;	//문제 이미지
 	private String question_img_name;	//문제 이미지 이름
-	private int question_plus;	//문제풀이 추가 카운트
-	private int question_count;	//문제풀이 횟수
-	private int sub_code;	//문제코드
+	private int question_plus;			//문제풀이 추가 카운트
+	private int question_count;			//문제풀이 횟수
+	private String sub_code_sum;		//과목코드(과목코드+챕터코드)
+	private int mem_serial;				//멤버식별변수
+	private int question_serial;		//문제고유번호(과목코드+문제번호)
 	
 	//Getter(), Setter()
 	public int getQuestion_num() {
@@ -19,11 +21,11 @@ public class Question {
 	public void setQuestion_num(int question_num) {
 		this.question_num = question_num;
 	}
-	public String getQuestion_inner() {
-		return question_inner;
+	public String getQuestion_content() {
+		return question_content;
 	}
-	public void setQuestion_inner(String question_inner) {
-		this.question_inner = question_inner;
+	public void setQuestion_content(String question_content) {
+		this.question_content = question_content;
 	}
 	public String getQuestion_ans() {
 		return question_ans;
@@ -55,11 +57,22 @@ public class Question {
 	public void setQuestion_count(int question_count) {
 		this.question_count = question_count;
 	}
-	public int getSub_code() {
-		return sub_code;
+	public String getSub_code_sum() {
+		return sub_code_sum;
 	}
-	public void setSub_code(int sub_code) {
-		this.sub_code = sub_code;
-	}	
-	
+	public void setSub_code_sum(String sub_code_sum) {
+		this.sub_code_sum = sub_code_sum;
+	}
+	public int getMem_serial() {
+		return mem_serial;
+	}
+	public void setMem_serial(int mem_serial) {
+		this.mem_serial = mem_serial;
+	}
+	public int getQuestion_serial() {
+		return question_serial;
+	}
+	public void setQuestion_serial(int question_serial) {
+		this.question_serial = question_serial;
+	}
 }

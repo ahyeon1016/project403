@@ -12,6 +12,7 @@
 </head>
 <body>
 	HELLO SUBJECT ALL
+	<hr>
 	<%
 	if(sub_all.size()!=0){
 		for(Subject sub : sub_all){ 
@@ -27,6 +28,7 @@
 		</p>
 		<p>챕터 코드 <%=sub.getSub_chap_code()%>
 		<p>과목 번호 <%=sub.getSub_num()%>
+		<hr>
 	<%	} 
 	}else{
 	%>
