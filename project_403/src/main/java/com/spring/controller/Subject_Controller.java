@@ -171,7 +171,12 @@ public class Subject_Controller {
 		return "redirect:/sub/sub_all";
 	}
 
-
-
+	//sub_name과 일치하는 sub_chap(챕터)을 제거하는 함수
+	@GetMapping("/deleteSubChap")
+	public String deleteSubChap(@RequestParam String sub_name, @RequestParam String sub_chap) {
+		System.out.println("컨트롤러 | deleteSubChap() 도착");
+		subjectService.deleteSubChap(sub_name, sub_chap);
+		return "redirect:/sub/sub_all";
+	}
 
 }

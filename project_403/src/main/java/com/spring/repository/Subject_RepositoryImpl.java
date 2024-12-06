@@ -329,6 +329,30 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		}
 	}
 
+	//Subject 테이블에서 sub_name과 일치하는 sub_chap 데이터를 제거하는 함수(Delete)
+	@Override
+	public void deleteSubChap(String sub_name, String sub_chap) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			//DB연결
+			conn = DBConnection.dbconn();
+			//쿼리 전송
+			String SQL = "DELETE FROM Subject WHERE sub_name=? AND sub_chap=?";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, sub_name);
+			pstmt.setString(2, sub_chap);
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			//사용한 객체 닫기
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+	}
+
 	//sub_code 변수 값 설정 함수 | 이 함수를 사용한 함수 : addNameSub()
 	private int subNameCodeValue() {
 		System.out.println("리파지토리 | subNameCodeValue() 호출");

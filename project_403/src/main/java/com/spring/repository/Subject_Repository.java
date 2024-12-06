@@ -16,4 +16,5 @@ public interface Subject_Repository {
 	void updateSubName(String old_sub_name, String new_sub_name);
 	void updateSubChap(String sub_name, String old_sub_chap, String new_sub_chap);
 	void deleteSubName(String sub_name);
+	void deleteSubChap(String sub_name, String sub_chap);
 }
