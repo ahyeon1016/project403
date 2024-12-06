@@ -9,7 +9,7 @@
 <body>
 	HELLO SUBJECT NAME FORM
 	<form method="POST" action="sub_name_form">
-		<p>과목 이름 : <input type="text" name="sub_name" id="n_sub_name"/>
+		<p>과목 이름 : <input type="text" name="sub_name" id="n_sub_name" required/>
 		<span style="display: none;" id="n_duplication">중복된 과목입니다.</span>
 		<p><input type="submit" value="전송" id="n_sub_submit">
 	</form>

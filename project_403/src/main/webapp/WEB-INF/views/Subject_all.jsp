@@ -18,7 +18,7 @@
 	%>
 		<h3>과목 이름 <%=sub.getSub_name()%> | <a href="updateSubName?sub_name=<%=sub.getSub_name()%>">수정하기</a></h3>
 		<p>과목 코드 <%=sub.getSub_name_code()%>
-		<p>챕터 이름 <%=sub.getSub_chap()%> | <a href="#">수정하기</a>
+		<p>챕터 이름 <%=sub.getSub_chap()%> | <a href="updateSubChap?sub_name=<%=sub.getSub_name()%>&sub_chap=<%=sub.getSub_chap()%>">수정하기</a>
 		<p>챕터 코드 <%=sub.getSub_chap_code()%>
 		<p>과목 번호 <%=sub.getSub_num()%>
 	<%	} 

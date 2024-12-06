@@ -11,9 +11,9 @@
 	HELLO SUBJECT CHAP FORM
 	<form:form modelAttribute="subject" method="POST" action="sub_chap_form">
 		<!-- 추후에 ajax로 검색 가능하게 처리할 것임. -->
-		<p>과목 이름 : <form:input path="sub_name" id="c_sub_name"/>
+		<p>과목 이름 : <form:input path="sub_name" id="c_sub_name" required/>
 		<span style="display: none;" id="c1_duplication">존재하지 않는 과목입니다.</span>
-		<p>과목 챕터 : <form:input path="sub_chap" id="c_sub_chap"/> 
+		<p>과목 챕터 : <form:input path="sub_chap" id="c_sub_chap" required/> 
 		<span style="display: none;" id="c2_duplication">중복된 챕터입니다.</span>
 		<p><input type="submit" value="전송" id="c_sub_submit">
 	</form:form>

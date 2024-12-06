@@ -10,8 +10,8 @@
 <body>
 	HELLO SUBJECT UPDATE NAME
 	<form action="updateSubName" method="POST">
-		<p>기존과목 : <input type="text" name="old_sub_name" value="${sub_name}" readonly>
-		<p>수정과목 : <input type="text" name="new_sub_name" id="u_sub_name">
+		<p>과목 : <input type="text" name="sub_name" value="${sub_name}" readonly>
+		<p>기존과목 : <input type="text" name="new_sub_name" id="u_sub_name">
 		<span style="display: none;" id="u_duplication">중복된 과목입니다.</span>
 		<p><input type="submit" value="수정" id="u_sub_submit">
 	</form>

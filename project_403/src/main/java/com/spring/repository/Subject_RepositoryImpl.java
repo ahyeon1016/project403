@@ -280,6 +280,32 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		}
 	}
 
+	//Subject 테이블의 sub_name과 일치하는 sub_chap을 수정하는 함수
+	@Override
+	public void updateSubChap(String sub_name, String old_sub_chap, String new_sub_chap) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			//DB연결
+			conn = DBConnection.dbconn();
+			//쿼리 전송
+			String SQL = "UPDATE Subject SET sub_chap=? WHERE sub_name=? AND sub_chap=?";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, new_sub_chap);
+			pstmt.setString(2, sub_name);
+			pstmt.setString(3, old_sub_chap);
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			//사용한 객체 닫기
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		
+	}
+
 	//sub_code 변수 값 설정 함수 | 이 함수를 사용한 함수 : addNameSub()
 	private int subNameCodeValue() {
 		System.out.println("리파지토리 | subNameCodeValue() 호출");

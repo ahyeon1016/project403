@@ -14,4 +14,5 @@ public interface Subject_Service {
 	ArrayList<Subject> getSubByName(String sub_name);
 	Subject getSubByChap(Subject subject);
 	void updateSubName(String old_sub_name, String new_sub_name);
+	void updateSubChap(String sub_name, String old_sub_chap, String new_sub_chap);
 }

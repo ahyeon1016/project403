@@ -140,4 +140,26 @@ public class Subject_Controller {
 		subjectService.updateSubName(old_sub_name, new_sub_name);
 		return "redirect:/sub/sub_all";
 	}
+
+	//sub_chap 수정 폼 페이지로 이동
+	@GetMapping("/updateSubChap")
+	public String updateSubChapForm(
+			@RequestParam String sub_name,
+			@RequestParam String sub_chap, 
+			Model model) {
+		System.out.println("컨트롤러 | sub_chap 수정을 위한 폼 페이지로 이동");
+		model.addAttribute("sub_name", sub_name);
+		model.addAttribute("sub_chap", sub_chap);
+		return "Subjcet_update_chap";
+	}
+	
+	//sub_name, 기존 sub_chap, 수정된 sub_chap을 파라미터로 받아 처리하는 함수
+	@PostMapping("/updateSubChap")
+	public String updateSubChap(
+			@RequestParam String sub_name,
+			@RequestParam String old_sub_chap,
+			@RequestParam String new_sub_chap) {
+		subjectService.updateSubChap(sub_name, old_sub_chap, new_sub_chap);
+		return "redirect:/sub/sub_all";
+	}
 }
