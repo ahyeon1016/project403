@@ -256,7 +256,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		return sum;
 	}
 
-	//Subject 테이블의 sub_name을 수정하는 함수
+	//Subject 테이블의 sub_name을 수정하는 함수(Update)
 	@Override
 	public void updateSubName(String old_sub_name, String new_sub_name) {
 		Connection conn = null;
@@ -280,7 +280,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		}
 	}
 
-	//Subject 테이블의 sub_name과 일치하는 sub_chap을 수정하는 함수
+	//Subject 테이블의 sub_name과 일치하는 sub_chap을 수정하는 함수(Update)
 	@Override
 	public void updateSubChap(String sub_name, String old_sub_chap, String new_sub_chap) {
 		Connection conn = null;
@@ -304,6 +304,29 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 		}
 		
+	}
+
+	//Subject 테이블에서 sub_name과 일치하는 데이터를 제거하는 함수(Delete)
+	@Override
+	public void deleteSubName(String sub_name) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			//DB연결
+			conn = DBConnection.dbconn();
+			//쿼리 전송
+			String SQL = "DELETE FROM Subject WHERE sub_name=?";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, sub_name);
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			//사용한 객체 닫기
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
 	}
 
 	//sub_code 변수 값 설정 함수 | 이 함수를 사용한 함수 : addNameSub()

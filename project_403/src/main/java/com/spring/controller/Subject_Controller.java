@@ -162,4 +162,16 @@ public class Subject_Controller {
 		subjectService.updateSubChap(sub_name, old_sub_chap, new_sub_chap);
 		return "redirect:/sub/sub_all";
 	}
+
+	//sub_name(과목)을 제거하는 함수
+	@GetMapping("/deleteSubName")
+	public String deleteSubName(@RequestParam String sub_name) {
+		System.out.println("컨트롤러 | deleteSubName() 도착");
+		subjectService.deleteSubName(sub_name);
+		return "redirect:/sub/sub_all";
+	}
+
+
+
+
 }
