@@ -148,6 +148,40 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		return sub_name_arr;
 	}
 
+	//Subject 테이블에 존재하는 sub_name 목록을 ArrayList에 담아 리턴하는 함수(Read)
+	public ArrayList<Subject> getSubAllName(){
+		ArrayList<Subject> sub_name_all = new ArrayList<Subject>();
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.dbconn();
+			//쿼리 전송
+			String SQL = "SELECT DISTINCT sub_name_code, sub_name FROM Subject ORDER BY BINARY sub_name ASC";
+			pstmt = conn.prepareStatement(SQL);
+			//ResultSet에 데이터를 담아 처리
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Subject sub = new Subject();
+				
+				sub.setSub_name_code(rs.getInt(1));
+				sub.setSub_name(rs.getString(2));
+				
+				sub_name_all.add(sub);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			//사용한 객체 닫기
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		return sub_name_all;
+	}
+	
 	//Subject 테이블에서 특정 sub_name과 sub_chap을 가진 DTO를 리턴하는 함수(Read)
 	@Override
 	public Subject getSubByChap(Subject subject) {

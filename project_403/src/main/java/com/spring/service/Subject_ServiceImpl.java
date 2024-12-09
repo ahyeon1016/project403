@@ -79,5 +79,11 @@ public class Subject_ServiceImpl implements Subject_Service {
 		System.out.println("서비스 | Repository의 deleteSubChap() 호출");
 		subjectRepository.deleteSubChap(sub_name, sub_chap);
 	}
+
+	@Override
+	public ArrayList<Subject> getSubAllName() {
+		System.out.println("서비스 | Repository의 getSubAllName() 호출");
+		return subjectRepository.getSubAllName();
+	}
 	
 }

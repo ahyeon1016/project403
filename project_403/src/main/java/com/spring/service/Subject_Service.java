@@ -17,4 +17,5 @@ public interface Subject_Service {
 	void updateSubChap(String sub_name, String old_sub_chap, String new_sub_chap);
 	void deleteSubName(String sub_name);
 	void deleteSubChap(String sub_name, String sub_chap);
+	public ArrayList<Subject> getSubAllName();
 }
