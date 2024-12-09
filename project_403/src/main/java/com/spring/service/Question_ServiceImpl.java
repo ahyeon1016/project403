@@ -13,8 +13,8 @@ public class Question_ServiceImpl implements Question_Service{
 	Question_Repository questionRepository;
 	
 	@Override
-	public void Question_Insert_DB(Question question) {
-		System.out.println("서비스 | Question_Insert_DB() 호출");
-		questionRepository.Question_Insert_DB(question);
+	public void addMCQ(Question question) {
+		System.out.println("서비스 | addMCQ() 호출");
+		questionRepository.addMCQ(question);
 	}
 }

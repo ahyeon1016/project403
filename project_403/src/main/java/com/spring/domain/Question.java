@@ -13,6 +13,7 @@ public class Question {
 	private String sub_code_sum;		//과목코드(과목코드+챕터코드)
 	private int mem_serial;				//멤버식별변수
 	private int question_serial;		//문제고유번호(과목코드+문제번호)
+	private String question_id;			//문제식별변수(분류 : 객관식, 주관식, 코딩)
 	
 	//Getter(), Setter()
 	public int getQuestion_num() {
@@ -74,5 +75,11 @@ public class Question {
 	}
 	public void setQuestion_serial(int question_serial) {
 		this.question_serial = question_serial;
+	}
+	public String getQuestion_id() {
+		return question_id;
+	}
+	public void setQuestion_id(String question_id) {
+		this.question_id = question_id;
 	}
 }
