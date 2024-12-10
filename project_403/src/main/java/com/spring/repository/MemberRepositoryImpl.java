@@ -17,7 +17,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 	PreparedStatement pstmt=null;
 	ResultSet rs=null;
 	
-	//insert 쿼리문 
+	//회원가입
 	public void addMember(Member member) {
 		System.out.println("회원가입 ");
 		try {
@@ -25,9 +25,13 @@ public class MemberRepositoryImpl implements MemberRepository {
 		String sql="insert into member(mem_id,mem_pw,mem_nickName,mem_email) values (?,?,?,?)";
 		pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, member.getMem_id());
-		pstmt.setString(2, member.getMem_pw());
+		if(member.getMem_pw()!=null) {
+		pstmt.setString(2, member.getMem_pw());}
+		else {pstmt.setString(2, null);}
 		pstmt.setString(3, member.getMem_nickName());
-		pstmt.setString(4, member.getMem_email());
+		if(member.getMem_email()!=null) {
+		pstmt.setString(4, member.getMem_email());}
+		else {pstmt.setString(4,null);}
 		pstmt.executeUpdate();
 		
 		pstmt.close();
@@ -35,7 +39,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 		}catch (Exception e) {e.printStackTrace();}
 	}
 	
-	//read one 쿼리문
+	//정보 조회
 	@Override
 	public Member getMyInfo(String mem_id) {
 		System.out.println("셀렉"+mem_id);
@@ -115,8 +119,44 @@ public class MemberRepositoryImpl implements MemberRepository {
 	}
 	
 	
+	//카카오 로그인시 데이터 조회
+	public boolean kakao_info(Member member) {
+		boolean is_client=false;
+		
+		
+		
+		
+		return is_client;
+	}
 	
 	
+	//네이버 로그인시 데이터 조회
+	public boolean naver_info(Member member) {
+		boolean is_client=false;
+		try {
+			conn=DBConnection.getConnection();
+			String sql="select * from Member where mem_id=? and mem_email=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, member.getMem_id());
+			pstmt.setString(2, member.getMem_email());
+			rs=pstmt.executeQuery();
+				if(rs.next()) {
+					is_client=true;
+				}
+			}catch(Exception e) {e.printStackTrace();}
+		
+		return is_client;
+		}
+	
+	//소셜 로그인 기능
+	public Member social_login(Member member) {
+		try{
+			conn=DBConnection.getConnection();
+			
+		}catch(Exception e) {e.printStackTrace();}
+		
+		return null;
+	}
 	//정보 수정 기능
 	@Override
 	public void member_update(Member member) {

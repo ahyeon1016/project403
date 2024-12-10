@@ -36,7 +36,7 @@
                     <a href="logout" class="btn btn-outline-secondary btn-custom me-2">
                         <i class="fas fa-sign-out-alt me-2"></i>로그아웃
                     </a><br>
-                    <a href="./" class="btn btn-outline-info btn-custom">
+                    <a href="/project_403/" class="btn btn-outline-info btn-custom">
                         <i class="fas fa-home me-2"></i>홈으로
                     </a>
                 </div>

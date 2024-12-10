@@ -8,4 +8,7 @@ public interface MemberService {
 	Member member_login(Member member);
 	void member_update(Member member);
 	void member_delete(Member member);
+	boolean naver_info(Member member);
+	boolean kakao_info(Member member);
+	Member social_login(Member member);
 }

@@ -13,6 +13,24 @@ public class MemberServiceImpl implements MemberService {
 	
 	
 	@Override
+	public Member social_login(Member member) {
+		return memberRepository.social_login(member);
+	}
+
+
+	@Override
+	public boolean naver_info(Member member) {
+		return memberRepository.naver_info(member);
+	}
+
+
+	@Override
+	public boolean kakao_info(Member member) {
+		return memberRepository.kakao_info(member);
+	}
+
+
+	@Override
 	public Member getMyInfo(String mem_id) {
 		System.out.println("서비스접근");
 		return memberRepository.getMyInfo(mem_id);

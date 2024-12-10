@@ -155,8 +155,8 @@ public class Membercontroller {
 	}
 	//카카오로 로그인하기
 	@GetMapping("/login/kakao")
-	public ResponseEntity<String> kakao_login(@RequestParam String code) {
-		
+	public String kakao_login(@RequestParam String code) {
+		System.out.println("카카오 로그인 실행");
 	    // Jackson ObjectMapper 사용
 	    ObjectMapper objectMapper = new ObjectMapper();
 
@@ -183,9 +183,7 @@ public class Membercontroller {
 	    Map<String, Object> tokenMap = null;
 	    try {
 	        tokenMap = objectMapper.readValue(tokenResponseString.getBody(), new TypeReference<Map<String, Object>>() {});
-	    } catch (Exception e) {
-	        return ResponseEntity.badRequest().body("토큰 파싱 오류: " + e.getMessage());
-	    }
+	    } catch (Exception e) {e.printStackTrace();}
 
 	    String accessToken = (String) tokenMap.get("access_token");
 
@@ -205,9 +203,7 @@ public class Membercontroller {
 	    Map<String, Object> userInfo = null;
 	    try {
 	        userInfo = objectMapper.readValue(userInfoResponseString.getBody(), new TypeReference<Map<String, Object>>() {});
-	    } catch (Exception e) {
-	        return ResponseEntity.badRequest().body("사용자 정보 파싱 오류: " + e.getMessage());
-	    }
+	    } catch (Exception e) {e.printStackTrace();}
 
 	    // 필요한 사용자 정보 추출
 	    Map<String, Object> kakaoAccount = (Map<String, Object>) userInfo.get("kakao_account");
@@ -220,17 +216,17 @@ public class Membercontroller {
 	    System.out.println("User ID: " + userInfo.get("id"));
 	    System.out.println("Email: " + email);
 	    System.out.println("Nickname: " + nickname);
-
+	    System.out.println(profile);
 	    // 여기서 사용자 정보를 데이터베이스에 저장하거나 세션 처리 등을 진행
-	    return ResponseEntity.ok("로그인 성공: " + userInfo.get("id"));
+	    return "member_home";
 	}
 	
 	//네이버로 로그인하기
 	@GetMapping("/login/naver")
 	
-	public String naver_login(@RequestParam String code) {
+	public String naver_login(@RequestParam String code,HttpServletRequest req) {
 		try {
-		
+		System.out.println("네이버 로그인 실행");
 		//토큰 요청
 		URL url=new URL("https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=dYy4lyrqfeCoc7Q3NRsE&client_secret=FlcqD4iNLR&code="+code);
 		HttpURLConnection conn=(HttpURLConnection) url.openConnection();//페이지 접속(요청)
@@ -281,8 +277,27 @@ public class Membercontroller {
 		System.out.println("email"+user_email);
 		System.out.println("name"+user_name);
 		
+		//받은 정보를 바탕으로 로그인 하기
+		Member member=new Member();
+		member.setMem_id("naver_"+user_id);
+		member.setMem_email(user_email);
+		member.setMem_nickName(user_nick);
+		
+		if(memberservice.naver_info(member)) { //이미 회원이라면?
+			System.out.println("회원 정보가 있어서 로그인할게용");
+			HttpSession session=req.getSession();
+			session.setAttribute("member", member);
+			
+		}else {
+			memberservice.addMember(member);
+			System.out.println("네이버 계정의 회원정보가 없어용");
+			HttpSession session=req.getSession();
+			session.setAttribute("member", member);
+			
+		}
+		
 	}catch (Exception e) {e.printStackTrace();}
-		return "member_home";
+		return "member_My_page";
 	}
 	
 	//member_My_page에서 정보조회를 눌렀을때 세션에 있는 mem_id를 받아 member_who로 이동
