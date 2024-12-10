@@ -1,6 +1,7 @@
 package com.spring.repository;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Random;
@@ -21,22 +22,19 @@ public class MemberRepositoryImpl implements MemberRepository {
 		System.out.println("회원가입 ");
 		try {
 		conn=DBConnection.getConnection();
-		String sql="insert into member(mem_id,mem_pw,mem_nickName,mem_email,mem_serial) values (?,?,?,?,?)";
+		String sql="insert into member(mem_id,mem_pw,mem_nickName,mem_email) values (?,?,?,?)";
 		pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, member.getMem_id());
 		pstmt.setString(2, member.getMem_pw());
 		pstmt.setString(3, member.getMem_nickName());
 		pstmt.setString(4, member.getMem_email());
-		double random=Math.random()*900000;
-		int ran=(int)random;
-		pstmt.setString(5,String.valueOf(ran));
-		System.out.println(ran);
 		pstmt.executeUpdate();
 		
 		pstmt.close();
 		conn.close();
 		}catch (Exception e) {e.printStackTrace();}
 	}
+	
 	//read one 쿼리문
 	@Override
 	public Member getMyInfo(String mem_id) {
@@ -57,6 +55,9 @@ public class MemberRepositoryImpl implements MemberRepository {
 			member.setMem_point(rs.getInt(4));
 			member.setMem_exp(rs.getInt(5));
 			member.setMem_admin(rs.getBoolean(6));
+			member.setMem_email(rs.getString("mem_email"));
+			member.setMem_confirmed(rs.getBoolean("mem_confirmed"));
+			member.setMem_serial(rs.getInt("mem_serial"));
 			pstmt.close();
 			conn.close();
 			}else {
@@ -82,11 +83,16 @@ public class MemberRepositoryImpl implements MemberRepository {
 		pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, member.getMem_id());
 		pstmt.setString(2, member.getMem_pw());
+	
 		rs=pstmt.executeQuery();
 		if(rs.next()) {
 			member.setMem_id(rs.getString("mem_id"));
+			member.setMem_email(rs.getString("mem_email"));
+			member.setMem_serial(rs.getInt("mem_serial"));
+			member.setMem_admin(rs.getBoolean("mem_admin"));
+			System.out.println(rs.getBoolean("mem_admin")+"admin인가용??????");
 			member.setMem_nickName(rs.getString("mem_nickName"));
-			
+			member_log_date(member);
 		}else {
 			return null;
 		}
@@ -95,21 +101,44 @@ public class MemberRepositoryImpl implements MemberRepository {
 		}catch(Exception e) {e.printStackTrace();}
 		return member;
 	}
+	
+	//로그인 할때 마지막 접속날짜 업데이트
+	
+	public void member_log_date(Member member) {
+		try{conn=DBConnection.getConnection();
+		String sql="update Member set mem_date=? where mem_id=?";
+		pstmt=conn.prepareStatement(sql);
+		pstmt.setDate(1, new Date(System.currentTimeMillis()));
+		pstmt.setString(2, member.getMem_id());
+		pstmt.executeUpdate();
+		}catch (Exception e) {e.printStackTrace();}
+	}
+	
+	
+	
+	
 	//정보 수정 기능
 	@Override
 	public void member_update(Member member) {
 		try{
 		conn=DBConnection.getConnection();
-		String sql="update Member set mem_pw=?,mem_nickName=? where mem_id=?";
+		System.out.println(member.getMem_id());
+		System.out.println(member.getMem_pw());
+		System.out.println(member.getMem_email());
+		System.out.println(member.getMem_nickName());
+		String sql="update Member set mem_pw=?,mem_nickName=?,mem_email=? mem_profile_name=? where mem_id=?";
 		pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, member.getMem_pw());
 		pstmt.setString(2, member.getMem_nickName());
-		pstmt.setString(3, member.getMem_id());
+		pstmt.setString(3, member.getMem_email());
+		pstmt.setString(4, member.getMem_id());
+		pstmt.setString(5, member.getMem_profile_name());
 		pstmt.executeUpdate();
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
 	//회원 탈퇴 기능
 	@Override
 	public void member_delete(Member member) {

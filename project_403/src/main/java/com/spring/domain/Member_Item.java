@@ -1,9 +1,19 @@
 package com.spring.domain;
 
 public class Member_Item {
+	
 	private boolean mem_itemA;//멤버 아이템1
 	private boolean mem_itemB;//멤버 아이템2
 	private String mem_color;//멤버 닉네임컬러
+	private String mem_id;//멤버 아이디
+	
+	
+	public String getMem_id() {
+		return mem_id;
+	}
+	public void setMem_id(String mem_id) {
+		this.mem_id = mem_id;
+	}
 	public boolean isMem_itemA() {
 		return mem_itemA;
 	}

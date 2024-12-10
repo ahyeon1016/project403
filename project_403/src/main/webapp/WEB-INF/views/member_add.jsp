@@ -5,13 +5,15 @@
 <head>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script> <%--아작스 사용을 위한 코오드 --%>
 <meta charset="UTF-8">
+
 <title>회원가입 페이지</title>
 </head>
 <body>
 <div>
-<form method="get">
+<form>
 아이디<input id="mem_id"  maxlength="15"/><button type="button" id="check_id">중복 검사</button><br>
 비밀번호<input id="mem_pw" type="password" maxlength="15" required/> *3~15자 이내의 값을 입력해주세요.  <br>
+비밀번호 확인<input id="mem_pw_submit" type="password" maxlength="15" required/> <span id="conf"></span> <br>
 닉네임<input id="mem_nickName" maxlength="10"/><br>
 이메일<input type="email" id="mem_email" required/> *아이디@naver.com의 형식으로 써주세요. <br>
 <button type="submit" id="sub" disabled>회원 가입하기</button> <h5>아이디 중복검사 후 활성화됩니다.</h5>
@@ -20,7 +22,25 @@
 
 
 <script>
-//ajax로 아이디 중복검사를 실행하는 함수 만들기
+//비밀번호 확인
+
+document.querySelector("#mem_pw_submit").addEventListener("keyup",passck);
+
+function passck(){
+	let pass=document.querySelector("#mem_pw").value;
+	let passub=document.querySelector("#mem_pw_submit").value;
+	
+	if(pass==passub){
+		document.querySelector("#conf").innerText="일치합니다.";
+	}else{
+		document.querySelector("#conf").innerText="불일치합니다.";
+	}
+	
+	
+}
+
+
+//ajax로 중복검사를 실행하는 함수 만들기
 document.querySelector("#check_id").addEventListener("click",memck);
 document.querySelector("#sub").addEventListener("click",finalck);
 //아이디 중복검사 실행
@@ -52,12 +72,13 @@ function finalck(event){
 	let mem_id=document.querySelector("#mem_id").value;
 	let sub=document.querySelector("#sub");
 	let mem_pw=document.querySelector("#mem_pw").value;
+	let mem_pwsub=document.querySelector("#mem_pw_submit").value;
 	let mem_nick=document.querySelector("#mem_nickName").value;
 	let mem_email=document.querySelector("#mem_email").value;
 	$.ajax({
 		url:"finalck",
 		type:"post",
-		data:JSON.stringify({"mem_id":mem_id,"mem_pw":mem_pw,"mem_nick":mem_nick,"mem_email":mem_email}),
+		data:JSON.stringify({"mem_id":mem_id,"mem_pw":mem_pw,"mem_nick":mem_nick,"mem_email":mem_email,"mem_pw_sub":mem_pwsub}),
 		contentType:"application/json; charset=UTF-8",
 		success:function(data){
 			alert(data.key);
