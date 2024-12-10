@@ -1,10 +1,10 @@
-package com.spring.service;
+package com.spring.repository;
 
 import java.util.List;
 
 import com.spring.domain.Test;
 
-public interface TestService 
+public interface TestRepository 
 {
 //	페이징 없이 All
 //	List<Test> getAllTestList();
@@ -25,5 +25,5 @@ public interface TestService
 
 	Test getOneTestList(Integer test_num);
 
-	Test getTestValue(Integer test_num);
+	Test getTestValue(Integer test_num);	
 }

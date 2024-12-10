@@ -20,9 +20,8 @@
             <param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
-    </servlet>
-   
-    <servlet-mapping>
+    </servlet>   
+    <servlet-mapping> <!-- 모든 요청에 대해서 작동하도록 설정 -->
         <servlet-name>appServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>  
