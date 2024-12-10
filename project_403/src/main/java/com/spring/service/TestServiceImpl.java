@@ -14,12 +14,31 @@ public class TestServiceImpl implements TestService {
 	@Autowired
 	private TestRepository testRepository;
 
-	@Override
-	public List<Test> getAllTestList() {
-		
-		return testRepository.getAllTestList();
-	}
+//	페이징 없이 All
+//	@Override
+//	public List<Test> getAllTestList() {
+//		
+//		return testRepository.getAllTestList();
+//	}
 
+	// 페이징 처리 Read All
+	@Override
+	public List<Test> getBoardList(Integer pageNum, int limit) {
+		
+		List<Test> list = testRepository.getBoardList(pageNum, limit);
+		
+		return list;
+	}
+	
+	// Test 테이블 전체 글 숫자 계산
+	@Override
+	public int getListCount() {
+		
+		int count = testRepository.getListCount();
+		
+		return count;
+	}
+	
 	@Override
 	public void setNewTest(Test test) {
 		
@@ -45,6 +64,22 @@ public class TestServiceImpl implements TestService {
 		
 		testRepository.setUpdateTest(test);
 	}
+
+	@Override
+	public Test getOneTestList(Integer test_num) {
+		
+		Test test = testRepository.getOneTestList(test_num);
+		
+		return test;
+	}
+
+	@Override
+	public Test getTestValue(Integer test_num) {
+		
+		Test test = testRepository.getTestValue(test_num);
+		
+		return test;
+	}	
 	
 	
 	

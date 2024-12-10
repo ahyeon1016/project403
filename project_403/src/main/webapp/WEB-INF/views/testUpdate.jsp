@@ -12,21 +12,26 @@ testUpdate 페이지
 <p><a href="testAll">Home</a>
 
 <form:form modelAttribute="UpdateTest" action="./testUpdate">
-	<fieldset>			
+	<fieldset>
 		<div>
-			<form:input path="test_num" value="${test.test_num}" type="hidden" />
+			시험 번호: <input name="test_num" value="${test.test_num}" readonly="readonly" />
+		</div>		
+		<div>			
 			작성자ID: <input name="mem_id" value="${test.mem_id}" readonly="readonly" />
 		</div>
 		<div>
-			시험시간: <form:input path="test_time" value="${test.test_time}" />
+			시험 제목: <form:input path="test_name" value="${test.test_name}" />
 		</div>
 		<div>
-			시험날짜: <form:input path="test_date" value="${test.test_date}" />
+			시험 비밀번호: <form:input path="test_pw" value="${test.test_pw}" />
 		</div>
 		<div>
-			시험이름: <form:input path="test_name" value="${test.test_name}" />
+			공개 또는 비공개: <form:input path="test_openYN" value="${test.test_openYN}" />
 		</div>
-		<div class="col-sm-offset-2 col-sm-10">
+		<div>
+			과목명: <form:input path="sub_name" value="${test.sub_name}" />
+		</div>
+		<div>
 			<input type="submit" value="전송">
 		</div>
 	</fieldset>
