@@ -116,6 +116,35 @@ public class Question_Controller {
 		return "Question_view";
 	}
 	
+	//코딩 문제를 만드는 폼 페이지로 이동
+	@GetMapping("Q_addCP")
+	public String Q_addCP_form(@ModelAttribute Question question, Model model){
+		System.out.println("컨트롤러 | Q_addCP_form() 도착");
+		ArrayList<Subject> sub_all = subjectService.getSubAll();
+		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
+		model.addAttribute("sub_all", sub_all);
+		model.addAttribute("sub_all_name", sub_all_name);
+		String content 
+				= "public class test {\n"
+				+ "\n"
+				+ "    public static void main(String[] args){\n"
+				+ "        int a = 0;\n"
+				+ "    }\n"
+				+ "}";
+		System.out.println(content);
+		question.setQuestion_content(content);
+		return "Question_addCP_form";
+	}
+	
+	//코딩 문제를 만드는 폼 페이지로 이동
+	@PostMapping("Q_addCP")
+	public String Q_addCP(@ModelAttribute Question question, HttpServletRequest request){
+		System.out.println("컨트롤러 | Q_addCP() 도착");
+		System.out.println(question.getQuestion_content());
+		
+		return "Question_view";
+	}
+	
 	//선택된 과목의 고유 넘버를 만드는 함수로 모듈화 하였음.
 	private void sub_code_sum(Question question, String sub_name, String sub_chap) {
 		System.out.println("컨트롤러 | sub_code_sum() 도착");
@@ -163,5 +192,5 @@ public class Question_Controller {
 		}
 	}
 
-	
+
 }
