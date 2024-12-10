@@ -59,12 +59,33 @@ public class Question_Controller {
 	@PostMapping("/Q_addMCQ")
 	public String Q_addMCQ(@ModelAttribute Question question, HttpServletRequest request) {
 		System.out.println("컨트롤러 | Q_addMCQ() 도착");
-		System.out.println(question.getQuestion_img().getSize());
 		//전처리
 		//폼 페이지에서 select한 과목과 챕터를 가져와 DB에서 일치하는 DTO를 가져오는 작업
 		String sub_name = request.getParameter("name_select");
 		String sub_chap = request.getParameter("chap_select");
 		
+		sub_code_sum(question, sub_name, sub_chap);
+		
+		//정답의 쉼표를 다른 문자로 변환
+		question.setQuestion_ans(question.getQuestion_ans().replace(",", "|★|"));
+		System.out.println("컨트롤러 | Q_addMCQ() 정답 : "+question.getQuestion_ans());
+		
+		//ModelAttribute로 데이터를 받은 DTO에서 이미지 파일을 처리
+		if(question.getQuestion_img().getSize()!=0) {
+			img_file_processing(question, request);
+		}else {
+			System.out.println("컨트롤러 | Q_addMCQ() 이미지 파일이 없음");
+		}
+		//서비스 이동
+		System.out.println("컨트롤러 | addMCQ() 호출");
+		questionService.addMCQ(question);
+		
+		return "Question_view";
+	}
+	
+	//선택된 과목의 고유 넘버를 만드는 함수로 모듈화 하였음.
+	private void sub_code_sum(Question question, String sub_name, String sub_chap) {
+		System.out.println("컨트롤러 | sub_code_sum() 도착");
 		Subject sub = new Subject();
 		sub.setSub_name(sub_name); 
 		sub.setSub_chap(sub_chap);
@@ -75,46 +96,38 @@ public class Question_Controller {
 		String sub_code_sum = sub_name_code+"_"+sub_chap_code;
 		//DTO에 SET
 		question.setSub_code_sum(sub_code_sum);
-		
-		//정답의 쉼표를 다른 문자로 변환
-		question.setQuestion_ans(question.getQuestion_ans().replace(",", "|★|"));
-		System.out.println("컨트롤러 | Q_addMCQ() 정답 : "+question.getQuestion_ans());
-		
-		//ModelAttribute로 데이터를 받은 DTO에서 이미지 파일을 처리
+	}
+	
+	//이미지 파일을 처리하는 함수로 다른 문제에도 사용되는 경우가 많을 것이라 판단해서 따로 모듈화를 진행했음.
+	private void img_file_processing(Question question, HttpServletRequest request) {
+		System.out.println("컨트롤러 | img_file_processing() 도착");
 		//파일 저장 경로
 		String path = request.getServletContext().getRealPath("/resources/images");
 		//파일 이름 만들기
 		//파일의 확장자를 분리하는 작업
-		if(question.getQuestion_img().getSize()!=0) {
-			MultipartFile multi = question.getQuestion_img();
-			String file_name = multi.getOriginalFilename();
-			String[] file_names = file_name.split("\\.");
-			String extension = file_names[file_names.length-1];
-			//파일의 이름을 현재시간으로 사용하기 위한 작업
-			long time = System.currentTimeMillis();
-			SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmssSSS");
-			//결합 : RLPL209912311030123.확장자
-			String img_name = "RLPL"+sdf.format(time)+"."+extension;
-			System.out.println("저장되는 파일 : "+img_name);
-			//DTO에 SET
-			question.setQuestion_img_name(img_name);
-			
-			//빈 파일 생성
-			File file = new File(path, img_name); 
+		MultipartFile multi = question.getQuestion_img();
+		String file_name = multi.getOriginalFilename();
+		String[] file_names = file_name.split("\\.");
+		String extension = file_names[file_names.length-1];
+		//파일의 이름을 현재시간으로 사용하기 위한 작업
+		long time = System.currentTimeMillis();
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmssSSS");
+		//결합 : RLPL209912311030123.확장자
+		String img_name = "RLPL"+sdf.format(time)+"."+extension;
+		System.out.println("저장되는 파일 : "+img_name);
+		//DTO에 SET
+		question.setQuestion_img_name(img_name);
 		
-			//빈 파일에 작성
-			try {
-				multi.transferTo(file);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}else {
-			System.out.println("컨트롤러 | Q_addMCQ() 이미지 파일이 없음");
+		//빈 파일 생성
+		File file = new File(path, img_name); 
+	
+		//빈 파일에 작성
+		try {
+			multi.transferTo(file);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		//서비스 이동
-		System.out.println("컨트롤러 | addMCQ() 호출");
-		questionService.addMCQ(question);
-		
-		return "Question_view";
 	}
+
+	
 }
