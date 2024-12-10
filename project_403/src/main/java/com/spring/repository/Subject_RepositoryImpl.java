@@ -506,9 +506,9 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		return value;
 	}
 	
-	//Subject 테이블의 sub_name과 sub_chap의 유효성 검사를 위해 
-	//sub_name에 일치하는 sub_chap이 테이블에 없다면 null을 반환하는 함수
-	//이 함수를 사용한 함수 : getSubByChap()
+	/*Subject 테이블의 sub_name과 sub_chap의 유효성 검사를 위해 
+	 *sub_name에 일치하는 sub_chap이 테이블에 없다면 null을 반환하는 함수
+	 *이 함수를 사용한 함수 : getSubByChap()*/
 	private String subChapValue(Subject subject) {
 		System.out.println("리파지토리 | subChapValue() 도착");
 		String chap = null;

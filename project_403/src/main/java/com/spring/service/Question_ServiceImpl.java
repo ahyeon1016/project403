@@ -23,5 +23,11 @@ public class Question_ServiceImpl implements Question_Service{
 		System.out.println("서비스 | addSAQ() 호출");
 		questionRepository.addSAQ(question);
 	}
+
+	@Override
+	public void addCP(Question question) {
+		System.out.println("서비스 | addCP() 호출");
+		questionRepository.addCP(question);
+	}
 	
 }

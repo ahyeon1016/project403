@@ -140,7 +140,29 @@ public class Question_Controller {
 	@PostMapping("Q_addCP")
 	public String Q_addCP(@ModelAttribute Question question, HttpServletRequest request){
 		System.out.println("컨트롤러 | Q_addCP() 도착");
-		System.out.println(question.getQuestion_content());
+		System.out.println("컨트롤러 | 작성한 문제 내용 : \n"+question.getQuestion_content());
+		
+		//문제 내용과 코드 내용 합치기
+		String text = request.getParameter("question_content_text");
+		question.setQuestion_content(text+"|★|"+question.getQuestion_content());
+		System.out.println("컨트롤러 | Q_addCP() 문제 내용 : "+question.getQuestion_content());
+		
+		
+		//과목 코드 만들기
+		String sub_name = request.getParameter("name_select");
+		String sub_chap = request.getParameter("chap_select");
+		sub_code_sum(question, sub_name, sub_chap);
+		
+		//이미지 파일 처리
+		if(question.getQuestion_img().getSize()!=0) {
+			img_file_processing(question, request);
+		} else {
+			System.out.println("컨트롤러 | Q_addCP() 이미지 파일 없음.");
+		}
+		
+		//서비스 이동
+		System.out.println("컨트롤러 | addCP() 호출");
+		questionService.addCP(question); 
 		
 		return "Question_view";
 	}

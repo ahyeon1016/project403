@@ -8,6 +8,7 @@ public class Test
 	private String test_pw; // 시험지 비밀번호
 	private String test_openYN; // 시험지 공개/비공개
 	private String sub_name; // 과목명
+	private String sub_chap; // 챕터명
 	private int test_hit; // 조회수
 	
 	// 기본 생성자
@@ -79,6 +80,12 @@ public class Test
 	public void setTest_hit(int test_hit) {
 		this.test_hit = test_hit;
 	}
+
+	public String getSub_chap() {
+		return sub_chap;
+	}
 	
-	
+	public void setSub_chap(String sub_chap) {
+		this.sub_chap = sub_chap;
+	}
 }

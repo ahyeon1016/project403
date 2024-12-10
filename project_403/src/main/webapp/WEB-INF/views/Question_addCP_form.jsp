@@ -46,7 +46,8 @@
 						<label for="SAQ">주관식</label>
 					<form:radiobutton path="question_id" value="CP" checked="checked"/>
 						<label for="CP">코딩</label>
-		<p> 문제 내용 <form:textarea path="question_content" rows="5" cols="45"/>
+		<p> 문제 내용 <textarea name="question_content_text" rows="10" cols="70"></textarea>
+		<p> 코드 내용 <form:textarea path="question_content" rows="20" cols="70"/>
 		<p> 정답<form:input path="question_ans"/>
 		<p> 문제 이미지 <form:input type="file" path="question_img"/>
 		<p> 문제풀이 추가 카운트 <form:input path="question_plus"/>
