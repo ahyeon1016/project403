@@ -20,13 +20,13 @@
             </div>
 
             <div class="d-flex flex-column align-items-center">
-                <form action="member?mem_id=${member.getMem_id()}" method="post" class="mb-3">
+                <form action="/project_403/member/me?mem_id=${member.getMem_id()}" method="post" class="mb-3">
                     <button type="submit" class="btn btn-primary btn-custom">
                         <i class="fas fa-user-edit me-2"></i>정보 조회
                     </button>
                 </form>
 
-                <form action="delete?mem_id=${member.getMem_id()}" method="post" class="mb-3">
+                <form action="/project_403/member/delete?mem_id=${member.getMem_id()}" method="post" class="mb-3">
                     <button type="submit" class="btn btn-danger btn-custom">
                         <i class="fas fa-user-minus me-2"></i>회원 탈퇴
                     </button>

@@ -46,7 +46,7 @@ import com.spring.service.MemberItemService;
 import com.spring.service.MemberService;
 
 @Controller
-@RequestMapping
+@RequestMapping("member")
 public class Membercontroller {
 	
 	@Autowired
@@ -56,7 +56,7 @@ public class Membercontroller {
 	MemberItemService memberitemservice;
 	
 	//기본 매핑
-	@GetMapping("/")
+	@GetMapping
 	public String home(){
 		return "member_home";
 	}
@@ -132,14 +132,14 @@ public class Membercontroller {
 		}
 	
 	//member_login 폼 페이지로 이동
-	@GetMapping("/login")
+	@GetMapping("login")
 	public String Login_page(@ModelAttribute("member") Member member,Model model) {
 		model.addAttribute("member",member);				
 		return "member_login";
 	}
 	
 	//세션에 member_login에서 받은 멤버 정보 담으며 로그인하기.
-	@PostMapping("/login")
+	@PostMapping("login")
 	public String login(@ModelAttribute("member") Member member,Model model,HttpServletRequest req) {
 		HttpSession session=req.getSession();
 		member=memberservice.member_login(member);
@@ -154,7 +154,7 @@ public class Membercontroller {
 		}
 	}
 	//카카오로 로그인하기
-	@GetMapping("/login/kakao")
+	@GetMapping("login/kakao")
 	public String kakao_login(@RequestParam String code) {
 		System.out.println("카카오 로그인 실행");
 	    // Jackson ObjectMapper 사용
@@ -222,7 +222,7 @@ public class Membercontroller {
 	}
 	
 	//네이버로 로그인하기
-	@GetMapping("/login/naver")
+	@GetMapping("login/naver")
 	
 	public String naver_login(@RequestParam String code,HttpServletRequest req) {
 		try {
@@ -301,7 +301,7 @@ public class Membercontroller {
 	}
 	
 	//member_My_page에서 정보조회를 눌렀을때 세션에 있는 mem_id를 받아 member_who로 이동
-	@PostMapping("/member")
+	@PostMapping("me")
 	public String mem_info(@RequestParam String mem_id,Model model) {
 		System.out.println(mem_id+"받아온 멤버 아이디");
 		Member member=memberservice.getMyInfo(mem_id);

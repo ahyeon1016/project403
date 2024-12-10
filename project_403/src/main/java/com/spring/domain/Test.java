@@ -8,6 +8,25 @@ public class Test
 	private String test_pw; // 시험지 비밀번호
 	private String test_openYN; // 시험지 공개/비공개
 	private String sub_name; // 과목명
+	private String sub_chap;// 챕터명
+	private int test_hint; //조회수
+	
+	public int getTest_hint() {
+		return test_hint;
+	}
+
+	public void setTest_hint(int test_hint) {
+		this.test_hint = test_hint;
+	}
+
+	public String getSub_chap() {
+		return sub_chap;
+	}
+
+	public void setSub_chap(String sub_chap) {
+		this.sub_chap = sub_chap;
+	}
+
 	private int test_hit; // 조회수
 	
 	// 기본 생성자
