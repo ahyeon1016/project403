@@ -48,7 +48,6 @@ public class Question_Controller {
 	public String Q_addMCQ_form(@ModelAttribute Question question, Model model) {
 		ArrayList<Subject> sub_all = subjectService.getSubAll();
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
-		System.out.println(sub_all_name.get(0).getSub_name());
 		model.addAttribute("sub_all", sub_all);
 		model.addAttribute("sub_all_name", sub_all_name);
 		System.out.println("컨트롤러 | Question_addMCQ_form로 이동");
@@ -83,6 +82,40 @@ public class Question_Controller {
 		return "Question_view";
 	}
 	
+	//주관식 문제 작성 폼 페이지로 이동
+	@GetMapping("Q_addSAQ")
+	public String Q_addSAQ_form(@ModelAttribute Question question, Model model) {
+		System.out.println("컨트롤러 | Q_addSAQ() 도착");
+		ArrayList<Subject> sub_all = subjectService.getSubAll();
+		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
+		model.addAttribute("sub_all", sub_all);
+		model.addAttribute("sub_all_name", sub_all_name);
+		return "Question_addSAQ_form";
+	}
+	
+	//Question_addSAQ_form에서 받은 문제 정보를 받아 처리한 후에 DAO에 전달
+	@PostMapping("/Q_addSAQ")
+	public String Q_addSAQ(@ModelAttribute Question question, HttpServletRequest request) {
+		System.out.println("컨트롤러 | Q_addSAQ() 도착");
+		//선택한 과목과 챕터를 가져와 변수에 넣고 과목코드를 만드는 함수에 파라미터로 넘김
+		String sub_name = request.getParameter("name_select");
+		String sub_chap = request.getParameter("chap_select");
+		sub_code_sum(question, sub_name, sub_chap);
+		
+		//이미지 파일 처리
+		if(question.getQuestion_img().getSize()!=0) {
+			img_file_processing(question, request);
+		}else {
+			System.out.println("컨트롤러 | Q_addSAQ() 이미지 파일이 없음");
+		}
+		
+		//서비스 이동
+		System.out.println("컨트롤러 | addSAQ() 호출");
+		questionService.addSAQ(question);
+		
+		return "Question_view";
+	}
+	
 	//선택된 과목의 고유 넘버를 만드는 함수로 모듈화 하였음.
 	private void sub_code_sum(Question question, String sub_name, String sub_chap) {
 		System.out.println("컨트롤러 | sub_code_sum() 도착");
@@ -103,6 +136,7 @@ public class Question_Controller {
 		System.out.println("컨트롤러 | img_file_processing() 도착");
 		//파일 저장 경로
 		String path = request.getServletContext().getRealPath("/resources/images");
+		System.out.println("컨트롤러 | 이미지파일 저장 경로 : "+path);
 		//파일 이름 만들기
 		//파일의 확장자를 분리하는 작업
 		MultipartFile multi = question.getQuestion_img();

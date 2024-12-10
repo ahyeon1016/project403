@@ -17,4 +17,11 @@ public class Question_ServiceImpl implements Question_Service{
 		System.out.println("서비스 | addMCQ() 호출");
 		questionRepository.addMCQ(question);
 	}
+
+	@Override
+	public void addSAQ(Question question) {
+		System.out.println("서비스 | addSAQ() 호출");
+		questionRepository.addSAQ(question);
+	}
+	
 }

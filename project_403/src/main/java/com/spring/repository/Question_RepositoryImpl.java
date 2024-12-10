@@ -15,6 +15,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 	//DB에 객관식 문제 저장하는 함수 (CREATE)
 	@Override
 	public void addMCQ(Question question) {
+		System.out.println("리파지토리 | addMCQ() 도착");
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -42,9 +43,40 @@ public class Question_RepositoryImpl implements Question_Repository{
 		}
 	}
 	
-	
+	//DB에 주관식 문제를 저장하는 함수 (CREATE)
+	@Override
+	public void addSAQ(Question question) {
+		System.out.println("리파지토리 | addSAQ() 도착");
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			//DB연결
+			conn = DBConnection.dbconn();
+			//쿼리전송
+			//question_serial 변수 생성
+			String question_serial = question.getSub_code_sum()+"_"+setQuestionNum();
+			question.setQuestion_serial(question_serial);
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, 'MCQ')";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, question.getQuestion_content());
+			pstmt.setString(2, question.getQuestion_ans());
+			pstmt.setString(3, question.getQuestion_img_name());
+			pstmt.setString(4, question.getSub_code_sum());
+			pstmt.setString(5, question_serial);
+			//pstmt.setString(6, question.getQuestion_id());
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+	}
+
 	//DB의 question_num 컬럼의 최대값을 리턴하는 함수 | 사용한 함수 : addMCQ()
 	private String setQuestionNum() {
+		System.out.println("리파지토리 | setQuestionNum()도착");
 		int questionNum = 0;
 		
 		Connection conn = null;
