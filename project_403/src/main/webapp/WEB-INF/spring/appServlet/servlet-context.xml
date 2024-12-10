@@ -16,7 +16,7 @@
        2. @annotation 객체 생성
     -->
    <!-- 매트릭스 변수 허용 -->
-   <annotation-driven enable-matrix-variables="true" />
+   <annotation-driven/>
 
    <!-- css,image,js와 같은 공유되는 파일의 위치를 정하고 MVC외 처리를 실시함 
        Dispatcher Servlet은 관여하지 말과 그냥 통과시켜라.

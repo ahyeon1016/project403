@@ -20,7 +20,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 		PreparedStatement pstmt = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리전송
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+setQuestionNum();
@@ -51,7 +51,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 		PreparedStatement pstmt = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리전송
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+setQuestionNum();
@@ -84,7 +84,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 		ResultSet rs = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "SELECT MAX(question_num) FROM Question";
 			pstmt = conn.prepareStatement(SQL);

@@ -6,6 +6,7 @@
         <param-value>/WEB-INF/spring/root-context.xml
         </param-value>
     </context-param>
+    <!-- Listner:자동실행 -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>

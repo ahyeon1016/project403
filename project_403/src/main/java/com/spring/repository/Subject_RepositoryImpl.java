@@ -23,7 +23,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		PreparedStatement pstmt = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "INSERT INTO Subject(sub_name_code , sub_chap_code, sub_name) VALUES(?, 0, ?)";
 			pstmt = conn.prepareStatement(SQL);			
@@ -48,7 +48,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		PreparedStatement pstmt = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "INSERT INTO Subject(sub_name_code, sub_chap_code , sub_name, sub_chap) VALUES(?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(SQL);
@@ -79,7 +79,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		ResultSet rs = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "SELECT * FROM Subject WHERE sub_chap IS NOT NULL ORDER BY sub_name ASC";
 			pstmt = conn.prepareStatement(SQL);
@@ -119,7 +119,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		ResultSet rs = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? AND sub_chap IS NOT NULL ORDER BY sub_chap_code ASC";
 			pstmt = conn.prepareStatement(SQL);
@@ -159,7 +159,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		ResultSet rs = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "SELECT DISTINCT sub_name_code, sub_name FROM Subject ORDER BY BINARY sub_name ASC";
 			pstmt = conn.prepareStatement(SQL);
@@ -195,7 +195,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		ResultSet rs = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? AND sub_chap IS NOT NULL";
 			pstmt = conn.prepareStatement(SQL);
@@ -236,7 +236,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		ResultSet rs = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=?";
 			pstmt = conn.prepareStatement(SQL);
@@ -270,7 +270,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		ResultSet rs = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? AND BINARY sub_chap=?";
 			pstmt = conn.prepareStatement(SQL);
@@ -303,7 +303,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		PreparedStatement pstmt = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "UPDATE Subject SET sub_name=? WHERE BINARY sub_name=?";
 			pstmt = conn.prepareStatement(SQL);
@@ -329,7 +329,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		PreparedStatement pstmt = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "UPDATE Subject SET sub_chap=? WHERE BINARY sub_name=? AND BINARY sub_chap=?";
 			pstmt = conn.prepareStatement(SQL);
@@ -357,7 +357,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		PreparedStatement pstmt = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "DELETE FROM Subject WHERE BINARY sub_name=?";
 			pstmt = conn.prepareStatement(SQL);
@@ -382,7 +382,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		PreparedStatement pstmt = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "DELETE FROM Subject WHERE BINARY sub_name=? AND BINARY sub_chap=?";
 			pstmt = conn.prepareStatement(SQL);
@@ -409,7 +409,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		ResultSet rs = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "SELECT MAX(sub_name_code) FROM Subject GROUP BY BINARY sub_name";
 			pstmt = conn.prepareStatement(SQL);
@@ -445,7 +445,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		ResultSet rs = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "SELECT MAX(sub_name_code) FROM Subject WHERE BINARY sub_name=?";
 			pstmt = conn.prepareStatement(SQL);
@@ -476,7 +476,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		ResultSet rs = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "SELECT MAX(sub_chap_code) FROM Subject WHERE BINARY sub_name=?";
 			pstmt = conn.prepareStatement(SQL);
@@ -518,7 +518,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		ResultSet rs = null;
 		try {
 			//DB연결
-			conn = DBConnection.dbconn();
+			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? AND BINARY sub_chap=?";
 			pstmt = conn.prepareStatement(SQL);
