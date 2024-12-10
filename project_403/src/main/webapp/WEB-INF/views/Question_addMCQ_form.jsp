@@ -40,17 +40,29 @@
 			}
 			%>
 		</select>
+		<p> 문제분류 	<form:radiobutton path="question_id" value="MCQ" checked="checked"/>
+						<label for="MCQ">객관식</label>
+					<form:radiobutton path="question_id" value="SAQ" disabled="true"/>
+						<label for="SAQ">주관식</label>
+					<form:radiobutton path="question_id" value="CP" disabled="true"/>
+						<label for="CP">코딩</label>
 		<p> 문제 내용 <form:input path="question_content" style="width:300px; height:100px;"/>
-		<p> 정답 <form:input path="question_ans"/>
+		<p> 답안 1<form:input path="question_ans"/>
+		<p> 답안 2<form:input path="question_ans"/>
+		<p> 답안 3<form:input path="question_ans"/>
+		<p> 답안 4<form:input path="question_ans"/>
+		<p>	정답		<form:radiobutton path="question_ans" value="1"/>
+						<label for="1">1번</label>
+					<form:radiobutton path="question_ans" value="2"/>
+						<label for="2">2번</label>
+					<form:radiobutton path="question_ans" value="3"/>
+						<label for="3">3번</label>
+					<form:radiobutton path="question_ans" value="4"/>
+						<label for="4">4번</label>
 		<p> 문제 이미지 <form:input type="file" path="question_img"/>
 		<p> 문제풀이 추가 카운트 <form:input path="question_plus"/>
 		<p> 문제풀이 횟수 <form:input path="question_count"/>
-		<p> 문제분류 	<form:radiobutton path="question_id" value="MCQ"/>
-						<label for="MCQ">객관식</label>
-					<form:radiobutton path="question_id" value="SAQ"/>
-						<label for="SAQ">주관식</label>
-					<form:radiobutton path="question_id" value="CP"/>
-						<label for="CP">코딩</label>
+
 		<p> <input type="submit" value="전송">
 	</form:form>
 </body>

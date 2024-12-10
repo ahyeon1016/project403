@@ -58,7 +58,8 @@ public class Question_Controller {
 	//Question_addMCQ_form 페이지에서 입력받은 정보를 받아 처리 후에 DAO에 전달
 	@PostMapping("/Q_addMCQ")
 	public String Q_addMCQ(@ModelAttribute Question question, HttpServletRequest request) {
-		System.out.println("컨트롤러 | addMCQ() 호출");
+		System.out.println("컨트롤러 | Q_addMCQ() 도착");
+		System.out.println(question.getQuestion_img().getSize());
 		//전처리
 		//폼 페이지에서 select한 과목과 챕터를 가져와 DB에서 일치하는 DTO를 가져오는 작업
 		String sub_name = request.getParameter("name_select");
@@ -75,35 +76,43 @@ public class Question_Controller {
 		//DTO에 SET
 		question.setSub_code_sum(sub_code_sum);
 		
+		//정답의 쉼표를 다른 문자로 변환
+		question.setQuestion_ans(question.getQuestion_ans().replace(",", "|★|"));
+		System.out.println("컨트롤러 | Q_addMCQ() 정답 : "+question.getQuestion_ans());
+		
 		//ModelAttribute로 데이터를 받은 DTO에서 이미지 파일을 처리
 		//파일 저장 경로
 		String path = request.getServletContext().getRealPath("/resources/images");
 		//파일 이름 만들기
 		//파일의 확장자를 분리하는 작업
-		MultipartFile multi = question.getQuestion_img();
-		String file_name = multi.getOriginalFilename();
-		String[] file_names = file_name.split("\\.");
-		String extension = file_names[file_names.length-1];
-		//파일의 이름을 현재시간으로 사용하기 위한 작업
-		long time = System.currentTimeMillis();
-		SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmssSSS");
-		//결합 : RLPL209912311030123.확장자
-		String img_name = "RLPL"+sdf.format(time)+"."+extension;
-		System.out.println("저장되는 파일 : "+img_name);
-		//DTO에 SET
-		question.setQuestion_img_name(img_name);
+		if(question.getQuestion_img().getSize()!=0) {
+			MultipartFile multi = question.getQuestion_img();
+			String file_name = multi.getOriginalFilename();
+			String[] file_names = file_name.split("\\.");
+			String extension = file_names[file_names.length-1];
+			//파일의 이름을 현재시간으로 사용하기 위한 작업
+			long time = System.currentTimeMillis();
+			SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmssSSS");
+			//결합 : RLPL209912311030123.확장자
+			String img_name = "RLPL"+sdf.format(time)+"."+extension;
+			System.out.println("저장되는 파일 : "+img_name);
+			//DTO에 SET
+			question.setQuestion_img_name(img_name);
+			
+			//빈 파일 생성
+			File file = new File(path, img_name); 
 		
-		//빈 파일 생성
-		File file = new File(path, img_name); 
-	
-		//빈 파일에 작성
-		try {
-			multi.transferTo(file);
-		} catch (IOException e) {
-			e.printStackTrace();
+			//빈 파일에 작성
+			try {
+				multi.transferTo(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}else {
+			System.out.println("컨트롤러 | Q_addMCQ() 이미지 파일이 없음");
 		}
-		
 		//서비스 이동
+		System.out.println("컨트롤러 | addMCQ() 호출");
 		questionService.addMCQ(question);
 		
 		return "Question_view";

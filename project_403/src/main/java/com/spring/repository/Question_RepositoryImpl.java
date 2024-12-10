@@ -24,14 +24,14 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+setQuestionNum();
 			question.setQuestion_serial(question_serial);
-			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, ?)";
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, 'MCQ')";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, question.getQuestion_content());
 			pstmt.setString(2, question.getQuestion_ans());
 			pstmt.setString(3, question.getQuestion_img_name());
 			pstmt.setString(4, question.getSub_code_sum());
 			pstmt.setString(5, question_serial);
-			pstmt.setString(6, question.getQuestion_id());
+			//pstmt.setString(6, question.getQuestion_id());
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {

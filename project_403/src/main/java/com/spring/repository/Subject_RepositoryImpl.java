@@ -71,6 +71,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 	//Subject 테이블의 모든 데이터를 ArrayList에 담에 리턴하는 함수(Read)
 	@Override
 	public ArrayList<Subject> getSubAll() {
+		System.out.println("리파지토리 | getSubAll() 도착");
 		ArrayList<Subject> sub_all = new ArrayList<Subject>();
 		
 		Connection conn = null;
@@ -150,6 +151,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 
 	//Subject 테이블에 존재하는 sub_name 목록을 ArrayList에 담아 리턴하는 함수(Read)
 	public ArrayList<Subject> getSubAllName(){
+		System.out.println("리파지토리 | getSubAllName() 도착");
 		ArrayList<Subject> sub_name_all = new ArrayList<Subject>();
 		
 		Connection conn = null;
@@ -204,7 +206,6 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			if(rs.next()) {
 				subByChap.setSub_num(rs.getInt(1));
 				subByChap.setSub_name_code(rs.getInt(2));
-				System.out.println(rs.getInt(3));
 				subByChap.setSub_chap_code(rs.getInt(3));
 				subByChap.setSub_name(rs.getString(4));
 				subByChap.setSub_chap(chap);
@@ -227,6 +228,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 	//Subject 작성 폼에서 입력된 sub_name이 DB에 존재하는지 확인하는 함수
 	@Override
 	public HashMap<String, Object> subNameCheck(HashMap<String, Object> map) {
+		System.out.println("리파지토리 | subNameCheck() 도착");
 		HashMap<String, Object> sum = new HashMap<String, Object>();
 		
 		Connection conn = null;
@@ -260,6 +262,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 	//Subject 작성 폼에서 입력된 sub_chap이 DB에 존재하는지 확인하는 함수
 	@Override
 	public HashMap<String, Object> subChapCheck(HashMap<String, Object> map) {
+		System.out.println("리파지토리 | subChapCheck() 도착");
 		HashMap<String, Object> sum = new HashMap<String, Object>();
 		
 		Connection conn = null;
@@ -294,6 +297,8 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 	//Subject 테이블의 sub_name을 수정하는 함수(Update)
 	@Override
 	public void updateSubName(String old_sub_name, String new_sub_name) {
+		System.out.println("리파지토리 | updateSubName() 도착");
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -318,6 +323,8 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 	//Subject 테이블의 sub_name과 일치하는 sub_chap을 수정하는 함수(Update)
 	@Override
 	public void updateSubChap(String sub_name, String old_sub_chap, String new_sub_chap) {
+		System.out.println("리파지토리 | updateSubChap() 도착");
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -344,6 +351,8 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 	//Subject 테이블에서 sub_name과 일치하는 데이터를 제거하는 함수(Delete)
 	@Override
 	public void deleteSubName(String sub_name) {
+		System.out.println("리파지토리 | deleteSubName() 도착");
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -367,6 +376,8 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 	//Subject 테이블에서 sub_name과 일치하는 sub_chap 데이터를 제거하는 함수(Delete)
 	@Override
 	public void deleteSubChap(String sub_name, String sub_chap) {
+		System.out.println("리파지토리 | deleteSubChap() 도착");
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -499,6 +510,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 	//sub_name에 일치하는 sub_chap이 테이블에 없다면 null을 반환하는 함수
 	//이 함수를 사용한 함수 : getSubByChap()
 	private String subChapValue(Subject subject) {
+		System.out.println("리파지토리 | subChapValue() 도착");
 		String chap = null;
 
 		Connection conn = null;
