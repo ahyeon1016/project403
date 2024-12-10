@@ -58,7 +58,7 @@ public class Question_Controller {
 	//Question_addMCQ_form 페이지에서 입력받은 정보를 받아 처리 후에 DAO에 전달
 	@PostMapping("/Q_addMCQ")
 	public String Q_addMCQ(@ModelAttribute Question question, HttpServletRequest request) {
-		System.out.println("컨트롤러 | Q_?() 호출");
+		System.out.println("컨트롤러 | addMCQ() 호출");
 		//전처리
 		//폼 페이지에서 select한 과목과 챕터를 가져와 DB에서 일치하는 DTO를 가져오는 작업
 		String sub_name = request.getParameter("name_select");
@@ -71,7 +71,7 @@ public class Question_Controller {
 		//가져온 DTO에서 코드를 가져와 문자열로 캐스팅하여 과목의 고유 넘버를 만든다.
 		String sub_name_code = String.valueOf(return_sub.getSub_name_code()); 
 		String sub_chap_code = String.valueOf(return_sub.getSub_chap_code());
-		String sub_code_sum = sub_name_code+" "+sub_chap_code;
+		String sub_code_sum = sub_name_code+"_"+sub_chap_code;
 		//DTO에 SET
 		question.setSub_code_sum(sub_code_sum);
 		
