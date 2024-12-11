@@ -21,6 +21,9 @@ testOneView 페이지
 	과목명: ${test.sub_name}
 </div>
 <div>
+	챕터명: ${test.sub_chap}
+</div>
+<div>
 	문제: 
 </div>
 <div>

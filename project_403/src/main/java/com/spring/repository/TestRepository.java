@@ -2,6 +2,8 @@ package com.spring.repository;
 
 import java.util.List;
 
+import com.spring.domain.Question;
+import com.spring.domain.Subject;
 import com.spring.domain.Test;
 
 public interface TestRepository 
@@ -25,5 +27,11 @@ public interface TestRepository
 
 	Test getOneTestList(Integer test_num);
 
-	Test getTestValue(Integer test_num);	
+	Test getTestValue(Integer test_num);
+
+	List<Subject> getSubList();
+
+	List<Subject> subValue(String sub_name);
+
+	List<Question> qnaSelectValue(String subCodeSum);
 }
