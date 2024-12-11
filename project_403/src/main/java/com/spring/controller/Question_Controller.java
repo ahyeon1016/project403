@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,7 +20,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.domain.Question;
@@ -167,6 +170,15 @@ public class Question_Controller {
 		return "Question_view";
 	}
 	
+	//문제 작성 페이지에서 sub_name에 해당하는 sub_chap을 가져오는 함수
+	@ResponseBody
+	@PostMapping("/Q_subNameByChap")
+	public HashMap<String, Object> Q_subNameByChap(@RequestBody HashMap<String, Object> map){
+		//System.out.println(map.get("sub_name"));
+		HashMap<String, Object> a = new HashMap<String, Object>();
+		return subjectService.subNameByValue(map);
+	}
+	
 	//선택된 과목의 고유 넘버를 만드는 함수로 모듈화 하였음.
 	private void sub_code_sum(Question question, String sub_name, String sub_chap) {
 		System.out.println("컨트롤러 | sub_code_sum() 도착");
@@ -213,6 +225,5 @@ public class Question_Controller {
 			e.printStackTrace();
 		}
 	}
-
 
 }

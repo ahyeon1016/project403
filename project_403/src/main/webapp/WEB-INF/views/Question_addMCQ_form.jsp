@@ -13,11 +13,12 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <body>
 	HELLO QUESTION addMCQ FORM PAGE
 	<form:form modelAttribute="question" action="Q_addMCQ" method="post" enctype="multipart/form-data">
 		<p> 과목명 
-		<select name="name_select">
+		<select name="name_select" id="name_selector">
 			<option selected>선택</option>
 			<%
 			for(Subject sub:sub_all_name){	
@@ -27,19 +28,7 @@
 			}
 			%>
 		</select>
-		<select name="chap_select">	
-			<%	
-			for(Subject sub:sub_all_name){
-				for(Subject sub_chap : sub_all){
-					if(sub.getSub_name_code()==sub_chap.getSub_name_code()){
-					%>
-						<option><%=sub_chap.getSub_chap()%></option>
-					<%
-					}
-				}
-			}
-			%>
-		</select>
+		<select name="chap_select" id="chap_selector"></select>
 		<p> 문제분류 	<form:radiobutton path="question_id" value="MCQ" checked="checked"/>
 						<label for="MCQ">객관식</label>
 					<form:radiobutton path="question_id" value="SAQ" disabled="true"/>
@@ -65,5 +54,35 @@
 
 		<p> <input type="submit" value="전송">
 	</form:form>
+	<script>
+		let sub_name = document.querySelector("#name_selector");
+		let sub_chap = document.querySelector("#chap_selector");
+		sub_name.addEventListener("change", check);
+		function check(){
+			let sub_name_value = sub_name.value;
+			console.log(sub_name_value);
+			$.ajax({
+				url : "Q_subNameByChap",
+				type : "POST",
+				contentType : "application/json",
+				data : JSON.stringify({
+					"sub_name" : sub_name_value
+				}),
+				success : function(data){
+					let list = data.list;
+					sub_chap.replaceChildren();
+					for(let i=0; i<list.length; i++){
+						let option = document.createElement('option');
+						console.log(list[i]);
+						option.text = list[i];
+				        sub_chap.appendChild(option);
+					}
+				},
+				error : function(){
+					arlet("데이터를 받아오지 못했습니다.");
+				}
+			});
+		}
+	</script>
 </body>
 </html>

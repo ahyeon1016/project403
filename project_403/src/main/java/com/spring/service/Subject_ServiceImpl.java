@@ -85,5 +85,10 @@ public class Subject_ServiceImpl implements Subject_Service {
 		System.out.println("서비스 | Repository의 getSubAllName() 호출");
 		return subjectRepository.getSubAllName();
 	}
+
+	@Override
+	public HashMap<String, Object> subNameByValue(HashMap<String, Object> map) {
+		return subjectRepository.subNameByValue(map);
+	}
 	
 }

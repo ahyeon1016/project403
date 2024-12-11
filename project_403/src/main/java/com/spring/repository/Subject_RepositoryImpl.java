@@ -203,7 +203,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//ResultSet에 데이터를 담아 처리
 			rs = pstmt.executeQuery();
 			String chap = subChapValue(subject);
-			if(rs.next()) {
+			while(rs.next()) {
 				subByChap.setSub_num(rs.getInt(1));
 				subByChap.setSub_name_code(rs.getInt(2));
 				subByChap.setSub_chap_code(rs.getInt(3));
@@ -294,6 +294,41 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		return sum;
 	}
 
+	//Subject 작성 폼에서 입력된 sub_name이 DB에 존재하는지 확인하는 함수
+	@Override
+	public HashMap<String, Object> subNameByValue(HashMap<String, Object> map) {
+		System.out.println("리파지토리 | subNameByValue() 도착");
+		HashMap<String, Object> sum = new HashMap<String, Object>();
+		ArrayList<String> list = new ArrayList<String>();
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리 전송
+			String SQL = "SELECT sub_chap FROM Subject WHERE BINARY sub_name=? AND sub_chap IS NOT NULL";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, (String)map.get("sub_name"));
+			//ResultSet에 데이터를 담아 처리
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				list.add(rs.getString(1));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			//사용한 객체 닫기
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		System.out.println("리파지토리 | list의 크기 : "+list.size());
+		sum.put("list", list);
+		return sum;
+	}
+	
 	//Subject 테이블의 sub_name을 수정하는 함수(Update)
 	@Override
 	public void updateSubName(String old_sub_name, String new_sub_name) {
