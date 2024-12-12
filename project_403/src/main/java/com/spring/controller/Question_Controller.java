@@ -220,9 +220,24 @@ public class Question_Controller {
 		String[] ans = question.getQuestion_ans().split("\\|★\\|");
 		model.addAttribute("ans", ans);
 		model.addAttribute("question", question);
+		System.out.println("컨트롤러 | Q_readMCQ() 뷰로 이동");
 		return "Question_MCQ_view";
 	}
 	
+	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 뷰로 이동하는 함수
+	@GetMapping("Q_readSAQ/{question_serial}")
+	public String Q_readSAQ(@PathVariable String question_serial, Model model) {
+		System.out.println("컨트롤러 | Q_readSAQ() 도착");
+		//파라미터로 받은 question_serial 변수를 가지고 DB로 이동
+		System.out.println("컨트롤러 | Q_readSAQ() 파라미터로 받은 값을 가지고 서비스의 getQuestionBySerial()호출");
+		Question question = questionService.getQuestionBySerial(question_serial);
+		
+		model.addAttribute("question", question);
+		System.out.println("컨트롤러 | Q_readSAQ() 뷰로 이동");
+		return "Question_SAQ_view";
+	}
+	
+	//요청 파라미터로 question_serial, question_count, question_plus을 받아 전처리 후 DB로 가져가는 함수
 	@GetMapping("Q_plusCount")
 	public String Q_plusCount(HttpServletRequest request){
 		System.out.println("컨트롤러 | Q_plusCount() 도착");
