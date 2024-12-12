@@ -1,11 +1,16 @@
 package com.spring.controller;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -36,12 +41,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.domain.Member;
-import com.spring.repository.MemberRepository;
 import com.spring.service.MemberItemService;
 import com.spring.service.MemberService;
 
@@ -82,7 +87,13 @@ public class Membercontroller {
 		if(member==null) {
 			 value="사용 가능한 아이디입니다.";
 			 isavail=true;
-		}else {
+			 if(map.get("mem_id").toString().startsWith("naver_")||map.get("mem_id").toString().startsWith("kakao_")) {
+					value="잘못된 형식입니다.";
+					isavail=false;
+				}
+		}
+		
+		else {
 			 value="중복된 아이디입니다.";
 			 isavail=false;
 		}
@@ -105,7 +116,7 @@ public class Membercontroller {
 			String pw_sub=map.get("mem_pw_sub").toString();
 			int pw_length=pw.length();
 			System.out.println(pw_length);
-			if((pw_length<=15&&pw_length>=3)&&(Pattern.matches(email_pattern, email))&&pw.equals(pw_sub)) { //형식에 맞게 입력했을 시 코드 실행
+			if((pw_length<=15&&pw_length>=3)&&(Pattern.matches(email_pattern, email))&&pw.equals(pw_sub)&&(!(map.get("mem_id").toString().startsWith("naver_")||map.get("mem_id").toString().startsWith("kakao_")))) { //형식에 맞게 입력했을 시 코드 실행
 			Member member2=memberservice.getMyInfo((String)map.get("mem_id"));
 			if(member2==null) {
 				 value="회원가입 성공!";
@@ -153,9 +164,10 @@ public class Membercontroller {
 			return "member_login_fail";
 		}
 	}
+
 	//카카오로 로그인하기
 	@GetMapping("login/kakao")
-	public String kakao_login(@RequestParam String code) {
+	public String kakao_login(@RequestParam String code,HttpServletRequest req) {
 		System.out.println("카카오 로그인 실행");
 	    // Jackson ObjectMapper 사용
 	    ObjectMapper objectMapper = new ObjectMapper();
@@ -168,7 +180,7 @@ public class Membercontroller {
 	    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 	    params.add("grant_type", "authorization_code");
 	    params.add("client_id", "17731f8bc4cf09ad45f06addfd541982");
-	    params.add("redirect_uri", "http://localhost:8080/project_403/login/kakao");
+	    params.add("redirect_uri", "http://localhost:8080/project_403/member/login/kakao");
 	    params.add("code", code);
 
 	    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
@@ -208,16 +220,34 @@ public class Membercontroller {
 	    // 필요한 사용자 정보 추출
 	    Map<String, Object> kakaoAccount = (Map<String, Object>) userInfo.get("kakao_account");
 	    Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
-
+	    String user_id=userInfo.get("id").toString();
 	    String email = (String) kakaoAccount.get("email");
 	    String nickname = (String) profile.get("nickname");
-
+	    String profile_img=profile.get("profile_image_url").toString();
 	    // 로그 출력 또는 추가 처리
-	    System.out.println("User ID: " + userInfo.get("id"));
+	    System.out.println("User ID: " + user_id);
 	    System.out.println("Email: " + email);
 	    System.out.println("Nickname: " + nickname);
+	    System.out.println(profile_img);
 	    System.out.println(profile);
 	    // 여기서 사용자 정보를 데이터베이스에 저장하거나 세션 처리 등을 진행
+	    Member member=new Member();
+	    member.setMem_id("kakao_"+user_id);
+	    member.setMem_nickName(nickname);
+	    member.setMem_profile_name(profile_img);
+	    if(memberservice.kakao_info(member)) {
+			//카카오톡에 정보가 존재할 경우
+	    	member=memberservice.getMyInfo(member.getMem_id());
+	    	HttpSession session=req.getSession();
+	    	session.setAttribute("member", member);
+	    }else {
+	    	//아닐 경우
+	    	memberservice.addMember(member);
+	    	HttpSession session=req.getSession();
+	    	session.setAttribute("member", member);
+	    }
+	    
+	    
 	    return "member_home";
 	}
 	
@@ -285,6 +315,7 @@ public class Membercontroller {
 		
 		if(memberservice.naver_info(member)) { //이미 회원이라면?
 			System.out.println("회원 정보가 있어서 로그인할게용");
+			member=memberservice.getMyInfo(member.getMem_id());
 			HttpSession session=req.getSession();
 			session.setAttribute("member", member);
 			
@@ -322,6 +353,18 @@ public class Membercontroller {
 	@PostMapping("update/sequence")
 	public String update_sequence(@ModelAttribute("member")Member member,HttpSession session) {
 		System.out.println(member.getMem_id());
+		System.out.println(member.getMem_profile());
+		String path=session.getServletContext().getRealPath("/resources/images");
+		System.out.println(path);
+		MultipartFile multi=member.getMem_profile();
+		DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+		String dt=LocalDateTime.now().format(formatter);
+		String filename=("RLPL_profile_"+dt+"_"+multi.getOriginalFilename().substring(0,10));
+		File file=new File(path,filename);
+		try {
+			multi.transferTo(file);
+		} catch(Exception e) {e.printStackTrace();}
+		member.setMem_profile_name(filename);
 		memberservice.member_update(member);
 		session.invalidate();
 		return "member_home";
@@ -359,6 +402,22 @@ public class Membercontroller {
 		return "member_My_page";
 	}
 	
+	//관리자 페이지로 이동
+	@PostMapping("/admin")
+	public String admin_page(@RequestParam("page") int page,Model model) {
+		ArrayList<Member> al=new ArrayList<Member>();
+		int limit_num=(page-1)*10;
+		int mem_num=memberservice.mem_num();
+		al=memberservice.read_all_Member(limit_num);
+		Member mb=al.get(0);
+		System.out.println("첫번째 멤버의 아이디를 조회한다."+mb.getMem_id());
+		model.addAttribute("al",al);
+		model.addAttribute("mem_num",mem_num);
+		return "member_admin";
+	}
+	
+	
+
 	//로그아웃
 	@GetMapping("logout")
 	public String logout(HttpSession session) {

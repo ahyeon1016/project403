@@ -11,7 +11,7 @@
 <body>
 <div>
 <form>
-아이디<input id="mem_id"  maxlength="15"/><button type="button" id="check_id">중복 검사</button><br>
+아이디<input id="mem_id"  maxlength="15" pattern="^(?!naver_)(?!kakao_).{1,15}$"/><button type="button" id="check_id">중복 검사</button> <span> *아이디는 최대 15자입니다.</span><br>
 비밀번호<input id="mem_pw" type="password" maxlength="15" required/> *3~15자 이내의 값을 입력해주세요.  <br>
 비밀번호 확인<input id="mem_pw_submit" type="password" maxlength="15" required/> <span id="conf"></span> <br>
 닉네임<input id="mem_nickName" maxlength="10"/><br>

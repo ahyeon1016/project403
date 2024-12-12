@@ -1,5 +1,7 @@
 package com.spring.service;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,24 @@ public class MemberServiceImpl implements MemberService {
 	
 	
 	@Override
-	public Member social_login(Member member) {
-		return memberRepository.social_login(member);
+	public int mem_num() {
+		return memberRepository.mem_num();
 	}
+
+
+	@Override
+	public ArrayList<Member> search_admin(String search_data) {
+		return memberRepository.search_admin(search_data);
+	}
+
+
+	@Override
+	public ArrayList read_all_Member(int limit_num) {
+		return memberRepository.read_all_Member(limit_num);
+	}
+
+
+	
 
 
 	@Override

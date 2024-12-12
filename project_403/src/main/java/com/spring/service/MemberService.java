@@ -1,5 +1,7 @@
 package com.spring.service;
 
+import java.util.ArrayList;
+
 import com.spring.domain.Member;
 
 public interface MemberService {
@@ -10,5 +12,7 @@ public interface MemberService {
 	void member_delete(Member member);
 	boolean naver_info(Member member);
 	boolean kakao_info(Member member);
-	Member social_login(Member member);
+	ArrayList<Member> read_all_Member(int limit_num);
+	ArrayList<Member> search_admin(String search_data);
+	int mem_num();
 }

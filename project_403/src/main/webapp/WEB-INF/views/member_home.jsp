@@ -25,7 +25,7 @@
                <button type="submit">마이페이지</button>
            </form>
           <%if(member.isMem_admin()==true){ %>
-          <form action="" method="post">
+          <form action="/project_403/member/admin?page=1" method="post">
    		   	<button type="submit">관리자페이지</button>
           </form> 
        <%}
