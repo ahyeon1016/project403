@@ -49,5 +49,11 @@ public class Question_ServiceImpl implements Question_Service{
 		System.out.println("서비스 | getQuestionBySerial() 호출");
 		return questionRepository.getQuestionBySerial(question_serial);
 	}
+
+	@Override
+	public void updateQuestionCount(String question_serial, int question_count) {
+		System.out.println("서비스 | updateQuestionCount() 호출");
+		questionRepository.updateQuestionCount(question_serial, question_count);
+	}
 	
 }

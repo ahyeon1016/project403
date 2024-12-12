@@ -223,6 +223,24 @@ public class Question_Controller {
 		return "Question_MCQ_view";
 	}
 	
+	@GetMapping("Q_plusCount")
+	public String Q_plusCount(HttpServletRequest request){
+		System.out.println("컨트롤러 | Q_plusCount() 도착");
+		//전처리
+		String question_serial = request.getParameter("serial");
+		int question_count = Integer.parseInt(request.getParameter("count"));
+		int question_plus = Integer.parseInt(request.getParameter("plus"));
+		question_count+=question_plus;
+		//System.out.println(question_serial+"|"+question_count+"|"+question_plus);
+		//전처리한 변수를 가지고 DB로 이동
+		System.out.println("컨트롤러 | 서비스의 updateQuestionCount() 호출");
+		questionService.updateQuestionCount(question_serial, question_count);
+		
+		//문제 목록 페이지로 이동
+		return "redirect:/Q/Q_all";
+	}
+	
+	
 	//선택된 과목의 고유 넘버를 만드는 함수로 모듈화 하였음.
 	private String sub_code_sum(String sub_name, String sub_chap) {
 		System.out.println("컨트롤러 | sub_code_sum() 도착");

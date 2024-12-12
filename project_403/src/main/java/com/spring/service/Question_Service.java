@@ -11,4 +11,5 @@ public interface Question_Service {
 	ArrayList<Question> getQuestionAll();
 	ArrayList<Question> getQuestionsBySubCode(String sub_code);
 	Question getQuestionBySerial(String question_serial);
+	void updateQuestionCount(String question_serial, int question_count);
 }

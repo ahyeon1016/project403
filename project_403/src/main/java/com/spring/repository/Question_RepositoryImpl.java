@@ -232,6 +232,31 @@ public class Question_RepositoryImpl implements Question_Repository{
 		return question;
 	}
 
+	//Question 테이블에서 question_serial 과 일치하는 DTO의 question_count 수정
+	@Override
+	public void updateQuestionCount(String question_serial, int question_count) {
+		System.out.println("리파지토리 | updateQuestionCount() 도착");
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리 전송
+			String SQL = "UPDATE Question SET question_count=? WHERE question_serial=?";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setInt(1, question_count);
+			pstmt.setString(2, question_serial);
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+	}
+
 	//DB의 question_num 컬럼의 최대값을 리턴하는 함수 | 사용한 함수 : addMCQ()
 	private String setQuestionNum() {
 		System.out.println("리파지토리 | setQuestionNum()도착");

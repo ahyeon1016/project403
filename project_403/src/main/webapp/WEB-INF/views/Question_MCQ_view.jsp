@@ -14,7 +14,7 @@
 	<p> 문제 고유 번호 : ${question.question_serial}
 	<p> 과목 : ${question.sub_code_sum}
 	<p>
-	<p> 문제풀이 시도 횟수 합계 : ${question.question_count}+<span id="plus"></span>
+	<p> 문제풀이 시도 횟수 합계 : ${question.question_count}<span id="plus"></span>
 	<p><img src="/project_403/resources/images/${question.question_img_name}">
 	<p> 문제 : ${question.question_content}</p>
 	<%
@@ -24,15 +24,10 @@
 	<%
 	}
 	%>
-	
-	<%
-		Question q = (Question)request.getAttribute("question");
-	%>
-	
-	<p><button onclick="grading(<%=ans[4]%>, '<%=q.getQuestion_serial()%>')">정답 확인</button></p>
+	<p><button onclick="grading(<%=ans[4]%>, '${question.question_serial}', ${question.question_count})">정답 확인</button></p>
 	<script>
-		let count = 0;
-		function grading(ans, question_serial){
+		let index = 0;
+		function grading(ans, question_serial, question_count){
 			let option = document.querySelectorAll(".option");
 			let plus = document.querySelector("#plus");
 			let isChecked = false;
@@ -40,17 +35,19 @@
 				if(option[i].checked){
 					isChecked=true;
 					if(option[i].value==ans){
-						count++;
-						alert(count+"회만에 정답!");
-						console.log(count);
-						window.location.href="../Q?question_serial="+question_serial+"&plus="+count;
+						index++;
+						alert(index+"회만에 정답!");
+						window.location.href=
+								"../Q_plusCount?serial="+question_serial+
+								"&count="+question_count+
+								"&plus="+index;
 					} else{
-						count++;
+						index++;
 						alert("땡!");
 					}
 				} 
 			}
-			plus.textContent = count;
+			plus.textContent = "+"+index;
 			if(isChecked!=true){
 				alert("선택하고 눌러주세요.");
 			}
