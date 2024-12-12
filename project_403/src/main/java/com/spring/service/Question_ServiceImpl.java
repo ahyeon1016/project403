@@ -1,5 +1,7 @@
 package com.spring.service;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,18 @@ public class Question_ServiceImpl implements Question_Service{
 	public void addCP(Question question) {
 		System.out.println("서비스 | addCP() 호출");
 		questionRepository.addCP(question);
+	}
+
+	@Override
+	public ArrayList<Question> getQuestionAll() {
+		System.out.println("서비스 | getQuestionAll() 호출");
+		return questionRepository.getQuestionAll();
+	}
+
+	@Override
+	public ArrayList<Question> getQuestion(String sub_code) {
+		System.out.println("서비스 | getQuestion() 호출");
+		return questionRepository.getQuestion(sub_code);
 	}
 	
 }

@@ -12,5 +12,7 @@
 	<p><a href="Q_addMCQ">객관식 문제 만들기</a>
 	<p><a href="Q_addSAQ">주관식 문제 만들기</a>
 	<p><a href="Q_addCP">코딩 문제 만들기</a>
+	<hr>
+	<p><a href="Q_all">모든 문제 확인하기</a>
 </body>
 </html>

@@ -66,8 +66,7 @@ public class Question_Controller {
 		String sub_name = request.getParameter("name_select");
 		String sub_chap = request.getParameter("chap_select");
 		
-		sub_code_sum(question, sub_name, sub_chap);
-		
+		question.setSub_code_sum(sub_code_sum(sub_name, sub_chap));
 		//정답의 쉼표를 다른 문자로 변환
 		question.setQuestion_ans(question.getQuestion_ans().replace(",", "|★|"));
 		System.out.println("컨트롤러 | Q_addMCQ() 정답 : "+question.getQuestion_ans());
@@ -103,7 +102,8 @@ public class Question_Controller {
 		//선택한 과목과 챕터를 가져와 변수에 넣고 과목코드를 만드는 함수에 파라미터로 넘김
 		String sub_name = request.getParameter("name_select");
 		String sub_chap = request.getParameter("chap_select");
-		sub_code_sum(question, sub_name, sub_chap);
+		
+		question.setSub_code_sum(sub_code_sum(sub_name, sub_chap));
 		
 		//이미지 파일 처리
 		if(question.getQuestion_img().getSize()!=0) {
@@ -154,7 +154,8 @@ public class Question_Controller {
 		//과목 코드 만들기
 		String sub_name = request.getParameter("name_select");
 		String sub_chap = request.getParameter("chap_select");
-		sub_code_sum(question, sub_name, sub_chap);
+		
+		question.setSub_code_sum(sub_code_sum(sub_name, sub_chap));
 		
 		//이미지 파일 처리
 		if(question.getQuestion_img().getSize()!=0) {
@@ -174,13 +175,40 @@ public class Question_Controller {
 	@ResponseBody
 	@PostMapping("/Q_subNameByChap")
 	public HashMap<String, Object> Q_subNameByChap(@RequestBody HashMap<String, Object> map){
-		//System.out.println(map.get("sub_name"));
+		System.out.println("컨트롤러 | Q_subNameByChap() 도착");
 		HashMap<String, Object> a = new HashMap<String, Object>();
 		return subjectService.subNameByValue(map);
 	}
 	
+	//모든 문제를 확인할 수 있는 페이지로 이동
+	@GetMapping("/Q_all")
+	public String Q_all(Model model){
+		System.out.println("컨트롤러 | Q_all() 도착");
+		ArrayList<Question>	question_all = questionService.getQuestionAll();
+		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
+		model.addAttribute("question_all", question_all);
+		model.addAttribute("sub_all_name", sub_all_name);
+		return "Question_all";
+	}
+	
+	@ResponseBody
+	@PostMapping("/Q_search")
+	public HashMap<String, Object> Q_search(@RequestBody HashMap<String, Object> map){
+		System.out.println("컨트롤러 | Q_search() 도착");
+		//Map에 저장된 sub_name과 sub_chap을 꺼내 과목코드로 변환
+		String sub_code = sub_code_sum((String)map.get("name"), (String)map.get("chap"));
+
+		//변환된 코드를 가지고 Question_Repository로 이동
+		ArrayList<Question> question = questionService.getQuestion(sub_code);
+		
+		HashMap<String, Object> search = new HashMap<String, Object>();
+		search.put("question", question);
+		
+		return search;
+	}
+	
 	//선택된 과목의 고유 넘버를 만드는 함수로 모듈화 하였음.
-	private void sub_code_sum(Question question, String sub_name, String sub_chap) {
+	private String sub_code_sum(String sub_name, String sub_chap) {
 		System.out.println("컨트롤러 | sub_code_sum() 도착");
 		Subject sub = new Subject();
 		sub.setSub_name(sub_name); 
@@ -190,8 +218,8 @@ public class Question_Controller {
 		String sub_name_code = String.valueOf(return_sub.getSub_name_code()); 
 		String sub_chap_code = String.valueOf(return_sub.getSub_chap_code());
 		String sub_code_sum = sub_name_code+"_"+sub_chap_code;
-		//DTO에 SET
-		question.setSub_code_sum(sub_code_sum);
+		System.out.println("컨트롤러 | sub_code_sum 값 : "+sub_code_sum);
+		return sub_code_sum;
 	}
 	
 	//이미지 파일을 처리하는 함수로 다른 문제에도 사용되는 경우가 많을 것이라 판단해서 따로 모듈화를 진행했음.
@@ -224,6 +252,7 @@ public class Question_Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 }

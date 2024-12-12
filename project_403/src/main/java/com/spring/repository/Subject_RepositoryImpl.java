@@ -197,13 +197,14 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//DB연결
 			conn = DBConnection.getConnection();
 			//쿼리 전송
-			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? AND sub_chap IS NOT NULL";
+			String SQL = "SELECT * FROM Subject WHERE BINARY sub_name=? AND sub_chap=?";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, subject.getSub_name());
+			pstmt.setString(2, subject.getSub_chap());
 			//ResultSet에 데이터를 담아 처리
 			rs = pstmt.executeQuery();
 			String chap = subChapValue(subject);
-			while(rs.next()) {
+			if(rs.next()) {
 				subByChap.setSub_num(rs.getInt(1));
 				subByChap.setSub_name_code(rs.getInt(2));
 				subByChap.setSub_chap_code(rs.getInt(3));
