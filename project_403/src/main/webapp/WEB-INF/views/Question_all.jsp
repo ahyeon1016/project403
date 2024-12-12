@@ -95,7 +95,7 @@
 							"<p>"+question[i].question_id+"</p>"+
 							"<p>"+question[i].sub_code_sum+"</p>"+
 							"<p>"+question[i].question_serial+"</p>"+
-							"<a href='read"+question[i].question_id+"/"+question[i].question_serial+"'>문제 보기</a>"+
+							"<a href='Q_read"+question[i].question_id+"/"+question[i].question_serial+"'>문제 보기</a>"+
 							"<hr>";
 							
 						question_container.append(div);

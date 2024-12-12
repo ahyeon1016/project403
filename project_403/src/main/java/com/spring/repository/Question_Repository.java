@@ -9,5 +9,5 @@ public interface Question_Repository {
 	void addSAQ(Question question);
 	void addCP(Question question);
 	ArrayList<Question> getQuestionAll();
-	ArrayList<Question> getQuestion(String sub_code);
+	ArrayList<Question> getQuestionsBySubCode(String sub_code);
 }

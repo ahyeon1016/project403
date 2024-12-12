@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -191,6 +192,7 @@ public class Question_Controller {
 		return "Question_all";
 	}
 	
+	//sub_code_sum과 일치하는 Question을 찾아 ArrayList에 담고 맵으로 리턴하는 함수
 	@ResponseBody
 	@PostMapping("/Q_search")
 	public HashMap<String, Object> Q_search(@RequestBody HashMap<String, Object> map){
@@ -199,12 +201,19 @@ public class Question_Controller {
 		String sub_code = sub_code_sum((String)map.get("name"), (String)map.get("chap"));
 
 		//변환된 코드를 가지고 Question_Repository로 이동
-		ArrayList<Question> question = questionService.getQuestion(sub_code);
+		ArrayList<Question> question = questionService.getQuestionsBySubCode(sub_code);
 		
 		HashMap<String, Object> search = new HashMap<String, Object>();
 		search.put("question", question);
-		
 		return search;
+	}
+	
+	//
+	@GetMapping("Q_readMCQ/{question_serial}")
+	public String Q_readMCQ(@PathVariable String question_serial) {
+		System.out.println("컨트롤러 | Q_readMCQ() 도착");
+		
+		return null;
 	}
 	
 	//선택된 과목의 고유 넘버를 만드는 함수로 모듈화 하였음.

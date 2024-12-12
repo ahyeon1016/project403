@@ -39,9 +39,9 @@ public class Question_ServiceImpl implements Question_Service{
 	}
 
 	@Override
-	public ArrayList<Question> getQuestion(String sub_code) {
-		System.out.println("서비스 | getQuestion() 호출");
-		return questionRepository.getQuestion(sub_code);
+	public ArrayList<Question> getQuestionsBySubCode(String sub_code) {
+		System.out.println("서비스 | getQuestionsBySubCode() 호출");
+		return questionRepository.getQuestionsBySubCode(sub_code);
 	}
 	
 }

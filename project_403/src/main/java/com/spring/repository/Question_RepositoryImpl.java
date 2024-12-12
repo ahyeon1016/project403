@@ -151,7 +151,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 
 	//Question 테이블에서 sub_code와 일치하는 테이블을 찾아 ArrayList에 담고 반환(Read)
 	@Override
-	public ArrayList<Question> getQuestion(String sub_code) {
+	public ArrayList<Question> getQuestionsBySubCode(String sub_code) {
 		System.out.println("리파지토리 | getQuestion() 도착");
 		ArrayList<Question> question_list = new ArrayList<Question>();
 		
