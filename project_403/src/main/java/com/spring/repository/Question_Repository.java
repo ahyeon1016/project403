@@ -10,4 +10,5 @@ public interface Question_Repository {
 	void addCP(Question question);
 	ArrayList<Question> getQuestionAll();
 	ArrayList<Question> getQuestionsBySubCode(String sub_code);
+	Question getQuestionBySerial(String question_serial);
 }

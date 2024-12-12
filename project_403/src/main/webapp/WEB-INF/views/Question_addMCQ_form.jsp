@@ -36,10 +36,10 @@
 					<form:radiobutton path="question_id" value="CP" disabled="true"/>
 						<label for="CP">코딩</label>
 		<p> 문제 내용 <form:input path="question_content" style="width:300px; height:100px;"/>
-		<p> 답안 1<form:input path="question_ans"/>
-		<p> 답안 2<form:input path="question_ans"/>
-		<p> 답안 3<form:input path="question_ans"/>
-		<p> 답안 4<form:input path="question_ans"/>
+		<p> 선택지 1<form:input path="question_ans"/>
+		<p> 선택지 2<form:input path="question_ans"/>
+		<p> 선택지 3<form:input path="question_ans"/>
+		<p> 선택지 4<form:input path="question_ans"/>
 		<p>	정답		<form:radiobutton path="question_ans" value="1"/>
 						<label for="1">1번</label>
 					<form:radiobutton path="question_ans" value="2"/>

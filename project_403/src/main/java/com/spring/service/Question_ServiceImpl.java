@@ -43,5 +43,11 @@ public class Question_ServiceImpl implements Question_Service{
 		System.out.println("서비스 | getQuestionsBySubCode() 호출");
 		return questionRepository.getQuestionsBySubCode(sub_code);
 	}
+
+	@Override
+	public Question getQuestionBySerial(String question_serial) {
+		System.out.println("서비스 | getQuestionBySerial() 호출");
+		return questionRepository.getQuestionBySerial(question_serial);
+	}
 	
 }

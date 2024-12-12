@@ -25,7 +25,9 @@
 		}
 		%>
 	</select>
-	<select name="chap_select" id="chap_selector"></select> | 
+	<select name="chap_select" id="chap_selector">
+		<option>선택</option>
+	</select> | 
 	전체 <input type="radio" name="id" value="ALL" class="question_id" checked>
 	객관식<input type="radio" name="id" value="MCQ" class="question_id">
 	주관식<input type="radio" name="id" value="SAQ" class="question_id">
@@ -55,6 +57,9 @@
 				success : function(data){
 					let list = data.list;
 					sub_chap.replaceChildren();
+					let choice = document.createElement("option");
+					choice.text = "선택";
+					sub_chap.appendChild(choice);
 					for(let i=0; i<list.length; i++){
 						let option = document.createElement("option");
 						console.log(list[i]);
@@ -95,7 +100,8 @@
 							"<p>"+question[i].question_id+"</p>"+
 							"<p>"+question[i].sub_code_sum+"</p>"+
 							"<p>"+question[i].question_serial+"</p>"+
-							"<a href='Q_read"+question[i].question_id+"/"+question[i].question_serial+"'>문제 보기</a>"+
+							"<a href='Q_read"+question[i].question_id+
+							"/"+question[i].question_serial+"'>문제 보기</a>"+
 							"<hr>";
 							
 						question_container.append(div);

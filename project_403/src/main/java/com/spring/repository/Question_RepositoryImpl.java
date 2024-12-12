@@ -149,7 +149,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 		return question_all;
 	}
 
-	//Question 테이블에서 sub_code와 일치하는 테이블을 찾아 ArrayList에 담고 반환(Read)
+	//Question 테이블에서 sub_code와 일치하는 DTO를 찾아 ArrayList에 담고 반환(Read)
 	@Override
 	public ArrayList<Question> getQuestionsBySubCode(String sub_code) {
 		System.out.println("리파지토리 | getQuestion() 도착");
@@ -192,6 +192,46 @@ public class Question_RepositoryImpl implements Question_Repository{
 		return question_list;
 	}
 	
+	//Question 테이블에서 question_serial과 일치하는 DTO를 반환(Read)
+	@Override
+	public Question getQuestionBySerial(String question_serial) {
+		System.out.println("리파지토리 | getQuestionBySerial() 도착");
+		Question question = new Question();
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리 전송
+			String SQL = "SELECT * FROM Question WHERE BINARY question_serial=?";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, question_serial);
+			rs = pstmt.executeQuery();
+			//ResultSet를 통해 DTO에 데이터를 담는 작업
+			if(rs.next()) {
+				question.setQuestion_content(rs.getString(2));
+				question.setQuestion_ans(rs.getString(3));
+				question.setQuestion_img_name(rs.getString(4));
+				question.setQuestion_plus(rs.getInt(5));
+				question.setQuestion_count(rs.getInt(6));
+				question.setSub_code_sum(rs.getString(7));
+				question.setMem_serial(rs.getInt(8));
+				question.setQuestion_serial(rs.getString(9));
+				question.setQuestion_id(rs.getString(10));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		System.out.println("리파지토리 | getQuestionBySerial() question을 리턴하기 전에 값을 확인 sub_code_sum : "+question.getSub_code_sum());
+		return question;
+	}
+
 	//DB의 question_num 컬럼의 최대값을 리턴하는 함수 | 사용한 함수 : addMCQ()
 	private String setQuestionNum() {
 		System.out.println("리파지토리 | setQuestionNum()도착");

@@ -208,12 +208,19 @@ public class Question_Controller {
 		return search;
 	}
 	
-	//
+	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 뷰로 이동하는 함수
 	@GetMapping("Q_readMCQ/{question_serial}")
-	public String Q_readMCQ(@PathVariable String question_serial) {
+	public String Q_readMCQ(@PathVariable String question_serial, Model model) {
 		System.out.println("컨트롤러 | Q_readMCQ() 도착");
+		//파라미터로 받은 question_serial 변수를 가지고 DB로 이동
+		System.out.println("컨트롤러 | Q_readMCQ() 파라미터로 받은 값을 가지고 서비스의 getQuestionBySerial()호출");
+		Question question = questionService.getQuestionBySerial(question_serial);
+		System.out.println(question.getQuestion_count());
 		
-		return null;
+		String[] ans = question.getQuestion_ans().split("\\|★\\|");
+		model.addAttribute("ans", ans);
+		model.addAttribute("question", question);
+		return "Question_MCQ_view";
 	}
 	
 	//선택된 과목의 고유 넘버를 만드는 함수로 모듈화 하였음.
