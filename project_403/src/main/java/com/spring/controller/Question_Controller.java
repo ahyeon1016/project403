@@ -353,6 +353,7 @@ public class Question_Controller {
 		return "Question_updateMCQ";
 	}
 	
+	//수정된 Question DTO를 가지고 DB로 이동하는 함수
 	@PostMapping("Q_updateMCQ")
 	public String Q_updateMCQ(@ModelAttribute Question question, HttpServletRequest request) {
 		System.out.println("컨트롤러 | Q_updateMCQ() 도착");
