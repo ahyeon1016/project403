@@ -15,15 +15,30 @@ public class MemberServiceImpl implements MemberService {
 	
 	
 	@Override
+	public void mem_confirm(int mem_serial) {
+		memberRepository.mem_confirm(mem_serial);
+	}
+
+
+
+
+
+	@Override
 	public int mem_num() {
 		return memberRepository.mem_num();
 	}
 
 
+	
+
+
 	@Override
-	public ArrayList<Member> search_admin(String search_data) {
-		return memberRepository.search_admin(search_data);
+	public int mem_serial(String user_mail,String user_id) {
+		return memberRepository.mem_serial(user_mail,user_id);
 	}
+
+
+
 
 
 	@Override

@@ -29,6 +29,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
@@ -59,6 +61,9 @@ public class Membercontroller {
 	
 	@Autowired
 	MemberItemService memberitemservice;
+	
+	@Autowired
+	MailSender sender;
 	
 	//기본 매핑
 	@GetMapping
@@ -359,7 +364,7 @@ public class Membercontroller {
 		MultipartFile multi=member.getMem_profile();
 		DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
 		String dt=LocalDateTime.now().format(formatter);
-		String filename=("RLPL_profile_"+dt+"_"+multi.getOriginalFilename().substring(0,10));
+		String filename=("RLPL_profile_"+dt+"_"+multi.getOriginalFilename());
 		File file=new File(path,filename);
 		try {
 			multi.transferTo(file);
@@ -381,17 +386,17 @@ public class Membercontroller {
 	@PostMapping("delete_bye")
 	public String bye(HttpServletRequest req,HttpSession session) {
 		Member member=(Member)session.getAttribute("member");
-		Timer timer=new Timer();//객체생성
-		long millis=10000;//시간
-		TimerTask tt=new TimerTask() { //1주일 후에 실행할 코드		
-			@Override
-			public void run() {
-				System.out.println("되냐");
+//		Timer timer=new Timer();//객체생성
+//		long millis=10000;//시간
+//		TimerTask tt=new TimerTask() { //1주일 후에 실행할 코드		
+//			@Override
+//			public void run() {
+//				System.out.println("되냐");
 				memberservice.member_delete(member);
 				
-			}
-		};
-		timer.schedule(tt, millis);// 타이머기능
+//			}
+//		};
+//		timer.schedule(tt, millis);// 타이머기능
 		session.invalidate();
 		return "member_home";
 	}
@@ -416,8 +421,36 @@ public class Membercontroller {
 		return "member_admin";
 	}
 	
+	//이메일 전송
+	@ResponseBody
+	@PostMapping("email")
+	public HashMap<String,Object> email_send(@RequestBody HashMap<String,Object> map){
+		HashMap<String,Object> returnmap=new HashMap<String,Object>();
+		String user_mail=(String)map.get("user_mail");
+		String user_id=(String)map.get("user_id");
+		System.out.println("이메일 접속 완료!!!!!!!!!!!!!!!!!"+user_mail);
+		String host="http://localhost:8080/member/email/checked";
+		String from="rlpl4033@gmail.com";
+		String to=user_mail;
+		int mem_serial=memberservice.mem_serial(user_mail,user_id);
+		//이메일을 통해서 시리얼코드를 검색하는 기능 필요.
+		String content="클릭하여 이메일 인증을 완료해주세요!\n"+host+"?mem_serial="+mem_serial;
+		SimpleMailMessage ms=new SimpleMailMessage();
+		ms.setTo(to);
+		ms.setSubject("랠리폴리 이메일 인증메세지");
+		ms.setText(content);
+		ms.setFrom(from);
+		sender.send(ms);
+		return returnmap;
+	}
+	//이메일 인증
+	@GetMapping("email/checked")
+	public String check_email(@RequestParam int mem_serial) {
+		memberservice.mem_confirm(mem_serial);
+		return "member_home";
+	}
 	
-
+	
 	//로그아웃
 	@GetMapping("logout")
 	public String logout(HttpSession session) {

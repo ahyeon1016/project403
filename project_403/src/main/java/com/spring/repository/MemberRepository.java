@@ -13,6 +13,7 @@ public interface MemberRepository {
 	boolean naver_info(Member member);
 	boolean kakao_info(Member member);
 	ArrayList<Member> read_all_Member(int limit_num);
-	ArrayList<Member> search_admin(String search_data);
 	int mem_num();
+	int mem_serial(String user_mail,String user_id);
+	void mem_confirm(int mem_serial);
 }

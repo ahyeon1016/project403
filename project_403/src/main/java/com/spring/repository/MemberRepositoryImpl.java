@@ -128,35 +128,35 @@ public class MemberRepositoryImpl implements MemberRepository {
 	}
 	
 	//관리자 페이지에서 멤버 검색
-	@Override
-	public ArrayList<Member> search_admin(String search_data) {
-		ArrayList<Member> al=new ArrayList<Member>();
-		try {
-			conn=DBConnection.getConnection();
-			String sql="select * from Member where mem_id like ?";
-			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, "%"+search_data+"%");
-			rs=pstmt.executeQuery();
-			
-			while(rs.next()) {
-				Member mb=new Member();
-				mb.setMem_id(rs.getString("mem_id"));
-				mb.setMem_nickName(rs.getString("mem_nickName"));
-				mb.setMem_point(rs.getInt("mem_point"));
-				mb.setMem_exp(rs.getInt("mem_exp"));
-				mb.setMem_email(rs.getString("mem_email"));
-				mb.setMem_date(rs.getDate("mem_date"));
-				mb.setMem_serial(rs.getInt("mem_serial"));
-				al.add(mb);
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		
-		
-		return al;
-	}
+//	@Override
+//	public ArrayList<Member> search_admin(String search_data) {
+//		ArrayList<Member> al=new ArrayList<Member>();
+//		try {
+//			conn=DBConnection.getConnection();
+//			String sql="select * from Member where mem_id like ?";
+//			pstmt=conn.prepareStatement(sql);
+//			pstmt.setString(1, "%"+search_data+"%");
+//			rs=pstmt.executeQuery();
+//			
+//			while(rs.next()) {
+//				Member mb=new Member();
+//				mb.setMem_id(rs.getString("mem_id"));
+//				mb.setMem_nickName(rs.getString("mem_nickName"));
+//				mb.setMem_point(rs.getInt("mem_point"));
+//				mb.setMem_exp(rs.getInt("mem_exp"));
+//				mb.setMem_email(rs.getString("mem_email"));
+//				mb.setMem_date(rs.getDate("mem_date"));
+//				mb.setMem_serial(rs.getInt("mem_serial"));
+//				al.add(mb);
+//			}
+//		}catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		
+//		
+//		return al;
+//	}
 	
 	//로그인 기능
 	@Override
@@ -250,7 +250,37 @@ public class MemberRepositoryImpl implements MemberRepository {
 		}
 	
 
+	//멤버의 이메일로 시리얼을 조회
+	@Override
+	public int mem_serial(String user_mail,String user_id) {
+		int mem_serial=0;
+		try {
+		conn=DBConnection.getConnection();
+		String sql="select mem_serial from Member where mem_email=? and mem_id=?";
+		pstmt=conn.prepareStatement(sql);
+		pstmt.setString(1, user_mail);
+		pstmt.setString(2, user_id);
+		rs=pstmt.executeQuery();
+		if(rs.next()) {
+			mem_serial=rs.getInt("mem_serial");
+			System.out.println(mem_serial);
+		}
+		}catch(Exception e) {e.printStackTrace();}
+		return mem_serial;
+	}
 	
+	@Override
+	public void mem_confirm(int mem_serial) {
+		try {
+			conn=DBConnection.getConnection();
+			String sql="update Member set mem_confirmed=true where mem_serial=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, mem_serial);
+			pstmt.executeUpdate();
+		}catch (Exception e) {e.printStackTrace();}
+		
+	}
+
 	//정보 수정 기능
 	@Override
 	public void member_update(Member member) {
@@ -284,6 +314,8 @@ public class MemberRepositoryImpl implements MemberRepository {
 		}
 	}
 	
+	
+
 	//회원 탈퇴 기능
 	@Override
 	public void member_delete(Member member) {
