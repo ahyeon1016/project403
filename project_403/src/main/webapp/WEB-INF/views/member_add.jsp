@@ -11,12 +11,28 @@
 <body>
 <div>
 <form>
-아이디<input id="mem_id"  maxlength="15" pattern="^(?!naver_)(?!kakao_).{1,15}$"/><button type="button" id="check_id">중복 검사</button> <span> *아이디는 최대 15자입니다.</span><br>
-비밀번호<input id="mem_pw" type="password" maxlength="15" required/> *3~15자 이내의 값을 입력해주세요.  <br>
-비밀번호 확인<input id="mem_pw_submit" type="password" maxlength="15" required/> <span id="conf"></span> <br>
-닉네임<input id="mem_nickName" maxlength="10"/><br>
-이메일<input type="email" id="mem_email" required/> *아이디@naver.com의 형식으로 써주세요. <br>
-<button type="submit" id="sub" disabled>회원 가입하기</button> <h5>아이디 중복검사 후 활성화됩니다.</h5>
+	<table>
+		<tr>
+			<td>아이디</td><td><input id="mem_id"  maxlength="15"/><button type="button" id="check_id" >중복 검사</button> <span> *아이디는 최소3자,최대 15자입니다.</span></td>
+		</tr>
+		<tr>
+			<td>비밀번호</td><td><input id="mem_pw" type="password" maxlength="15" required/> *3~15자 이내의 값을 입력해주세요.  </td>
+		</tr>
+		<tr>
+			<td>비밀번호 확인</td><td><input id="mem_pw_submit" type="password" maxlength="15" required/> <span id="conf"></span> </td>
+		</tr>
+		<tr>
+			<td>닉네임</td><td><input id="mem_nickName" maxlength="10"/></td>
+		</tr>
+		<tr>
+			<td>이메일</td><td><input type="email" id="mem_email" required/> *아이디@naver.com의 형식으로 써주세요. </td>
+		</tr>
+		<tr>
+			<td><button type="submit" id="sub" disabled>회원 가입하기</button> <h5>아이디 중복검사 후 활성화됩니다.</h5></td>
+		</tr>	
+			 
+			 
+	</table>
 </form>
 </div>
 

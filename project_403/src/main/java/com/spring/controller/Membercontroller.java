@@ -87,12 +87,14 @@ public class Membercontroller {
 		HashMap<String,Object> returnmap=new HashMap<String,Object>();
 		String value=null;
 		Boolean isavail=false;
+		String regex = "^[a-zA-Z0-9]+$";
+		
 		System.out.println(map.get("mem_id"));
 		Member member=memberservice.getMyInfo((String)map.get("mem_id"));
 		if(member==null) {
 			 value="사용 가능한 아이디입니다.";
 			 isavail=true;
-			 if(map.get("mem_id").toString().startsWith("naver_")||map.get("mem_id").toString().startsWith("kakao_")) {
+			 if(map.get("mem_id").toString().startsWith("naver_")||map.get("mem_id").toString().startsWith("kakao_")||!(map.get("mem_id").toString().matches(regex))||map.get("mem_id").toString().length()<3) {
 					value="잘못된 형식입니다.";
 					isavail=false;
 				}
@@ -248,6 +250,8 @@ public class Membercontroller {
 	    }else {
 	    	//아닐 경우
 	    	memberservice.addMember(member);
+	    	memberitemservice.addMemItem(member);
+
 	    	HttpSession session=req.getSession();
 	    	session.setAttribute("member", member);
 	    }
@@ -326,6 +330,8 @@ public class Membercontroller {
 			
 		}else {
 			memberservice.addMember(member);
+			memberitemservice.addMemItem(member);//멤버 아이템 데이터 추가
+
 			System.out.println("네이버 계정의 회원정보가 없어용");
 			HttpSession session=req.getSession();
 			session.setAttribute("member", member);
