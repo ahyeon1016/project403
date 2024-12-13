@@ -1,7 +1,13 @@
 package com.spring.controller;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.FilterWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,6 +17,12 @@ import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -133,6 +145,7 @@ public class Question_Controller {
 				+ "\n"
 				+ "    public static void main(String[] args){\n"
 				+ "        int a = 0;\n"
+				+ "        System.out.print();\n"
 				+ "    }\n"
 				+ "}";
 		System.out.println(content);
@@ -237,6 +250,21 @@ public class Question_Controller {
 		return "Question_SAQ_view";
 	}
 	
+	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 뷰로 이동하는 함수
+	@GetMapping("Q_readCP/{question_serial}")
+	public String Q_readCP(@PathVariable String question_serial, Model model) {
+		System.out.println("컨트롤러 | Q_readCP() 도착");
+		//파라미터로 받은 question_serial 변수를 가지고 DB로 이동
+		Question question = questionService.getQuestionBySerial(question_serial);
+		
+		String[] ans = question.getQuestion_content().split("\\|★\\|");
+		System.out.println(ans[1]);
+		model.addAttribute("ans", ans);
+		model.addAttribute("question", question);
+		System.out.println("컨트롤러 | Q_readCP() 뷰로 이동");
+		return "Question_CP_view";
+	}
+	
 	//요청 파라미터로 question_serial, question_count, question_plus을 받아 전처리 후 DB로 가져가는 함수
 	@GetMapping("Q_plusCount")
 	public String Q_plusCount(HttpServletRequest request){
@@ -255,6 +283,62 @@ public class Question_Controller {
 		return "redirect:/Q/Q_all";
 	}
 	
+	//CP 문제를 JSON으로 받아서 컴파일한 후에 결과를 리턴
+	@ResponseBody
+	@PostMapping("Compile")
+	public HashMap<String, Object> Compile(@RequestBody HashMap<String, Object> map){
+		System.out.println("컨트롤러 | Compile() 도착");
+		System.out.println(map.get("ans_input"));
+		//전처리
+        String code = (String) map.get("ans_input"); // 요청에서 코드 가져오기
+        HashMap<String, Object> return_map = new HashMap<>();
+
+        try {
+            String fileName = "test.java";
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+                writer.write(code);
+            }
+
+            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+            int result = compiler.run(null, null, null, fileName);
+
+            if (result == 0) {
+            	Process process = Runtime.getRuntime().exec("java test");
+            	BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
+
+                StringBuilder output = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.append(line);
+                }
+                return_map.put("success", true);
+                return_map.put("output", output.toString());
+            } else {
+                // 컴파일 에러 발생
+                StringBuilder errorOutput = new StringBuilder();
+                errorOutput.append("컴파일 에러 발생 (상태 코드: ").append(result).append("):\n");
+
+                // Diagnostics 수집
+                DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
+                try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null)) {
+                    Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjects(fileName);
+                    compiler.getTask(null, fileManager, diagnostics, null, null, compilationUnits).call();
+                }
+
+                for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
+                    errorOutput.append("오류: ").append(diagnostic.getMessage(null)).append("\n")
+                               .append("행: ").append(diagnostic.getLineNumber()).append("\n");
+                }
+                return_map.put("success", false);
+                return_map.put("output", errorOutput.toString());
+                return_map.put("errorCode", result); // 오류 코드 추가
+            }
+        } catch (Exception e) {
+        	return_map.put("output", "오류 : " + e.getMessage());
+        }
+
+        return return_map; // 결과 반환
+    }
 	
 	//선택된 과목의 고유 넘버를 만드는 함수로 모듈화 하였음.
 	private String sub_code_sum(String sub_name, String sub_chap) {

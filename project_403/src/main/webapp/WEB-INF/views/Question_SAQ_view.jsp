@@ -27,7 +27,7 @@
 				isInput=true;
 				if(ans_input.value==ans){
 					index++;
-					alert(index+"회만에 정답!");
+					System.out.println("컨트롤러 | Q_readSAQ() 뷰로 이동");alert(index+"회만에 정답!");
 					window.location.href=
 							"../Q_plusCount?serial="+question_serial+
 							"&count="+question_count+
