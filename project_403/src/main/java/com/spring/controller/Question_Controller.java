@@ -196,7 +196,7 @@ public class Question_Controller {
 	
 	//모든 문제를 확인할 수 있는 페이지로 이동
 	@GetMapping("/Q_all")
-	public String Q_all(Model model){
+ 	public String Q_all(Model model){
 		System.out.println("컨트롤러 | Q_all() 도착");
 		ArrayList<Question>	question_all = questionService.getQuestionAll();
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
@@ -339,6 +339,40 @@ public class Question_Controller {
 
         return return_map; // 결과 반환
     }
+	
+	//question_serial과 일치하는 Question DTO를 가지고 수정 페이지로 이동하는 함수
+	@GetMapping("Q_updateMCQ/{question_serial}")
+	public String Q_updateMCQ_form(@PathVariable String question_serial, @ModelAttribute Question question, Model model) {
+		System.out.println("컨트롤러 | Q_updateMCQ_form() 도착");
+		//question_serial을 통해 Question DTO를 가지고온 후에 model에 추가한다.
+		question = questionService.getQuestionBySerial(question_serial);
+		String[] ans = question.getQuestion_ans().split("\\|★\\|");
+		question.setQuestion_ans(ans[4]);
+ 		model.addAttribute("ans", ans);
+		model.addAttribute("question", question);
+		return "Question_updateMCQ";
+	}
+	
+	@PostMapping("Q_updateMCQ")
+	public String Q_updateMCQ(@ModelAttribute Question question, HttpServletRequest request) {
+		System.out.println("컨트롤러 | Q_updateMCQ() 도착");
+		System.out.println(question.getQuestion_serial());
+		
+		//정답의 쉼표를 다른 문자로 변환
+		question.setQuestion_ans(question.getQuestion_ans().replace(",", "|★|"));
+
+		//ModelAttribute로 데이터를 받은 DTO에서 이미지 파일을 처리
+		if(question.getQuestion_img().getSize()!=0) {
+			img_file_processing(question, request);
+		}else {
+			System.out.println("컨트롤러 | Q_updateMCQ() 이미지 파일이 없음");
+		}
+		
+		//변경된 DTO를 가지고 DB로 이동
+		questionService.updateMCQ(question);
+		
+		return "redirect:/Q/Q_all";
+	}
 	
 	//선택된 과목의 고유 넘버를 만드는 함수로 모듈화 하였음.
 	private String sub_code_sum(String sub_name, String sub_chap) {

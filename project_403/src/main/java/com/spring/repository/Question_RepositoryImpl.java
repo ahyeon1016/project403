@@ -232,7 +232,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 		return question;
 	}
 
-	//Question 테이블에서 question_serial 과 일치하는 DTO의 question_count 수정
+	//Question 테이블에서 question_serial 과 일치하는 DTO의 question_count 수정(Update)
 	@Override
 	public void updateQuestionCount(String question_serial, int question_count) {
 		System.out.println("리파지토리 | updateQuestionCount() 도착");
@@ -249,6 +249,34 @@ public class Question_RepositoryImpl implements Question_Repository{
 			pstmt.setString(2, question_serial);
 			
 			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+	}
+
+	//Question 테이블에서 question_serial과 일치하는 DTO를 수정 (Update)
+	@Override
+	public void updateMCQ(Question question) {
+		System.out.println("리파지토리 | updateMCQ() 도착");
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리 전송
+			String SQL = "UPDATE Question SET question_content=?, question_ans=?, question_img_name=? WHERE question_serial=?";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, question.getQuestion_content());
+			pstmt.setString(2, question.getQuestion_ans());
+			pstmt.setString(3, question.getQuestion_img_name());
+			pstmt.setString(4, question.getQuestion_serial());
+			
+			pstmt.executeUpdate();
+			System.out.println("리파지토리 | updateMCQ() 수정완료");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

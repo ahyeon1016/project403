@@ -55,5 +55,10 @@ public class Question_ServiceImpl implements Question_Service{
 		System.out.println("서비스 | updateQuestionCount() 호출");
 		questionRepository.updateQuestionCount(question_serial, question_count);
 	}
-	
+
+	@Override
+	public void updateMCQ(Question question) {
+		System.out.println("서비스 | updateMCQ() 호출");
+		questionRepository.updateMCQ(question);
+	}
 }
