@@ -67,4 +67,8 @@ public class Question_ServiceImpl implements Question_Service{
 		System.out.println("서비스 | visibleQuestion() 호출");
 		questionRepository.visibleQuestion(question_serial);
 	}
+
+	
+
+
 }

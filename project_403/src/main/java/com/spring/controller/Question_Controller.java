@@ -100,7 +100,7 @@ public class Question_Controller {
 	}
 	
 	//주관식 문제 작성 폼 페이지로 이동
-	@GetMapping("Q_addSAQ")
+	@GetMapping("/Q_addSAQ")
 	public String Q_addSAQ_form(@ModelAttribute Question question, Model model) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addSAQ() 도착");
@@ -137,7 +137,7 @@ public class Question_Controller {
 	}
 	
 	//코딩 문제를 만드는 폼 페이지로 이동
-	@GetMapping("Q_addCP")
+	@GetMapping("/Q_addCP")
 	public String Q_addCP_form(@ModelAttribute Question question, Model model){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addCP_form() 도착");
@@ -159,7 +159,7 @@ public class Question_Controller {
 	}
 	
 	//코딩 문제를 만드는 폼 페이지로 이동
-	@PostMapping("Q_addCP")
+	@PostMapping("/Q_addCP")
 	public String Q_addCP(@ModelAttribute Question question, HttpServletRequest request){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addCP() 도착");
@@ -231,7 +231,7 @@ public class Question_Controller {
 	}
 	
 	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 뷰로 이동하는 함수
-	@GetMapping("Q_readMCQ/{question_serial}")
+	@GetMapping("/Q_readMCQ/{question_serial}")
 	public String Q_readMCQ(@PathVariable String question_serial, Model model) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_readMCQ() 도착");
@@ -248,7 +248,7 @@ public class Question_Controller {
 	}
 	
 	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 뷰로 이동하는 함수
-	@GetMapping("Q_readSAQ/{question_serial}")
+	@GetMapping("/Q_readSAQ/{question_serial}")
 	public String Q_readSAQ(@PathVariable String question_serial, Model model) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_readSAQ() 도착");
@@ -262,7 +262,7 @@ public class Question_Controller {
 	}
 	
 	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 뷰로 이동하는 함수
-	@GetMapping("Q_readCP/{question_serial}")
+	@GetMapping("/Q_readCP/{question_serial}")
 	public String Q_readCP(
 			@PathVariable String question_serial, 
 			Model model) {
@@ -280,7 +280,7 @@ public class Question_Controller {
 	}
 	
 	//요청 파라미터로 question_serial, question_count, question_plus을 받아 전처리 후 DB로 가져가는 함수
-	@GetMapping("Q_plusCount")
+	@GetMapping("/Q_plusCount")
 	public String Q_plusCount(HttpServletRequest request){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_plusCount() 도착");
@@ -300,7 +300,7 @@ public class Question_Controller {
 	
 	//CP 문제를 JSON으로 받아서 컴파일한 후에 결과를 리턴
 	@ResponseBody
-	@PostMapping("Compile")
+	@PostMapping("/Compile")
 	public HashMap<String, Object> Compile(@RequestBody HashMap<String, Object> map){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Compile() 도착");
@@ -357,7 +357,7 @@ public class Question_Controller {
     }
 	
 	//question_serial과 일치하는 Question DTO를 가지고 수정 페이지로 이동하는 함수
-	@GetMapping("Q_updateMCQ/{question_serial}")
+	@GetMapping("/Q_updateMCQ/{question_serial}")
 	public String Q_updateMCQ_form(
 			@PathVariable String question_serial, 
 			@ModelAttribute Question question, 
@@ -374,7 +374,7 @@ public class Question_Controller {
 	}
 	
 	//수정된 Question DTO를 가지고 DB로 이동하는 함수
-	@PostMapping("Q_updateMCQ")
+	@PostMapping("/Q_updateMCQ")
 	public String Q_updateMCQ(
 			@ModelAttribute Question question, 
 			HttpServletRequest request) {
@@ -399,7 +399,7 @@ public class Question_Controller {
 	}
 	
 	//question_serial을 통해 Question DTO를 구하고 폼 페이지로 이동
-	@GetMapping("Q_updateSAQ/{question_serial}")
+	@GetMapping("/Q_updateSAQ/{question_serial}")
 	public String Q_updateSAQ_form(
 			@PathVariable String question_serial, 
 			@ModelAttribute Question question,
@@ -414,7 +414,7 @@ public class Question_Controller {
 	}	
 	
 	//폼 페이지에서 입력받은 정보를 가지고 DB로 이동
-	@PostMapping("Q_updateSAQ")
+	@PostMapping("/Q_updateSAQ")
 	public String Q_updateSAQ(@ModelAttribute Question question, HttpServletRequest request) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_updateSAQ() 도착");
@@ -432,7 +432,7 @@ public class Question_Controller {
 	}
 	
 	//question_serial을 가지고 DB로 이동하여 일치하는 Question DTO를 가지고 온다.
-	@GetMapping("Q_updateCP/{question_serial}")
+	@GetMapping("/Q_updateCP/{question_serial}")
 	public String Q_updateCP_form(
 			@PathVariable String question_serial,
 			@ModelAttribute Question question,
@@ -452,7 +452,7 @@ public class Question_Controller {
 	}
 	
 	//폼 페이지에서 입력받은 정보를 가지고 DB로 이동
-	@PostMapping("Q_updateCP")
+	@PostMapping("/Q_updateCP")
 	public String Q_updateCP(@ModelAttribute Question question, HttpServletRequest request) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_updateCP() 도착");
@@ -473,7 +473,7 @@ public class Question_Controller {
 	}
 	
 	//question_serial을 가지고 DB로 이동하는 함수
-	@GetMapping("Q_delete/{question_serial}")
+	@GetMapping("/Q_delete/{question_serial}")
 	public String Q_delete(@PathVariable String question_serial){
 		System.out.println("컨트롤러 | Q_delete 도착");
 		questionService.visibleQuestion(question_serial);
