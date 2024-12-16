@@ -103,7 +103,8 @@
 							"<a href='Q_read"+question[i].question_id+
 							"/"+question[i].question_serial+"'>문제 보기</a> | "+
 							"<a href='Q_update"+question[i].question_id+
-							"/"+question[i].question_serial+"'>문제 수정 하기</a>"
+							"/"+question[i].question_serial+"'>문제 수정 하기</a> | "+
+							"<a href='Q_delete"+"/"+question[i].question_serial+"'>문제 삭제 하기</a>"+
 							"<hr>";
 							
 						question_container.append(div);

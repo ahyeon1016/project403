@@ -13,4 +13,5 @@ public interface Question_Repository {
 	Question getQuestionBySerial(String question_serial);
 	void updateQuestionCount(String question_serial, int question_count);
 	void updateQuestion(Question question);
+	void visibleQuestion(String question_serial);
 }

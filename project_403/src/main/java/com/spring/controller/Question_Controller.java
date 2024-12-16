@@ -452,25 +452,33 @@ public class Question_Controller {
 	}
 	
 	//폼 페이지에서 입력받은 정보를 가지고 DB로 이동
-		@PostMapping("Q_updateCP")
-		public String Q_updateCP(@ModelAttribute Question question, HttpServletRequest request) {
-			System.out.println("==========================================");
-			System.out.println("컨트롤러 | Q_updateCP() 도착");
-			//content 처리
-			String text = request.getParameter("question_content_text");
-			question.setQuestion_content(text+"|★|"+question.getQuestion_content());
-			
-			//ModelAttribute로 데이터를 받은 DTO에서 이미지 파일을 처리
-			if(question.getQuestion_img().getSize()!=0) {
-				img_file_processing(question, request);
-			}else {
-				System.out.println("컨트롤러 | Q_updateCP() 이미지 파일이 없음");
-			}
-			
-			//변경된 DTO를 가지고 DB로 이동
-			questionService.updateQuestion(question);
-			return "redirect:/Q/Q_all";
+	@PostMapping("Q_updateCP")
+	public String Q_updateCP(@ModelAttribute Question question, HttpServletRequest request) {
+		System.out.println("==========================================");
+		System.out.println("컨트롤러 | Q_updateCP() 도착");
+		//content 처리
+		String text = request.getParameter("question_content_text");
+		question.setQuestion_content(text+"|★|"+question.getQuestion_content());
+		
+		//ModelAttribute로 데이터를 받은 DTO에서 이미지 파일을 처리
+		if(question.getQuestion_img().getSize()!=0) {
+			img_file_processing(question, request);
+		}else {
+			System.out.println("컨트롤러 | Q_updateCP() 이미지 파일이 없음");
 		}
+		
+		//변경된 DTO를 가지고 DB로 이동
+		questionService.updateQuestion(question);
+		return "redirect:/Q/Q_all";
+	}
+	
+	//question_serial을 가지고 DB로 이동하는 함수
+	@GetMapping("Q_delete/{question_serial}")
+	public String Q_delete(@PathVariable String question_serial){
+		System.out.println("컨트롤러 | Q_delete 도착");
+		questionService.visibleQuestion(question_serial);
+		return "redirect:/Q/Q_all";
+	}
 	
 	//선택된 과목의 고유 넘버를 만드는 함수로 모듈화 하였음.
  	private String sub_code_sum(String sub_name, String sub_chap) {

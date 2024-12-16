@@ -257,7 +257,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 		}
 	}
 
-	//Question 테이블에서 question_serial과 일치하는 DTO를 수정 (Create, Update)
+	//Question 테이블에서 question_serial과 일치하는 DTO를 수정 (Update)
 	@Override
 	public void updateQuestion(Question question) {
 		System.out.println("리파지토리 | updateQuestion() 도착");
@@ -281,8 +281,6 @@ public class Question_RepositoryImpl implements Question_Repository{
 			pstmt.setString(7, question.getQuestion_id());
 			
 			pstmt.executeUpdate();
-			//수정 전 Question 숨김 처리
-			visibleQuestion(question); 
 			System.out.println("리파지토리 | Question 수정완료");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -292,8 +290,8 @@ public class Question_RepositoryImpl implements Question_Repository{
 		}
 	}
 	
-	//수정하기 전의 Question DTO의 question_visible 값을 false로 변경하는 함수
-	private void visibleQuestion(Question question) {
+	//question_serial과 일치하는 Question DTO의 question_visible 값을 false로 변경하는 함수
+	public void visibleQuestion(String question_serial) {
 		System.out.println("리파지토리 | visibleQuestion() 도착");
 		
 		Connection conn = null;
@@ -304,10 +302,10 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//쿼리 전송
 			String SQL = "UPDATE Question SET question_visible=0 WHERE question_serial=?";
 			pstmt = conn.prepareStatement(SQL);
-			pstmt.setString(1, question.getQuestion_serial());
+			pstmt.setString(1, question_serial);
 		
 			pstmt.executeUpdate();
-			System.out.println("리파지토리 | 수정하기 전 Question DTO 숨김 처리 완료");
+			System.out.println("리파지토리 | Question DTO 숨김 처리 완료");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

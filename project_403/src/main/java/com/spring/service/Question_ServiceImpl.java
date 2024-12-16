@@ -61,4 +61,10 @@ public class Question_ServiceImpl implements Question_Service{
 		System.out.println("서비스 | updateQuestion() 호출");
 		questionRepository.updateQuestion(question);
 	}
+
+	@Override
+	public void visibleQuestion(String question_serial) {
+		System.out.println("서비스 | visibleQuestion() 호출");
+		questionRepository.visibleQuestion(question_serial);
+	}
 }
