@@ -3,37 +3,44 @@ package com.spring.domain;
 import java.util.Date;
 
 public class QnA {
-	private String comment_title;	//제목
-	private String comment_inner;	//질문내용
-	private Date comment_date;	//작성날짜
-	private int comment_num;	//게시번호
-	private int comment_hit;	//조회수
-	private int comment_good;	//추천수
+	private int comment_num;			//게시번호(A.I)
+	private String mem_id;				//회원 아이디
+	private String question_serial;		//문제 고유 번호
+	private String comment_title;		//질문 내용
+	private Date comment_date;			//작성날짜
+	private int comment_hit;			//조회수
+	private int comment_good;			//추천수
 	
-	//Getter(), Setter()
+	//Getter() Setter()
+	public int getComment_num() {
+		return comment_num;
+	}
+	public void setComment_num(int comment_num) {
+		this.comment_num = comment_num;
+	}
+	public String getMem_id() {
+		return mem_id;
+	}
+	public void setMem_id(String mem_id) {
+		this.mem_id = mem_id;
+	}
+	public String getQuestion_serial() {
+		return question_serial;
+	}
+	public void setQuestion_serial(String question_serial) {
+		this.question_serial = question_serial;
+	}
 	public String getComment_title() {
 		return comment_title;
 	}
 	public void setComment_title(String comment_title) {
 		this.comment_title = comment_title;
 	}
-	public String getComment_inner() {
-		return comment_inner;
-	}
-	public void setComment_inner(String comment_inner) {
-		this.comment_inner = comment_inner;
-	}
 	public Date getComment_date() {
 		return comment_date;
 	}
 	public void setComment_date(Date comment_date) {
 		this.comment_date = comment_date;
-	}
-	public int getComment_num() {
-		return comment_num;
-	}
-	public void setComment_num(int comment_num) {
-		this.comment_num = comment_num;
 	}
 	public int getComment_hit() {
 		return comment_hit;
