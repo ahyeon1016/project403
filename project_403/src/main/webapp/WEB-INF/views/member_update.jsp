@@ -15,10 +15,10 @@
 <form:form modelAttribute="member" action="update/sequence" method="post" id="form" enctype="multipart/form-data">
 	 
 	<p id="id_filed">아이디<form:input path="mem_id" type="text" value="${member.getMem_id()}" readonly="true" id="mem_id"/></p>
-	<p id="pw_filed">비밀번호<form:input path="mem_pw" type="password"  minlength="3" maxlength="15" required="true" id="pw"/> 비밀번호는 3~15자 이내여야 합니다.<p>
-	<p>닉네임<form:input path="mem_nickName" type="text" maxlength="10" value="${member.getMem_nickName()}"/></p>
+	<p id="pw_filed">비밀번호<form:input path="mem_pw" type="password"  minlength="3" maxlength="15" required="true" id="pw"/> 비밀번호는 3~15자 이내여야 합니다.</p>
+	<p>닉네임<form:input path="mem_nickName" type="text" maxlength="10" value="${member.getMem_nickName()}" readonly="true"/> 닉네임 변경권을 쓸 경우 바꿀 수 있습니다.</p>
 	<p>이메일<form:input path="mem_email" type="email" value="${member.getMem_email()}" id="email" required="true" /></p>
-	<p><form:input path="mem_profile" id="input_file" type="file" accept="image/*"/> </p>
+	<p>프로필 사진<form:input path="mem_profile" id="input_file" type="file" accept="image/*"/> </p>
 	<form:button type="submit" id="sub">수정하기</form:button>
 </form:form>
 <script>

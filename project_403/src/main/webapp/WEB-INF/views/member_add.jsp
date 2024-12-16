@@ -22,7 +22,7 @@
 			<td>비밀번호 확인</td><td><input id="mem_pw_submit" type="password" maxlength="15" required/> <span id="conf"></span> </td>
 		</tr>
 		<tr>
-			<td>닉네임</td><td><input id="mem_nickName" maxlength="10"/></td>
+			<td>닉네임</td><td><input id="mem_nickName" maxlength="10" id="mem_nick"/></td>
 		</tr>
 		<tr>
 			<td>이메일</td><td><input type="email" id="mem_email" required/> *아이디@naver.com의 형식으로 써주세요. </td>
@@ -30,9 +30,8 @@
 		<tr>
 			<td><button type="submit" id="sub" disabled>회원 가입하기</button> <h5>아이디 중복검사 후 활성화됩니다.</h5></td>
 		</tr>	
-			 
-			 
 	</table>
+	<a href="./">뒤로가기</a>
 </form>
 </div>
 
@@ -63,11 +62,12 @@ document.querySelector("#sub").addEventListener("click",finalck);
 function memck(){
 	console.log("memck함수 실행");
 	let mem_id=document.querySelector("#mem_id").value;
+	let mem_nick=document.querySelector("#mem_nick").value;
 	let sub=document.querySelector("#sub");
 	$.ajax({
 		url:"check",
 		type:"post",
-		data:JSON.stringify({"mem_id":mem_id}),
+		data:JSON.stringify({"mem_id":mem_id,"mem_nick":mem_nick}),
 		contentType:"application/json; charset=UTF-8",
 		success:function(data){
 			alert(data.key);

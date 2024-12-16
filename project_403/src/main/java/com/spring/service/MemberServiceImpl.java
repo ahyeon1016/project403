@@ -15,6 +15,15 @@ public class MemberServiceImpl implements MemberService {
 	
 	
 	@Override
+	public void mem_nickname_change(Member member) {
+		memberRepository.mem_nickname_change(member);
+	}
+
+
+
+
+
+	@Override
 	public void mem_confirm(int mem_serial) {
 		memberRepository.mem_confirm(mem_serial);
 	}

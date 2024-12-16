@@ -5,12 +5,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.random.RandomGenerator;
-
 import org.springframework.stereotype.Repository;
-
 import com.spring.domain.Member;
+
 @Repository
 public class MemberRepositoryImpl implements MemberRepository {
 	
@@ -45,7 +42,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 		}catch (Exception e) {e.printStackTrace();}
 	}
 	
-	//정보 조회
+	//회원 id를 통한 정보 조회
 	@Override
 	public Member getMyInfo(String mem_id) {
 		System.out.println("셀렉"+mem_id);
@@ -106,7 +103,9 @@ public class MemberRepositoryImpl implements MemberRepository {
 			member.setMem_serial(rs.getInt("mem_serial"));
 			al.add(member);
 		}
-		
+		rs.close();
+		pstmt.close();
+		conn.close();
 		}catch(Exception e) {e.printStackTrace();}
 		return al;
 	}
@@ -123,41 +122,14 @@ public class MemberRepositoryImpl implements MemberRepository {
 			if(rs.next()) {
 				num=rs.getInt("count(*)");
 			}
+			rs.close();
+			pstmt.close();
+			conn.close();
 		}catch (Exception e) {e.printStackTrace();}
 		return num;
 	}
 	
-	//관리자 페이지에서 멤버 검색
-//	@Override
-//	public ArrayList<Member> search_admin(String search_data) {
-//		ArrayList<Member> al=new ArrayList<Member>();
-//		try {
-//			conn=DBConnection.getConnection();
-//			String sql="select * from Member where mem_id like ?";
-//			pstmt=conn.prepareStatement(sql);
-//			pstmt.setString(1, "%"+search_data+"%");
-//			rs=pstmt.executeQuery();
-//			
-//			while(rs.next()) {
-//				Member mb=new Member();
-//				mb.setMem_id(rs.getString("mem_id"));
-//				mb.setMem_nickName(rs.getString("mem_nickName"));
-//				mb.setMem_point(rs.getInt("mem_point"));
-//				mb.setMem_exp(rs.getInt("mem_exp"));
-//				mb.setMem_email(rs.getString("mem_email"));
-//				mb.setMem_date(rs.getDate("mem_date"));
-//				mb.setMem_serial(rs.getInt("mem_serial"));
-//				al.add(mb);
-//			}
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		
-//		
-//		return al;
-//	}
-	
+
 	//로그인 기능
 	@Override
 	public Member member_login(Member member) {
@@ -204,6 +176,8 @@ public class MemberRepositoryImpl implements MemberRepository {
 		pstmt.setDate(1, new Date(System.currentTimeMillis()));
 		pstmt.setString(2, member.getMem_id());
 		pstmt.executeUpdate();
+		pstmt.close();
+		conn.close();
 		}catch (Exception e) {e.printStackTrace();}
 	}
 	
@@ -221,6 +195,9 @@ public class MemberRepositoryImpl implements MemberRepository {
 			is_client=true;
 			member_log_date(member);
 		}
+		rs.close();
+		pstmt.close();
+		conn.close();
 		}
 		catch(Exception e) {e.printStackTrace();}
 		return is_client;
@@ -265,10 +242,14 @@ public class MemberRepositoryImpl implements MemberRepository {
 			mem_serial=rs.getInt("mem_serial");
 			System.out.println(mem_serial);
 		}
+		rs.close();
+		pstmt.close();
+		conn.close();
 		}catch(Exception e) {e.printStackTrace();}
 		return mem_serial;
 	}
 	
+	//이메일 인증 기능
 	@Override
 	public void mem_confirm(int mem_serial) {
 		try {
@@ -277,6 +258,8 @@ public class MemberRepositoryImpl implements MemberRepository {
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setInt(1, mem_serial);
 			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
 		}catch (Exception e) {e.printStackTrace();}
 		
 	}
@@ -309,12 +292,32 @@ public class MemberRepositoryImpl implements MemberRepository {
 		else{ pstmt.setString(4, member.getMem_profile_name());}
 		pstmt.setString(5, member.getMem_id());
 		pstmt.executeUpdate();
-		}catch (Exception e) {
+		pstmt.close();
+		conn.close();
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		
 	}
 	
 	
+	//닉네임 변경!
+	@Override
+	public void mem_nickname_change(Member member) {
+		try{
+			conn=DBConnection.getConnection();
+			String sql="update Member set mem_nickName=? where mem_id=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, member.getMem_nickName());
+			pstmt.setString(2, member.getMem_id());
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+		}catch(Exception e) {e.printStackTrace();}
+		
+	}
 
 	//회원 탈퇴 기능
 	@Override
@@ -326,7 +329,8 @@ public class MemberRepositoryImpl implements MemberRepository {
 			pstmt.setString(1, member.getMem_id());
 			pstmt.executeUpdate();
 			
-			
+			pstmt.close();
+			conn.close();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

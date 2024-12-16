@@ -49,6 +49,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.domain.Member;
+import com.spring.domain.Member_Item;
 import com.spring.service.MemberItemService;
 import com.spring.service.MemberService;
 
@@ -75,8 +76,6 @@ public class Membercontroller {
 	@GetMapping("/add")
 	public String add(@ModelAttribute Member member,Model model)
 	{	
-		
-		
 		return "member_add";
 	}
 	
@@ -88,13 +87,17 @@ public class Membercontroller {
 		String value=null;
 		Boolean isavail=false;
 		String regex = "^[a-zA-Z0-9]+$";
-		
+		String nick_pattern = "^[가-힣a-zA-Z0-9]+$";
 		System.out.println(map.get("mem_id"));
 		Member member=memberservice.getMyInfo((String)map.get("mem_id"));
 		if(member==null) {
 			 value="사용 가능한 아이디입니다.";
 			 isavail=true;
-			 if(map.get("mem_id").toString().startsWith("naver_")||map.get("mem_id").toString().startsWith("kakao_")||!(map.get("mem_id").toString().matches(regex))||map.get("mem_id").toString().length()<3) {
+			 if(map.get("mem_id").toString().startsWith("naver_")||
+					 map.get("mem_id").toString().startsWith("kakao_")||
+					 !(map.get("mem_id").toString().matches(regex))||
+					 (map.get("mem_id").toString().length()<3)||
+					 !(map.get("mem_nick").toString().matches(nick_pattern))) {
 					value="잘못된 형식입니다.";
 					isavail=false;
 				}
@@ -158,13 +161,14 @@ public class Membercontroller {
 	
 	//세션에 member_login에서 받은 멤버 정보 담으며 로그인하기.
 	@PostMapping("login")
-	public String login(@ModelAttribute("member") Member member,Model model,HttpServletRequest req) {
+	public String login(@ModelAttribute("member") Member member,HttpServletRequest req) {
 		HttpSession session=req.getSession();
 		member=memberservice.member_login(member);
-		
+		Member_Item mi=memberitemservice.mem_item_info(member.getMem_id());
 		if(member!=null) {
 			System.out.println("logiiiiiiiiiiiiiiiiiiiiin"+member.getMem_nickName());
 			session.setAttribute("member", member);
+			session.setAttribute("member_item", mi);
 			return "member_My_page";
 		}
 		else {
@@ -245,8 +249,10 @@ public class Membercontroller {
 	    if(memberservice.kakao_info(member)) {
 			//카카오톡에 정보가 존재할 경우
 	    	member=memberservice.getMyInfo(member.getMem_id());
+	    	Member_Item mi=memberitemservice.mem_item_info(member.getMem_id());
 	    	HttpSession session=req.getSession();
 	    	session.setAttribute("member", member);
+	    	session.setAttribute("member_item", mi);
 	    }else {
 	    	//아닐 경우
 	    	memberservice.addMember(member);
@@ -325,8 +331,10 @@ public class Membercontroller {
 		if(memberservice.naver_info(member)) { //이미 회원이라면?
 			System.out.println("회원 정보가 있어서 로그인할게용");
 			member=memberservice.getMyInfo(member.getMem_id());
+			Member_Item mi=memberitemservice.mem_item_info(member.getMem_id());
 			HttpSession session=req.getSession();
 			session.setAttribute("member", member);
+			session.setAttribute("member_item", mi);
 			
 		}else {
 			memberservice.addMember(member);
@@ -358,6 +366,62 @@ public class Membercontroller {
 			member=memberservice.getMyInfo(mem_id);
 			model.addAttribute(member);
 			return "member_update";
+	}
+	
+	//받은 회원 아이디를 가지고 아이템 페이지로 이동.
+	@PostMapping("item")
+	public String mem_item(@RequestParam String mem_id,Model model) {
+		Member_Item mi=memberitemservice.mem_item_info(mem_id);
+		model.addAttribute("mem_item",mi);
+		return "member_Items";
+	}
+
+	//model에 member dto를 넣고 닉네임 변경 페이지로 이동
+	@PostMapping("item/nick")
+	public String mem_nickname(@RequestParam String mem_id,Model model) {
+		System.out.println("닉네임 페이지의 멤버아이디"+mem_id);
+		Member mb=new Member();
+		mb=memberservice.getMyInfo(mem_id);
+		System.out.println("아이디가 있다~~~~~~~~~~~~~~~~~~~"+mb.getMem_id());
+		model.addAttribute("member", mb);
+		return "member_nick";
+	}
+	
+	//닉네임 변경을 눌렀을 때 기능
+	@PostMapping("item/nick/change")
+	public String mem_nick_change(@RequestParam String mem_id,HttpServletRequest req,Model model) {
+		String nick=(String)req.getParameter("nick");
+		//id를 통한 회원정보 조회
+		Member mb=memberservice.getMyInfo(mem_id);
+		//닉네임 변경 함수
+		mb.setMem_nickName(nick);
+		memberservice.mem_nickname_change(mb);
+		//아이템에서 닉변권 제거 함수
+		memberitemservice.nick_change(mem_id);
+		model.addAttribute("member",mb);
+		
+		return "member_My_page";
+	}
+	
+	//model에 Member dto를 넣고 닉네임 색상 변경 페이지로 이동
+	@PostMapping("item/font")
+	public String mem_font(@RequestParam String mem_id,Model model) {
+		Member_Item mi=new Member_Item();
+		mi=memberitemservice.mem_item_info(mem_id);
+		Member mb=memberservice.getMyInfo(mem_id);
+		model.addAttribute("member",mb);
+		model.addAttribute("member_item",mi);
+		return "member_font";
+	}
+	@PostMapping("item/font/change")
+	public String mem_font_change(@RequestParam String mem_id,HttpServletRequest req) {
+		Member_Item mi=new Member_Item();
+		String color=req.getParameter("color");
+		System.out.println(color);
+		mi=memberitemservice.mem_item_info(mem_id);
+		mi.setMem_color(color);
+		memberitemservice.color_change(mi);
+		return "member_My_page";
 	}
 	
 	//member_update 폼페이지에서 받은 데이터를 member 객체에 삽입 후 session을 종료해 다시 로그인 하게 만듬
@@ -435,11 +499,10 @@ public class Membercontroller {
 		String user_mail=(String)map.get("user_mail");
 		String user_id=(String)map.get("user_id");
 		System.out.println("이메일 접속 완료!!!!!!!!!!!!!!!!!"+user_mail);
-		String host="http://localhost:8080/member/email/checked";
+		String host="http://localhost:8080/project_403/member/email/checked";
 		String from="rlpl4033@gmail.com";
 		String to=user_mail;
 		int mem_serial=memberservice.mem_serial(user_mail,user_id);
-		//이메일을 통해서 시리얼코드를 검색하는 기능 필요.
 		String content="클릭하여 이메일 인증을 완료해주세요!\n"+host+"?mem_serial="+mem_serial;
 		SimpleMailMessage ms=new SimpleMailMessage();
 		ms.setTo(to);
@@ -449,9 +512,12 @@ public class Membercontroller {
 		sender.send(ms);
 		return returnmap;
 	}
+	
 	//이메일 인증
+	
 	@GetMapping("email/checked")
 	public String check_email(@RequestParam int mem_serial) {
+		System.out.println("이메일 인증 완료를 했다"+mem_serial);
 		memberservice.mem_confirm(mem_serial);
 		return "member_home";
 	}

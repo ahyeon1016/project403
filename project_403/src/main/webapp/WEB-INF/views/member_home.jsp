@@ -10,7 +10,8 @@
 </head>
 <body>
    <div class="container">
-   		
+   		<h1>&laquo; HELLO MEMBER HOME!!! &raquo; </h1>
+   	
        <%
        		Member member=(Member)session.getAttribute("member");
        	if(member==null){ %>

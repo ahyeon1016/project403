@@ -20,7 +20,7 @@
 <td>이메일:</td><td id="email">${member.getMem_email()}</td>
 </tr>
 <tr>
-<td>이메일 인증여부:</td><td >${member.isMem_confirmed()}</td><td id="conf"><button type="button" id="mailbut">이메일 인증하기</button></td>
+<td>이메일 인증여부:</td><td id="isconfirmed">${member.isMem_confirmed()}</td><td id="conf"><button type="button" id="mailbut">이메일 인증하기</button></td>
 </tr>
 <tr>
 <td>포인트:</td><td>${member.getMem_point()}</td>
@@ -36,8 +36,9 @@
 <script>
 	let mail=document.querySelector("#email");
 	let conf=document.querySelector("#conf");
-	if(mail.value==true){
-		conf.style.display="none";
+	let isconf=document.querySelector("#isconfirmed");
+	if(isconf.innerText=="true"){
+		document.querySelector("#mailbut").style.display="none";
 	}
 	document.querySelector("#mailbut").addEventListener("click",confirmm);
 	function confirmm(){

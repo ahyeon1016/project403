@@ -16,4 +16,5 @@ public interface MemberRepository {
 	int mem_num();
 	int mem_serial(String user_mail,String user_id);
 	void mem_confirm(int mem_serial);
+	void mem_nickname_change(Member member);
 }

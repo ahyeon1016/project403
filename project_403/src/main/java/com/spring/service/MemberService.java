@@ -16,4 +16,6 @@ public interface MemberService {
 	int mem_num();//전체 회원의 숫자
 	int mem_serial(String user_mail,String user_id);//이메일로 멤버 시리얼 조회
 	void mem_confirm(int mem_serial);//시리얼로 멤버 인증
+	void mem_nickname_change(Member member);
+	
 }
