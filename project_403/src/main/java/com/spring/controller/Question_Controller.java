@@ -417,7 +417,7 @@ public class Question_Controller {
 	@PostMapping("Q_updateSAQ")
 	public String Q_updateSAQ(@ModelAttribute Question question, HttpServletRequest request) {
 		System.out.println("==========================================");
-		System.out.println("컨트롤러 | Q_update() 도착");
+		System.out.println("컨트롤러 | Q_updateSAQ() 도착");
 		
 		//ModelAttribute로 데이터를 받은 DTO에서 이미지 파일을 처리
 		if(question.getQuestion_img().getSize()!=0) {
@@ -430,6 +430,47 @@ public class Question_Controller {
 		questionService.updateQuestion(question);
 		return "redirect:/Q/Q_all";
 	}
+	
+	//question_serial을 가지고 DB로 이동하여 일치하는 Question DTO를 가지고 온다.
+	@GetMapping("Q_updateCP/{question_serial}")
+	public String Q_updateCP_form(
+			@PathVariable String question_serial,
+			@ModelAttribute Question question,
+			Model model){
+		System.out.println("==========================================");
+		System.out.println("컨트롤러 | Q_updateCP() 도착");
+		//Question DTO를 구한 뒤에 전처리
+		question = questionService.getQuestionBySerial(question_serial);
+		//ans가 아닌 content를 split함
+		String[] content = question.getQuestion_content().split("\\|★\\|");
+		question.setQuestion_content(content[1]);
+		//model에 DTO및 배열변수 추가
+		model.addAttribute("content", content);
+		model.addAttribute("question", question);
+		//폼 페이지로 이동
+		return "Question_updateCP";
+	}
+	
+	//폼 페이지에서 입력받은 정보를 가지고 DB로 이동
+		@PostMapping("Q_updateCP")
+		public String Q_updateCP(@ModelAttribute Question question, HttpServletRequest request) {
+			System.out.println("==========================================");
+			System.out.println("컨트롤러 | Q_updateCP() 도착");
+			//content 처리
+			String text = request.getParameter("question_content_text");
+			question.setQuestion_content(text+"|★|"+question.getQuestion_content());
+			
+			//ModelAttribute로 데이터를 받은 DTO에서 이미지 파일을 처리
+			if(question.getQuestion_img().getSize()!=0) {
+				img_file_processing(question, request);
+			}else {
+				System.out.println("컨트롤러 | Q_updateCP() 이미지 파일이 없음");
+			}
+			
+			//변경된 DTO를 가지고 DB로 이동
+			questionService.updateQuestion(question);
+			return "redirect:/Q/Q_all";
+		}
 	
 	//선택된 과목의 고유 넘버를 만드는 함수로 모듈화 하였음.
  	private String sub_code_sum(String sub_name, String sub_chap) {

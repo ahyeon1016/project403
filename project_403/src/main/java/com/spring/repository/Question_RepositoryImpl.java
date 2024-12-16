@@ -284,7 +284,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 		}
 	}
-
+	
 	//DB의 question_num 컬럼의 최대값을 리턴하는 함수 | 사용한 함수 : addMCQ()
 	private String setQuestionNum() {
 		System.out.println("리파지토리 | setQuestionNum()도착");
@@ -316,7 +316,4 @@ public class Question_RepositoryImpl implements Question_Repository{
 		return String.valueOf(questionNum);
 	}
 
-
-
-	
 }
