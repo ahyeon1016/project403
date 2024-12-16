@@ -15,7 +15,7 @@
 		<p> <form:input path="question_serial" readonly="true"/>
 		<p> 문제분류 	<form:radiobutton path="question_id" value="CP" checked="checked"/>
 						<label for="CP">코딩</label>
-		<p> 문제 내용 <textarea name="question_content_text" rows="20" cols="70">${content[0]}</textarea>
+		<p> 문제 내용 <textarea name="question_content_text" rows="10" cols="70">${content[0]}</textarea>
 		<p> 코드 내용 <form:textarea path="question_content" rows="20" cols="70"/>
 		<p>	정답	<form:input path="question_ans"/>
 
