@@ -4,16 +4,42 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 	<meta charset="UTF-8">
 	<title>시험 제출 공간</title>
 </head>
-
+	<style>
+	.container {
+		display: flex;
+		justify-content: space-around;
+	}
+	
+	.test {
+		width: 30%;
+		border: 1px solid black;
+	}
+	
+	.input_wrap {
+		width:100%;
+		height: 500px;
+		border: 1px solid black;
+	}
+	
+	.input_list {
+		width:100%;
+		height: 100px;
+		background-color: yellow;
+		border: 1px solid black;
+	}
+	</style>	
 <body>
 testAdd 페이지
 <p><a href="../">Home</a>
-<form:form modelAttribute="NewTest" action="./testAdd">
-	<fieldset>
+<p><a href="../Q/main" onclick="window.open(this.href, '_blank', 'width=1000px, height=600px'); return false;">문제추가하기</a>
+<div class="container">
+	<form:form modelAttribute="NewTest" action="./testAdd" class="test">
 		<div>
 			작성자ID: <form:input path="mem_id" />
 		</div>		
@@ -24,7 +50,6 @@ testAdd 페이지
 			시험 비밀번호: <form:input path="test_pw" />
 		</div>
 		<div>
-			<!-- 공개 또는 비공개: <form:input path="test_openYN" /> -->
 			공개 / 비공개: 
 				<form:radiobutton path="test_openYN" value="Y" checked="checked" />Y
 				<form:radiobutton path="test_openYN" value="N" />N
@@ -46,16 +71,24 @@ testAdd 페이지
 	        			<form:option value="${chap.sub_chap}">${chap.sub_chap}</form:option>					
 					</c:forEach> -->
 				</form:select>
+		</div>
+		<div class="input_wrap">
+			시험지 작성 공간
+			<div class="input_list" draggable="true">
+				시험용
+			</div>
 		</div>		
 		<div>
 			<input type="submit" value="작성하기">
 		</div>
-	</fieldset>
-</form:form>
-
-<div>
-	기존 문제 불러오기:
-	<div id="qnaSelect"></div>
+	</form:form>
+	
+	<div class="test">
+		기존 문제 불러오기
+		<div id="qnaSelect" class="input_wrap">
+		
+		</div>
+	</div>
 </div>
 </body>
 
@@ -110,14 +143,34 @@ $("#chapSelect").on("change", function() {
 		dataType : 'json',
 		success: function (data) {
 			for(let i = 0; i < data.qnaList.length; i++) {
-				qnaHtml += "<div style='border: 1px solid black;'>" + data.qnaList[i].question_content + "</div><div>" + data.qnaList[i].question_ans + "</div>";
+				qnaHtml += "<div class='input_list' draggable='true'>";
+				qnaHtml += "<input type='hidden' name='serial[]' value='" + data.qnaList[i].question_serial + "'>";
+				qnaHtml += data.qnaList[i].question_content + "<br>";
+				for(let j = 0; j < data.ansList.length; j++) {
+					if(j != data.ansList.length-1) {
+						qnaHtml += j+1 + "번 : " + data.ansList[j] + ", ";
+					} else {
+						qnaHtml += "정답 : " + data.ansList[j];
+					}
+				}
+				qnaHtml += "</div>"
 			}
 			qnaSelect.append(qnaHtml);
 		},
 		error: function (data) {
 			alert("실패");
-		},		
+		},
 	});
+});
+
+// 드래그 앤 드랍 라이브러리
+const columns = document.querySelectorAll(".input_wrap");
+columns.forEach((column) => {
+  new Sortable(column, {
+    group: "shared",
+    animation: 150,
+    ghostClass: "blue-background-class"
+  });
 });
 </script>
 </html>

@@ -5,6 +5,7 @@ import java.util.List;
 import com.spring.domain.Question;
 import com.spring.domain.Subject;
 import com.spring.domain.Test;
+import com.spring.domain.TestSave;
 
 public interface TestService 
 {
@@ -33,5 +34,15 @@ public interface TestService
 
 	List<Subject> subValue(String sub_name);
 
-	List<Question> qnaSelectValue(String subCodeSum);	
+	List<Question> qnaSelectValue(String subCodeSum);
+
+	List<String> ansSelectValue(String subCodeSum);
+
+	void setTestSave(Test test, int testNumber);
+
+	int findTestNumber();
+
+	List<TestSave> getAllQuestion(Integer test_num);
+
+	List<Question> getQuestion(List<TestSave> testSave);
 }

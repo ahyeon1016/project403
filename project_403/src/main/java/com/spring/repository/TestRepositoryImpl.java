@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.spring.domain.Question;
 import com.spring.domain.Subject;
 import com.spring.domain.Test;
+import com.spring.domain.TestSave;
 
 @Repository
 public class TestRepositoryImpl implements TestRepository {
@@ -19,52 +21,6 @@ public class TestRepositoryImpl implements TestRepository {
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
-		
-	// 페이징 없이 All
-//	@Override
-//	public List<Test> getAllTestList() {
-//		
-//		List<Test> listOfTests = new ArrayList<Test>();
-//		
-//		try {
-//			// 데이터 베이스 연결객체 확보 
-//			conn = DBConnection.getConnection();
-//			// SQL쿼리 전송
-//			String sql = "SELECT * FROM Test";
-//			pstmt = conn.prepareStatement(sql);
-//			rs = pstmt.executeQuery();
-//			
-//			while(rs.next()) {
-//				Test test = new Test();
-//				
-//				test.setTest_num(rs.getInt(1));
-//				test.setMem_id(rs.getString(2));
-//				test.setTest_date(rs.getString(3));
-//				test.setTest_time(rs.getString(4));
-//				test.setTest_name(rs.getString(5));
-//				
-//				listOfTests.add(test);
-//			}			
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//		    try {
-//		    	if (rs != null) {
-//		    		rs.close();
-//		        }
-//		        if (pstmt != null) {
-//		            pstmt.close();
-//		        }
-//		        if (conn != null) {
-//		            conn.close();
-//		        }
-//		    } catch (Exception e) {
-//		        e.printStackTrace();
-//		    }
-//		}
-//		
-//		return listOfTests;
-//	}
 
 	// 페이징 처리 Read All
 	@Override
@@ -165,7 +121,7 @@ public class TestRepositoryImpl implements TestRepository {
 	public void setNewTest(Test test) {
 		
 		try {
-			//데이터 베이스 연결객체 확보 getOneTestList
+			//데이터 베이스 연결객체 확보 
 			conn = DBConnection.getConnection();
 			//SQL쿼리 전송
 			String sql = "INSERT INTO Test(mem_id, test_name, test_pw, test_openYN, sub_name, sub_chap) VALUES (?, ?, ?, ?, ?, ?)";
@@ -340,6 +296,7 @@ public class TestRepositoryImpl implements TestRepository {
 		return test;
 	}
 
+	// test_num에 해당하는 행 값을 가져오기
 	@Override
 	public Test getTestValue(Integer test_num) {
 		
@@ -475,7 +432,7 @@ public class TestRepositoryImpl implements TestRepository {
 	        pstmt.setString(1, subCodeSum);
 	        rs = pstmt.executeQuery();
 	        
-            while (rs.next()) {
+            while(rs.next()) {
             	Question question = new Question();
             	question.setQuestion_num(rs.getInt(1));
             	question.setQuestion_content(rs.getString(2));
@@ -507,6 +464,211 @@ public class TestRepositoryImpl implements TestRepository {
 		        e.printStackTrace();
 		    }
 		}
+		
+		return list;
+	}
+
+	// sub_code_sum(과목탭터코드) 값에 해당하는 question_ans(정답) 값을 Question 테이블에서 가져오기
+	@Override
+	public List<String> ansSelectValue(String subCodeSum) {
+		
+		List<String> list = new ArrayList<String>();
+		
+		try {
+			conn = DBConnection.getConnection();	    	
+	    	String sql = "SELECT question_ans FROM Question WHERE sub_code_sum=?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, subCodeSum);
+	        rs = pstmt.executeQuery();
+	        
+	        if(rs.next()) {
+	        	String ans = rs.getString(1);
+	        	String[] ansList = ans.split("\\|★\\|");
+	        	
+	        	list =  Arrays.asList(ansList);
+	        }
+	    } catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+		    try {
+		    	if (rs != null) {
+		    		rs.close();
+		        }
+		        if (pstmt != null) {
+		            pstmt.close();
+		        }
+		        if (conn != null) {
+		            conn.close();
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}
+		
+		return list;
+		}
+
+	// 새로 만들어진 test_num(시험번호) 와 serial(과목챕터코드) 값을 Test_Save 테이블에 저장
+	@Override
+	public void setTestSave(Test test, int testNumber) {
+		
+		String[] serial = test.getSerial();
+		
+		try {
+			//데이터 베이스 연결객체 확보 getOneTestList
+			conn = DBConnection.getConnection();
+			//SQL쿼리 전송
+			String sql = "INSERT INTO Test_Save(test_num, serial) VALUES (?, ?)";
+			pstmt = conn.prepareStatement(sql);
+			for(int i = 0; i < serial.length; i++) {
+				pstmt.setInt(1, testNumber);
+				pstmt.setString(2, serial[i]);
+				pstmt.executeUpdate();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+		    try {
+		        if (pstmt != null) {
+		            pstmt.close();
+		        }
+		        if (conn != null) {
+		            conn.close();
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}
+	}
+
+	// 현재 생성된 test_num(시험번호) 찾기
+	@Override
+	public int findTestNumber() {
+		
+		int testNumber = 0;
+		
+		try {
+			//데이터 베이스 연결객체 확보 
+			conn = DBConnection.getConnection();
+			//SQL쿼리 전송
+			String sql = "SELECT MAX(test_num) FROM Test";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				testNumber = rs.getInt(1);
+			}	
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+		    try {
+		    	if (rs != null) {
+		    		rs.close();
+		        }
+		        if (pstmt != null) {
+		            pstmt.close();
+		        }
+		        if (conn != null) {
+		            conn.close();
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}
+		
+		return testNumber;
+	}
+
+	// test_num(시험번호) 해당하는 serial(과목챕터코드) 찾기
+	@Override
+	public List<TestSave> getAllQuestion(Integer test_num) {
+		
+		List<TestSave> list = new ArrayList<TestSave>();
+		
+		try {
+			conn = DBConnection.getConnection();
+			String sql = "SELECT * FROM Test_Save WHERE test_num=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, test_num);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				TestSave testSave = new TestSave();
+				testSave.setTest_code(rs.getInt(1));
+				testSave.setTest_num(rs.getInt(2));
+				testSave.setSerial(rs.getString(3));
+				list.add(testSave);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+		    try {
+		    	if (rs != null) {
+		    		rs.close();
+		        }
+		        if (pstmt != null) {
+		            pstmt.close();
+		        }
+		        if (conn != null) {
+		            conn.close();
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}
+		
+		return list;
+	
+	}
+
+	// serial(과목챕터코드) 해당하는 문제를 Question 테이블에서 가져오기
+	@Override
+	public List<Question> getQuestion(List<TestSave> testSave) {
+		
+		List<Question> list = new ArrayList<Question>();
+		
+		try {
+			conn = DBConnection.getConnection();
+			for(int i = 0; i < testSave.size(); i++) {
+				String sql = "SELECT Q.* FROM Test_Save T LEFT JOIN Question Q ON T.serial = Q.question_serial "
+						+ "WHERE T.test_num=? AND T.serial=?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, testSave.get(i).getTest_num());
+				pstmt.setString(2, testSave.get(i).getSerial());
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					Question question = new Question();
+		        	question.setQuestion_num(rs.getInt(1));
+		        	question.setQuestion_content(rs.getString(2));
+		        	question.setQuestion_ans(rs.getString(3));
+		        	question.setQuestion_img_name(rs.getString(4));
+		        	question.setQuestion_plus(rs.getInt(5));
+		        	question.setQuestion_count(rs.getInt(6));
+		        	question.setSub_code_sum(rs.getString(7));
+		        	question.setMem_serial(rs.getInt(8));
+		        	question.setQuestion_serial(rs.getString(9));
+		        	question.setQuestion_id(rs.getString(10));
+		        	
+		            list.add(question);
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+		    try {
+		    	if (rs != null) {
+		    		rs.close();
+		        }
+		        if (pstmt != null) {
+		            pstmt.close();
+		        }
+		        if (conn != null) {
+		            conn.close();
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}		
 		
 		return list;
 	}

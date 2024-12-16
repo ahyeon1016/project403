@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.spring.domain.Question;
 import com.spring.domain.Subject;
 import com.spring.domain.Test;
+import com.spring.domain.TestSave;
 import com.spring.repository.TestRepository;
 
 @Repository
@@ -105,7 +106,45 @@ public class TestServiceImpl implements TestService {
 		List<Question> list = testRepository.qnaSelectValue(subCodeSum);
 		
 		return list;
-	}	
+	}
+
+	@Override
+	public List<String> ansSelectValue(String subCodeSum) {
+		
+		List<String> list = testRepository.ansSelectValue(subCodeSum);
+		
+		return list;
+	}
+
+	@Override
+	public void setTestSave(Test test, int testNumber) {
+		
+		testRepository.setTestSave(test, testNumber);
+	}
+
+	@Override
+	public int findTestNumber() {
+		
+		int testNumber = testRepository.findTestNumber();
+		
+		return testNumber;
+	}
+
+	@Override
+	public List<TestSave> getAllQuestion(Integer test_num) {
+		
+		List<TestSave> testSave = testRepository.getAllQuestion(test_num);
+		
+		return testSave;
+	}
+
+	@Override
+	public List<Question> getQuestion(List<TestSave> testSave) {
+		
+		List<Question> question = testRepository.getQuestion(testSave);
+		
+		return question;
+	}
 	
 	
 	

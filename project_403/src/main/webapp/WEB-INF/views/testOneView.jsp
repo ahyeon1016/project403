@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +25,12 @@ testOneView 페이지
 	챕터명: ${test.sub_chap}
 </div>
 <div>
-	문제: 
+	<c:forEach items="${allQuestion}" var="all" >
+		<p>------
+		<div>${all.question_content}</div>
+		<div>${all.question_ans}</div>
+		<p>------
+	</c:forEach>
 </div>
 <div>
 	조회수: ${test.test_hit}

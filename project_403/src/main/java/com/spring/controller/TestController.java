@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.spring.domain.Question;
 import com.spring.domain.Subject;
 import com.spring.domain.Test;
+import com.spring.domain.TestSave;
 import com.spring.service.Subject_Service;
 import com.spring.service.TestService;
 
@@ -66,11 +67,6 @@ public class TestController {
 		model.addAttribute("boardList", boardList);
 		// 페이징 처리 Read All
 		
-		// 페이징 없이 Read All
-//		List<Test> arr = testService.getAllTestList();		
-//		model.addAttribute("List", arr);
-		// 페이징 없이 Read All
-		
 		return "testAll";
 	}
 	
@@ -91,6 +87,9 @@ public class TestController {
 	public String testAddNew(@ModelAttribute("NewTest") Test test) {
 		
 		testService.setNewTest(test);
+		
+		int testNumber = testService.findTestNumber();
+		testService.setTestSave(test, testNumber);
 		
 		return "redirect:/test/testAll";
 	}
@@ -129,8 +128,14 @@ public class TestController {
 	public String testOneView(@RequestParam("Num") Integer test_num, Model model) {
 		
 		Test test = testService.getOneTestList(test_num);
+		List<TestSave> testSave = new ArrayList<TestSave>();
+		testSave = testService.getAllQuestion(test_num);
+		List<Question> allQuestion = new ArrayList<Question>();
+		allQuestion = testService.getQuestion(testSave);
+		
 		
 		model.addAttribute("test", test);
+		model.addAttribute("allQuestion", allQuestion);
 		
 		return "testOneView";
 	}
@@ -173,7 +178,7 @@ public class TestController {
 		return rusultMap;
 	}
 	
-
+	// 과목+챕터 선택시 해당 문제 출력 ajax
 	@RequestMapping(value="/qnaSelectRead", method=RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> qnaSelectRead(@RequestParam Map<String, Object> params) {
@@ -184,17 +189,12 @@ public class TestController {
 		String sub_chap = (String)params.get("sub_chap");
 		
 //		rusultMap.put("chapList", subjectService.getSubByName(sub_name));
-//		rusultMap.put("chapList", testService.subValue(sub_name));
-		
+//		rusultMap.put("chapList", testService.subValue(sub_name));		
 				
-		String subCodeSum = sub_code_sum(sub_name, sub_chap); // 아래에 있음
-		List<Question> qnaList = new ArrayList<Question>();		
-		qnaList = testService.qnaSelectValue(subCodeSum);
-		
-		
-		
+		String subCodeSum = sub_code_sum(sub_name, sub_chap);
 				
-		rusultMap.put("qnaList", qnaList);
+		rusultMap.put("qnaList", testService.qnaSelectValue(subCodeSum));
+		rusultMap.put("ansList", testService.ansSelectValue(subCodeSum));
 	    
 		return rusultMap;
 	}	
