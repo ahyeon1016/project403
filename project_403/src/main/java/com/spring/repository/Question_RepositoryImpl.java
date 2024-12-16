@@ -24,7 +24,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			conn = DBConnection.getConnection();
 			//쿼리전송
 			//question_serial 변수 생성
-			String question_serial = question.getSub_code_sum()+"_"+setQuestionNum();
+			String question_serial = question.getSub_code_sum()+"_"+addQuestionNum();
 			question.setQuestion_serial(question_serial);
 			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, 'MCQ', true)";
 			pstmt = conn.prepareStatement(SQL);
@@ -55,7 +55,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			conn = DBConnection.getConnection();
 			//쿼리전송
 			//question_serial 변수 생성
-			String question_serial = question.getSub_code_sum()+"_"+setQuestionNum();
+			String question_serial = question.getSub_code_sum()+"_"+addQuestionNum();
 			question.setQuestion_serial(question_serial);
 			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, 'SAQ', true)";
 			pstmt = conn.prepareStatement(SQL);
@@ -86,7 +86,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			conn = DBConnection.getConnection();
 			//쿼리전송
 			//question_serial 변수 생성
-			String question_serial = question.getSub_code_sum()+"_"+setQuestionNum();
+			String question_serial = question.getSub_code_sum()+"_"+addQuestionNum();
 			question.setQuestion_serial(question_serial);
 			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, 'CP', true)";
 			pstmt = conn.prepareStatement(SQL);
@@ -257,7 +257,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 		}
 	}
 
-	//Question 테이블에서 question_serial과 일치하는 DTO를 수정 (Update)
+	//Question 테이블에서 question_serial과 일치하는 DTO를 수정 (Create, Update)
 	@Override
 	public void updateQuestion(Question question) {
 		System.out.println("리파지토리 | updateQuestion() 도착");
@@ -268,15 +268,46 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//DB연결
 			conn = DBConnection.getConnection();
 			//쿼리 전송
-			String SQL = "UPDATE Question SET question_content=?, question_ans=?, question_img_name=? WHERE question_serial=?";
+			String question_serial = question.getSub_code_sum()+"_"+addQuestionNum(); 
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, ?, ?, NULL, ?, ?, true)";
 			pstmt = conn.prepareStatement(SQL);
+			System.out.println(question.getQuestion_content());
 			pstmt.setString(1, question.getQuestion_content());
 			pstmt.setString(2, question.getQuestion_ans());
 			pstmt.setString(3, question.getQuestion_img_name());
-			pstmt.setString(4, question.getQuestion_serial());
+			pstmt.setInt(4, question.getQuestion_count());
+			pstmt.setString(5, question.getSub_code_sum());
+			pstmt.setString(6, question_serial);
+			pstmt.setString(7, question.getQuestion_id());
 			
 			pstmt.executeUpdate();
-			System.out.println("리파지토리 | Question() 수정완료");
+			//수정 전 Question 숨김 처리
+			visibleQuestion(question); 
+			System.out.println("리파지토리 | Question 수정완료");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+	}
+	
+	//수정하기 전의 Question DTO의 question_visible 값을 false로 변경하는 함수
+	private void visibleQuestion(Question question) {
+		System.out.println("리파지토리 | visibleQuestion() 도착");
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리 전송
+			String SQL = "UPDATE Question SET question_visible=0 WHERE question_serial=?";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, question.getQuestion_serial());
+		
+			pstmt.executeUpdate();
+			System.out.println("리파지토리 | 수정하기 전 Question DTO 숨김 처리 완료");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -286,8 +317,8 @@ public class Question_RepositoryImpl implements Question_Repository{
 	}
 	
 	//DB의 question_num 컬럼의 최대값을 리턴하는 함수 | 사용한 함수 : addMCQ()
-	private String setQuestionNum() {
-		System.out.println("리파지토리 | setQuestionNum()도착");
+	private String addQuestionNum() {
+		System.out.println("리파지토리 | addQuestionNum()도착");
 		int questionNum = 0;
 		
 		Connection conn = null;
@@ -312,7 +343,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
 			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 		}
-		System.out.println("리파지토리 | setQuestionNum함수의 리턴값 : "+questionNum);
+		System.out.println("리파지토리 | addQuestionNum함수의 리턴값 : "+questionNum);
 		return String.valueOf(questionNum);
 	}
 
