@@ -34,6 +34,12 @@ public class QnA {
 	public void setQuestion_serial(String question_serial) {
 		this.question_serial = question_serial;
 	}
+	public int getComment_root() {
+		return comment_root;
+	}
+	public void setComment_root(int comment_root) {
+		this.comment_root = comment_root;
+	}
 	public int getComment_parent() {
 		return comment_parent;
 	}
@@ -76,12 +82,5 @@ public class QnA {
 	public void setComment_good(int comment_good) {
 		this.comment_good = comment_good;
 	}
-	public int getComment_root() {
-		return comment_root;
-	}
-	public void setComment_root(int comment_root) {
-		this.comment_root = comment_root;
-	}
-	
-	
+
 }
