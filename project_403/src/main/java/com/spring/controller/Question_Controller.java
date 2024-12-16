@@ -62,6 +62,7 @@ public class Question_Controller {
 	//객관식 문제 작성 폼 페이지로 이동
 	@GetMapping("/Q_addMCQ")
 	public String Q_addMCQ_form(@ModelAttribute Question question, Model model) {
+		System.out.println("==========================================");
 		ArrayList<Subject> sub_all = subjectService.getSubAll();
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
 		model.addAttribute("sub_all", sub_all);
@@ -73,6 +74,7 @@ public class Question_Controller {
 	//Question_addMCQ_form 페이지에서 입력받은 정보를 받아 처리 후에 DAO에 전달
 	@PostMapping("/Q_addMCQ")
 	public String Q_addMCQ(@ModelAttribute Question question, HttpServletRequest request) {
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addMCQ() 도착");
 		//전처리
 		//폼 페이지에서 select한 과목과 챕터를 가져와 DB에서 일치하는 DTO를 가져오는 작업
@@ -100,6 +102,7 @@ public class Question_Controller {
 	//주관식 문제 작성 폼 페이지로 이동
 	@GetMapping("Q_addSAQ")
 	public String Q_addSAQ_form(@ModelAttribute Question question, Model model) {
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addSAQ() 도착");
 		ArrayList<Subject> sub_all = subjectService.getSubAll();
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
@@ -111,6 +114,7 @@ public class Question_Controller {
 	//Question_addSAQ_form에서 받은 문제 정보를 받아 처리한 후에 DAO에 전달
 	@PostMapping("/Q_addSAQ")
 	public String Q_addSAQ(@ModelAttribute Question question, HttpServletRequest request) {
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addSAQ() 도착");
 		//선택한 과목과 챕터를 가져와 변수에 넣고 과목코드를 만드는 함수에 파라미터로 넘김
 		String sub_name = request.getParameter("name_select");
@@ -135,6 +139,7 @@ public class Question_Controller {
 	//코딩 문제를 만드는 폼 페이지로 이동
 	@GetMapping("Q_addCP")
 	public String Q_addCP_form(@ModelAttribute Question question, Model model){
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addCP_form() 도착");
 		ArrayList<Subject> sub_all = subjectService.getSubAll();
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
@@ -156,6 +161,7 @@ public class Question_Controller {
 	//코딩 문제를 만드는 폼 페이지로 이동
 	@PostMapping("Q_addCP")
 	public String Q_addCP(@ModelAttribute Question question, HttpServletRequest request){
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addCP() 도착");
 		System.out.println("컨트롤러 | 작성한 문제 내용 : \n"+question.getQuestion_content());
 		
@@ -189,6 +195,7 @@ public class Question_Controller {
 	@ResponseBody
 	@PostMapping("/Q_subNameByChap")
 	public HashMap<String, Object> Q_subNameByChap(@RequestBody HashMap<String, Object> map){
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_subNameByChap() 도착");
 		HashMap<String, Object> a = new HashMap<String, Object>();
 		return subjectService.subNameByValue(map);
@@ -197,6 +204,7 @@ public class Question_Controller {
 	//모든 문제를 확인할 수 있는 페이지로 이동
 	@GetMapping("/Q_all")
  	public String Q_all(Model model){
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_all() 도착");
 		ArrayList<Question>	question_all = questionService.getQuestionAll();
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
@@ -209,6 +217,7 @@ public class Question_Controller {
 	@ResponseBody
 	@PostMapping("/Q_search")
 	public HashMap<String, Object> Q_search(@RequestBody HashMap<String, Object> map){
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_search() 도착");
 		//Map에 저장된 sub_name과 sub_chap을 꺼내 과목코드로 변환
 		String sub_code = sub_code_sum((String)map.get("name"), (String)map.get("chap"));
@@ -224,6 +233,7 @@ public class Question_Controller {
 	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 뷰로 이동하는 함수
 	@GetMapping("Q_readMCQ/{question_serial}")
 	public String Q_readMCQ(@PathVariable String question_serial, Model model) {
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_readMCQ() 도착");
 		//파라미터로 받은 question_serial 변수를 가지고 DB로 이동
 		System.out.println("컨트롤러 | Q_readMCQ() 파라미터로 받은 값을 가지고 서비스의 getQuestionBySerial()호출");
@@ -240,6 +250,7 @@ public class Question_Controller {
 	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 뷰로 이동하는 함수
 	@GetMapping("Q_readSAQ/{question_serial}")
 	public String Q_readSAQ(@PathVariable String question_serial, Model model) {
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_readSAQ() 도착");
 		//파라미터로 받은 question_serial 변수를 가지고 DB로 이동
 		System.out.println("컨트롤러 | Q_readSAQ() 파라미터로 받은 값을 가지고 서비스의 getQuestionBySerial()호출");
@@ -252,7 +263,10 @@ public class Question_Controller {
 	
 	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 뷰로 이동하는 함수
 	@GetMapping("Q_readCP/{question_serial}")
-	public String Q_readCP(@PathVariable String question_serial, Model model) {
+	public String Q_readCP(
+			@PathVariable String question_serial, 
+			Model model) {
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_readCP() 도착");
 		//파라미터로 받은 question_serial 변수를 가지고 DB로 이동
 		Question question = questionService.getQuestionBySerial(question_serial);
@@ -268,6 +282,7 @@ public class Question_Controller {
 	//요청 파라미터로 question_serial, question_count, question_plus을 받아 전처리 후 DB로 가져가는 함수
 	@GetMapping("Q_plusCount")
 	public String Q_plusCount(HttpServletRequest request){
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_plusCount() 도착");
 		//전처리
 		String question_serial = request.getParameter("serial");
@@ -287,6 +302,7 @@ public class Question_Controller {
 	@ResponseBody
 	@PostMapping("Compile")
 	public HashMap<String, Object> Compile(@RequestBody HashMap<String, Object> map){
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Compile() 도착");
 		System.out.println(map.get("ans_input"));
 		//전처리
@@ -342,7 +358,11 @@ public class Question_Controller {
 	
 	//question_serial과 일치하는 Question DTO를 가지고 수정 페이지로 이동하는 함수
 	@GetMapping("Q_updateMCQ/{question_serial}")
-	public String Q_updateMCQ_form(@PathVariable String question_serial, @ModelAttribute Question question, Model model) {
+	public String Q_updateMCQ_form(
+			@PathVariable String question_serial, 
+			@ModelAttribute Question question, 
+			Model model) {
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_updateMCQ_form() 도착");
 		//question_serial을 통해 Question DTO를 가지고온 후에 model에 추가한다.
 		question = questionService.getQuestionBySerial(question_serial);
@@ -355,7 +375,10 @@ public class Question_Controller {
 	
 	//수정된 Question DTO를 가지고 DB로 이동하는 함수
 	@PostMapping("Q_updateMCQ")
-	public String Q_updateMCQ(@ModelAttribute Question question, HttpServletRequest request) {
+	public String Q_updateMCQ(
+			@ModelAttribute Question question, 
+			HttpServletRequest request) {
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_updateMCQ() 도착");
 		System.out.println(question.getQuestion_serial());
 		
@@ -370,14 +393,47 @@ public class Question_Controller {
 		}
 		
 		//변경된 DTO를 가지고 DB로 이동
-		questionService.updateMCQ(question);
+		questionService.updateQuestion(question);
 		
 		return "redirect:/Q/Q_all";
 	}
 	
+	//question_serial을 통해 Question DTO를 구하고 폼 페이지로 이동
+	@GetMapping("Q_updateSAQ/{question_serial}")
+	public String Q_updateSAQ_form(
+			@PathVariable String question_serial, 
+			@ModelAttribute Question question,
+			Model model){
+		System.out.println("==========================================");
+		System.out.println("컨트롤러 | Q_updateSAQ_form() 도착");
+		//Question DTO를 구한 뒤에 model에 추가
+		question = questionService.getQuestionBySerial(question_serial);
+		model.addAttribute("question", question);
+		//업데이트 폼 페이지 이동
+		return "Question_updateSAQ";
+	}	
+	
+	//폼 페이지에서 입력받은 정보를 가지고 DB로 이동
+	@PostMapping("Q_updateSAQ")
+	public String Q_updateSAQ(@ModelAttribute Question question, HttpServletRequest request) {
+		System.out.println("==========================================");
+		System.out.println("컨트롤러 | Q_update() 도착");
+		
+		//ModelAttribute로 데이터를 받은 DTO에서 이미지 파일을 처리
+		if(question.getQuestion_img().getSize()!=0) {
+			img_file_processing(question, request);
+		}else {
+			System.out.println("컨트롤러 | Q_updateSAQ() 이미지 파일이 없음");
+		}
+		
+		//변경된 DTO를 가지고 DB로 이동
+		questionService.updateQuestion(question);
+		return "redirect:/Q/Q_all";
+	}
+	
 	//선택된 과목의 고유 넘버를 만드는 함수로 모듈화 하였음.
-	private String sub_code_sum(String sub_name, String sub_chap) {
-		System.out.println("컨트롤러 | sub_code_sum() 도착");
+ 	private String sub_code_sum(String sub_name, String sub_chap) {
+ 		System.out.println("컨트롤러 | sub_code_sum() 도착");
 		Subject sub = new Subject();
 		sub.setSub_name(sub_name); 
 		sub.setSub_chap(sub_chap);

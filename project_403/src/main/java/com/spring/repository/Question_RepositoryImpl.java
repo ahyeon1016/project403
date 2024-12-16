@@ -259,8 +259,8 @@ public class Question_RepositoryImpl implements Question_Repository{
 
 	//Question 테이블에서 question_serial과 일치하는 DTO를 수정 (Update)
 	@Override
-	public void updateMCQ(Question question) {
-		System.out.println("리파지토리 | updateMCQ() 도착");
+	public void updateQuestion(Question question) {
+		System.out.println("리파지토리 | updateQuestion() 도착");
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -276,7 +276,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			pstmt.setString(4, question.getQuestion_serial());
 			
 			pstmt.executeUpdate();
-			System.out.println("리파지토리 | updateMCQ() 수정완료");
+			System.out.println("리파지토리 | Question() 수정완료");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

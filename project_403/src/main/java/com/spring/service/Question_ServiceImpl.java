@@ -57,8 +57,8 @@ public class Question_ServiceImpl implements Question_Service{
 	}
 
 	@Override
-	public void updateMCQ(Question question) {
-		System.out.println("서비스 | updateMCQ() 호출");
-		questionRepository.updateMCQ(question);
+	public void updateQuestion(Question question) {
+		System.out.println("서비스 | updateQuestion() 호출");
+		questionRepository.updateQuestion(question);
 	}
 }
