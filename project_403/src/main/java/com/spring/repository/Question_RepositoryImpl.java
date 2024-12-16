@@ -26,7 +26,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+setQuestionNum();
 			question.setQuestion_serial(question_serial);
-			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, 'MCQ')";
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, 'MCQ', true)";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, question.getQuestion_content());
 			pstmt.setString(2, question.getQuestion_ans());
@@ -57,7 +57,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+setQuestionNum();
 			question.setQuestion_serial(question_serial);
-			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, 'SAQ')";
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, 'SAQ', true)";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, question.getQuestion_content());
 			pstmt.setString(2, question.getQuestion_ans());
@@ -88,7 +88,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+setQuestionNum();
 			question.setQuestion_serial(question_serial);
-			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, 'CP')";
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, 'CP', true)";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, question.getQuestion_content());
 			pstmt.setString(2, question.getQuestion_ans());
@@ -114,12 +114,12 @@ public class Question_RepositoryImpl implements Question_Repository{
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		ResultSet rs = null;	
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
 			//쿼리 전송
-			String SQL = "SELECT * FROM Question ORDER BY sub_code_sum ASC";
+			String SQL = "SELECT * FROM Question WHERE question_visible=1 ORDER BY sub_code_sum ASC";
 			pstmt = conn.prepareStatement(SQL);
 			rs = pstmt.executeQuery();
 			//ResultSet를 통해 DTO를 ArrayList에 담는 작업
@@ -162,7 +162,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//DB연결
 			conn = DBConnection.getConnection();
 			//쿼리 전송
-			String SQL = "SELECT * FROM Question WHERE BINARY sub_code_sum=? ORDER BY sub_code_sum ASC";
+			String SQL = "SELECT * FROM Question WHERE BINARY sub_code_sum=? AND question_visible=1 ORDER BY sub_code_sum ASC";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, sub_code);
 			rs = pstmt.executeQuery();
@@ -205,7 +205,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//DB연결
 			conn = DBConnection.getConnection();
 			//쿼리 전송
-			String SQL = "SELECT * FROM Question WHERE BINARY question_serial=?";
+			String SQL = "SELECT * FROM Question WHERE BINARY question_serial=? AND question_visible=1";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, question_serial);
 			rs = pstmt.executeQuery();
