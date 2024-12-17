@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Repository;
 
@@ -45,6 +46,52 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		
 	}
 	
+	//DB에서 comment_parent와 comment_child가 0인 comment_root 컬럼을 모두 가져온다. (Read) 
+	@Override
+	public ArrayList<QnA> getCommentRootAll() {
+		System.out.println("리파지토리 | getCommentRootAll() 도착");
+		ArrayList<QnA> rootAll = new ArrayList<QnA>();
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리전송
+			String SQL = "SELECT * FROM QnA WHERE comment_parent=0 AND comment_child=0";
+			pstmt = conn.prepareStatement(SQL);
+			
+			rs =  pstmt.executeQuery();
+			//ResultSet에 담긴 데이터를 ArrayList에 추가
+			while(rs.next()) {
+				QnA qna = new QnA();
+				qna.setComment_num(rs.getInt(1));
+				qna.setMem_id(rs.getString(2));
+				qna.setQuestion_serial(rs.getString(3));
+				qna.setComment_root(rs.getInt(4));
+				qna.setComment_parent(rs.getInt(5));
+				qna.setComment_child(rs.getInt(6));
+				qna.setComment_title(rs.getString(7));
+				qna.setComment_content(rs.getString(8));
+				qna.setComment_date(rs.getTimestamp(9));
+				qna.setComment_hit(rs.getInt(10));
+				qna.setComment_good(rs.getInt(11));
+				
+				rootAll.add(qna);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		System.out.println("리파지토리 | getCommentRootAll() rootAll의 크기 : "+rootAll.size());
+		return rootAll;
+	}
+
 	//comment_root, comment_parent, comment_child의 최대값을 구하는 함수
 	private int getCommentDepth(String name) {
 		System.out.println("리파지토리 | getCommentDepth() 도착 "+name+"의 값 설정 시작");

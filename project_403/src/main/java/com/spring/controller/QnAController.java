@@ -1,5 +1,7 @@
 package com.spring.controller;
 
+import java.util.ArrayList;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,4 +50,17 @@ public class QnAController {
 		return "redirect:/QnA/main";
 	}
 	
+	@GetMapping("commentRootAll")
+	public String getCommentRootAll(Model model) {
+		System.out.println("==========================================");
+		System.out.println("컨트롤러 | getCommentRootAll() 도착");
+		
+		//DB로 이동하여 모든 comment_root 정보를 가져옴
+		ArrayList<QnA> rootAll = qnaService.getCommentRootAll();
+		
+		//모델에 저장
+		model.addAttribute("rootAll", rootAll);
+		
+		return "QnA_commentRootAll";
+	}
 }
