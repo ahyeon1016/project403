@@ -58,7 +58,9 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			//DB연결
 			conn = DBConnection.getConnection();
 			//쿼리전송
-			String SQL = "SELECT * FROM QnA WHERE comment_parent=0 AND comment_child=0";
+			String SQL = 
+					"SELECT * FROM QnA "
+					+ "WHERE comment_parent=0 AND comment_child=0";
 			pstmt = conn.prepareStatement(SQL);
 			
 			rs =  pstmt.executeQuery();
@@ -91,9 +93,9 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		return rootAll;
 	}
 
-	//
+	//comment_root와 일치하고 comment_parent와 comment_child가 0인 컬럼을 가져오는 함수
 	@Override
-	public QnA getCommentRootOne(int comment_root, int comment_hit) {
+	public QnA getCommentRootOne(int comment_root) {
 		System.out.println("리파지토리 | getCommentRootOne() 도착");
 		QnA qna = new QnA();
 		
@@ -104,8 +106,10 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			//DB연결
 			conn = DBConnection.getConnection();
 			//쿼리전송
-			commentHitUp(comment_root, comment_hit);
-			String SQL = "SELECT * FROM QnA WHERE comment_root=? AND comment_parent=0 AND comment_child=0";
+			commentHitUp(comment_root);
+			String SQL = 
+					"SELECT * FROM QnA "
+					+ "WHERE comment_root=? AND comment_parent=0 AND comment_child=0";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, comment_root);
 			
@@ -169,7 +173,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 	}
 	
 	//comment_hit(조회수) 추가 함수
-	private void commentHitUp(int comment_root, int comment_hit) {
+	private void commentHitUp(int comment_root) {
 		System.out.println("리파지토리 | commentHitUp() 도착");
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -177,10 +181,13 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			//DB연결
 			conn = DBConnection.getConnection();
 			//쿼리전송
-			String SQL = "UPDATE QnA SET comment_hit=? WHERE comment_root=? AND comment_parent=0 AND comment_child=0";
+			String SQL = 
+					"UPDATE QnA "
+					+ "SET comment_hit=comment_hit+1 "
+					+ "WHERE comment_root=? AND comment_parent=0 AND comment_child=0";
 			pstmt = conn.prepareStatement(SQL);
-			pstmt.setInt(1, comment_hit+1);
-			pstmt.setInt(2, comment_root);
+			//pstmt.setInt(1, comment_hit+1);
+			pstmt.setInt(1, comment_root);
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {

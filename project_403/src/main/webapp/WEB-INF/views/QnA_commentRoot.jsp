@@ -16,9 +16,20 @@
 	<p>${qna.getComment_content()}
 	<br>
 	<br>
-	<p>조회수 ${qna.getComment_hit()}  |  <button onclick="goodUp(${qna.getComment_good()})">추천</button> ${qna.getComment_good()}
+	<p>조회수 ${qna.getComment_hit()}  |  
+	<button onclick="goodUp(${qna.getComment_good()})">
+		<p>추천</p>
+		(<span id="good">${qna.getComment_good()}</span>)
+	</button> 
 	<hr>
 	<h3>댓글</h3>
 	<p>
+	<script>
+		let good = document.querySelector("#good");
+		function goodUp(count){
+			console.log(good.textContent);
+			good.textContent = parseInt(good.textContent)+1;
+		}
+	</script>
 </body>
 </html>

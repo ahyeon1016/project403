@@ -71,12 +71,11 @@ public class QnAController {
 	@GetMapping("commentRootOne")
 	public String getCommentRootOne(
 			@RequestParam int comment_root,
-			@RequestParam int comment_hit,
 			Model model) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | getCommentRootOne() 도착");
 		
-		QnA qna = qnaService.getCommentRootOne(comment_root, comment_hit);
+		QnA qna = qnaService.getCommentRootOne(comment_root);
 		model.addAttribute("qna", qna);
 		
 		return "QnA_commentRoot";

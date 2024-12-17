@@ -27,9 +27,9 @@ public class QnA_ServiceImpl implements QnA_Service{
 	}
 
 	@Override
-	public QnA getCommentRootOne(int comment_root, int comment_hit) {
+	public QnA getCommentRootOne(int comment_root) {
 		System.out.println("서비스 | getCommentRootOne() 호출");
-		return qnaRepository.getCommentRootOne(comment_root, comment_hit);	
+		return qnaRepository.getCommentRootOne(comment_root);	
 	}
 	
 	

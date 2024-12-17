@@ -32,8 +32,7 @@
 		<span>추천수 : <%=qna.getComment_good()%></span>
 		<br>
 		<a href="commentRootOne?
-				comment_root=<%=qna.getComment_root()%>&
-				comment_hit=<%=qna.getComment_hit()%>
+				comment_root=<%=qna.getComment_root()%>
 				">확인하기</a>
 		<hr>
 	<%
