@@ -13,19 +13,6 @@
 testAll 페이지
 <p><a href="../">Home</a>
 <div>
-	<!-- 시험 목록 보여주기(All) -->
-	<!-- <c:forEach items="${List}" var="test">
-		<div style="border: 1px solid black;">
-			<h3>${test.test_num}</h3>
-			<p>${test.mem_id}
-			<p>${test.test_time}
-			<p>${test.test_date}
-			<p>${test.test_name}
-			<p><a href="testUpdate?Num=${test.test_num}">수정</a>
-			<p><a href="testDelete?Num=${test.test_num}">삭제</a>
-		</div>
-	</c:forEach> -->
-	
 	<!-- 검색 -->
 	<div>				
 		<select name="items" class="txt">
@@ -69,9 +56,7 @@ testAll 페이지
 				</c:choose>
 			</a>
 		</c:forEach>
-	</div>
-	
-	
+	</div>	
 </div>
 </body>
 <script type="text/javascript">

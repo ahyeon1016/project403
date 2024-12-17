@@ -33,7 +33,18 @@
 		background-color: yellow;
 		border: 1px solid black;
 	}
-	</style>	
+	
+	/* 문제 자동 카운터 */
+	.list {
+    counter-reset: numbering;
+}
+
+	.list .item:before{
+    counter-increment: numbering; 
+    content: counter(numbering) "번";
+    margin-right: 10px;
+}
+</style>	
 <body>
 testAdd 페이지
 <p><a href="../">Home</a>
@@ -72,10 +83,10 @@ testAdd 페이지
 					</c:forEach> -->
 				</form:select>
 		</div>
-		<div class="input_wrap">
+		<div class="input_wrap list">
 			시험지 작성 공간
-			<div class="input_list" draggable="true">
-				시험용
+			<div class="input_list item" draggable="true">
+				test sample
 			</div>
 		</div>		
 		<div>
@@ -108,7 +119,7 @@ $("#subjectSelect").on("change", function() {
 			dataType : "json",
 	        <!-- 전송과 응답이 성공했을 경우의 작업을 설정 -->
 			success: function(data) {
-				chapterHtml += "<option selected value=''>ALL</option>";				
+				chapterHtml += "<option selected value=''>ALL</option>";		
 				for(let i = 0; i < data.chapList.length; i++) {
 					chapterHtml += "<option>" + data.chapList[i].sub_chap +"</option>";
 				}
@@ -143,7 +154,7 @@ $("#chapSelect").on("change", function() {
 		dataType : 'json',
 		success: function (data) {
 			for(let i = 0; i < data.qnaList.length; i++) {
-				qnaHtml += "<div class='input_list' draggable='true'>";
+				qnaHtml += "<div class='input_list item' draggable='true'>";
 				qnaHtml += "<input type='hidden' name='serial[]' value='" + data.qnaList[i].question_serial + "'>";
 				qnaHtml += data.qnaList[i].question_content + "<br>";
 				for(let j = 0; j < data.ansList.length; j++) {

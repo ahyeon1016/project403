@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.spring.domain.Question;
 import com.spring.domain.Subject;
 import com.spring.domain.Test;
-import com.spring.domain.TestSave;
 import com.spring.repository.TestRepository;
 
 @Repository
@@ -117,31 +116,9 @@ public class TestServiceImpl implements TestService {
 	}
 
 	@Override
-	public void setTestSave(Test test, int testNumber) {
+	public List<Question> getQuestion(Test test) {
 		
-		testRepository.setTestSave(test, testNumber);
-	}
-
-	@Override
-	public int findTestNumber() {
-		
-		int testNumber = testRepository.findTestNumber();
-		
-		return testNumber;
-	}
-
-	@Override
-	public List<TestSave> getAllQuestion(Integer test_num) {
-		
-		List<TestSave> testSave = testRepository.getAllQuestion(test_num);
-		
-		return testSave;
-	}
-
-	@Override
-	public List<Question> getQuestion(List<TestSave> testSave) {
-		
-		List<Question> question = testRepository.getQuestion(testSave);
+		List<Question> question = testRepository.getQuestion(test);
 		
 		return question;
 	}

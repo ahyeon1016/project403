@@ -1,6 +1,5 @@
 package com.spring.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.spring.domain.Question;
 import com.spring.domain.Subject;
 import com.spring.domain.Test;
-import com.spring.domain.TestSave;
 import com.spring.service.Subject_Service;
 import com.spring.service.TestService;
 
@@ -46,8 +44,7 @@ public class TestController {
 		}
 				
 		int total_record = testService.getListCount();
-		List<Test> boardList = new ArrayList<Test>();
-		boardList = testService.getBoardList(pageNum, limit);
+		List<Test> boardList = testService.getBoardList(pageNum, limit);
 		
 		int total_page;
 		
@@ -65,7 +62,6 @@ public class TestController {
 		model.addAttribute("total_page", total_page);
 		model.addAttribute("total_record",total_record);
 		model.addAttribute("boardList", boardList);
-		// 페이징 처리 Read All
 		
 		return "testAll";
 	}
@@ -74,8 +70,7 @@ public class TestController {
 	@GetMapping("/testAdd")
 	public String testAddForm(@ModelAttribute("NewTest") Test test, Model model)	{
 		
-		List<Subject> subList = new ArrayList<Subject>();
-		subList = testService.getSubList();
+		List<Subject> subList = testService.getSubList();
 		
 		model.addAttribute("subList", subList);
 		
@@ -87,9 +82,6 @@ public class TestController {
 	public String testAddNew(@ModelAttribute("NewTest") Test test) {
 		
 		testService.setNewTest(test);
-		
-		int testNumber = testService.findTestNumber();
-		testService.setTestSave(test, testNumber);
 		
 		return "redirect:/test/testAll";
 	}
@@ -128,11 +120,7 @@ public class TestController {
 	public String testOneView(@RequestParam("Num") Integer test_num, Model model) {
 		
 		Test test = testService.getOneTestList(test_num);
-		List<TestSave> testSave = new ArrayList<TestSave>();
-		testSave = testService.getAllQuestion(test_num);
-		List<Question> allQuestion = new ArrayList<Question>();
-		allQuestion = testService.getQuestion(testSave);
-		
+		List<Question> allQuestion = testService.getQuestion(test);
 		
 		model.addAttribute("test", test);
 		model.addAttribute("allQuestion", allQuestion);

@@ -11,6 +11,7 @@ public class Test
 	private String sub_chap; // 챕터명
 	private int test_hit; // 조회수
 	private String[] serial;
+	private boolean visible;
 	
 	// 기본 생성자
 	public Test() 
@@ -96,6 +97,14 @@ public class Test
 
 	public void setSerial(String[] serial) {
 		this.serial = serial;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 
 	
