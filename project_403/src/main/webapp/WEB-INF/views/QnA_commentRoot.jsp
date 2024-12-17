@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
 	HELLO COMMENT ROOT VIEW
@@ -17,7 +18,7 @@
 	<br>
 	<br>
 	<p>조회수 ${qna.getComment_hit()}  |  
-	<button onclick="goodUp(${qna.getComment_good()})">
+	<button onclick="goodUp()">
 		<p>추천</p>
 		(<span id="good">${qna.getComment_good()}</span>)
 	</button> 
@@ -26,9 +27,23 @@
 	<p>
 	<script>
 		let good = document.querySelector("#good");
-		function goodUp(count){
-			console.log(good.textContent);
+		function goodUp(){
 			good.textContent = parseInt(good.textContent)+1;
+			console.log(good.textContent);
+			/*$.ajax({
+				url : "",
+				type : "get",
+				contentType : "application/json",
+				data : ({
+					"count" : parseInt(good.textContent)+1
+				}),
+				success : function(data){
+					good.textContent = data.count;
+				},
+				error : function(data){
+					alert("조회수 증가 실패");
+				}
+			});*/
 		}
 	</script>
 </body>
