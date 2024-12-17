@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -66,5 +67,19 @@ public class QnAController {
 		return "QnA_commentRootAll";
 	}
 	
+	//comment_root와 일치하는 DTO를 가져오기 위해 DB로 이동하는 함수
+	@GetMapping("commentRootOne")
+	public String getCommentRootOne(
+			@RequestParam int comment_root,
+			@RequestParam int comment_hit,
+			Model model) {
+		System.out.println("==========================================");
+		System.out.println("컨트롤러 | getCommentRootOne() 도착");
+		
+		QnA qna = qnaService.getCommentRootOne(comment_root, comment_hit);
+		model.addAttribute("qna", qna);
+		
+		return "QnA_commentRoot";
+	}
 	
 }

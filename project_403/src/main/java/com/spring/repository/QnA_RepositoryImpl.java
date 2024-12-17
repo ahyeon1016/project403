@@ -91,6 +91,51 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		return rootAll;
 	}
 
+	//
+	@Override
+	public QnA getCommentRootOne(int comment_root, int comment_hit) {
+		System.out.println("리파지토리 | getCommentRootOne() 도착");
+		QnA qna = new QnA();
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리전송
+			commentHitUp(comment_root, comment_hit);
+			String SQL = "SELECT * FROM QnA WHERE comment_root=? AND comment_parent=0 AND comment_child=0";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setInt(1, comment_root);
+			
+			rs =  pstmt.executeQuery();
+			//ResultSet에 담긴 데이터를 DTO에 추가
+			if(rs.next()) {
+				qna.setComment_num(rs.getInt(1));
+				qna.setMem_id(rs.getString(2));
+				qna.setQuestion_serial(rs.getString(3));
+				qna.setComment_root(rs.getInt(4));
+				qna.setComment_parent(rs.getInt(5));
+				qna.setComment_child(rs.getInt(6));
+				qna.setComment_title(rs.getString(7));
+				qna.setComment_content(rs.getString(8));
+				qna.setComment_date(rs.getTimestamp(9));
+				qna.setComment_hit(rs.getInt(10));
+				qna.setComment_good(rs.getInt(11));
+			}
+			System.out.println("리파지토리 | getCommentRootAll() 처리 완료");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		
+		return qna;
+	}
+
 	//comment_root, comment_parent, comment_child의 최대값을 구하는 함수
 	private int getCommentDepth(String name) {
 		System.out.println("리파지토리 | getCommentDepth() 도착 "+name+"의 값 설정 시작");
@@ -123,4 +168,27 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		return depth;
 	}
 	
+	//comment_hit(조회수) 추가 함수
+	private void commentHitUp(int comment_root, int comment_hit) {
+		System.out.println("리파지토리 | commentHitUp() 도착");
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리전송
+			String SQL = "UPDATE QnA SET comment_hit=? WHERE comment_root=? AND comment_parent=0 AND comment_child=0";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setInt(1, comment_hit+1);
+			pstmt.setInt(2, comment_root);
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		System.out.println("리파지토리 | commentHitUp() 추가 완료");
+	}
 }

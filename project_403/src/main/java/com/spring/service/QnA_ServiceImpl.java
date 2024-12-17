@@ -25,6 +25,12 @@ public class QnA_ServiceImpl implements QnA_Service{
 		System.out.println("서비스 | getCommentRootAll() 호출");
 		return qnaRepository.getCommentRootAll();	
 	}
+
+	@Override
+	public QnA getCommentRootOne(int comment_root, int comment_hit) {
+		System.out.println("서비스 | getCommentRootOne() 호출");
+		return qnaRepository.getCommentRootOne(comment_root, comment_hit);	
+	}
 	
 	
 }
