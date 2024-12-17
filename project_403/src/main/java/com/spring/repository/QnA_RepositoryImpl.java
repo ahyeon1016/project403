@@ -34,7 +34,6 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			pstmt.setString(4, qna.getComment_title());
 			pstmt.setString(5, qna.getComment_content());
 			pstmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
-			
 			pstmt.executeUpdate();
 			System.out.println("리파지토리 | INSERT 성공");
 		} catch (Exception e) {

@@ -14,13 +14,19 @@
 	HELLO COMMENT ROOT ALL
 	<hr>
 	<%
-	for(QnA qna : rootAll){
+	for(int i=0; i<rootAll.size(); i++){
+		QnA qna = rootAll.get(i);
 	%>
 		<span>작성자 : <%=qna.getMem_id()%> | </span>
 		<span>질문 문제 고유 넘버 : <%=qna.getQuestion_serial()%> | </span>
-		<span>번호 <%=qna.getComment_root()%> </span>
+		<span>번호 <%=i+1%> </span>
 		<br>
-		<p>작성 날짜 : <%=qna.getComment_date()%>
+		<p>작성 날짜 : 
+		<span>
+		<%= (qna.getComment_date().getYear() + 1900)+"-" 
+		    +String.format("%02d", qna.getComment_date().getMonth() + 1)+"-"
+		    +String.format("%02d", qna.getComment_date().getDate()) %>
+		</span>
 		<h3>제목 : <%=qna.getComment_title()%></h3>
 		<p>조회수 : <%=qna.getComment_hit()%>
 		<span>추천수 : <%=qna.getComment_good()%></span>

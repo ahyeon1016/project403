@@ -1,5 +1,7 @@
 package com.spring.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
@@ -50,6 +52,7 @@ public class QnAController {
 		return "redirect:/QnA/main";
 	}
 	
+	//모든 comment_root정보를 가져오기 위해 DB로 이동하는 함수
 	@GetMapping("commentRootAll")
 	public String getCommentRootAll(Model model) {
 		System.out.println("==========================================");
@@ -57,10 +60,11 @@ public class QnAController {
 		
 		//DB로 이동하여 모든 comment_root 정보를 가져옴
 		ArrayList<QnA> rootAll = qnaService.getCommentRootAll();
-		
-		//모델에 저장
+		//모델에 저장		
 		model.addAttribute("rootAll", rootAll);
-		
+	
 		return "QnA_commentRootAll";
 	}
+	
+	
 }
