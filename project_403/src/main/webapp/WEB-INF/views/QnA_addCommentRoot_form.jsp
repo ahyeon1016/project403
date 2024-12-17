@@ -9,7 +9,7 @@
 <body>
 	HELLO ADD COMMENT ROOT!
 	<hr>
-	<form:form modelAttribute="qna" action="../addCommentRoot" method="post">
+	<form:form modelAttribute="qna" action="addCommentRoot" method="post">
 		<p> 문제 번호 : <form:input path="question_serial" readonly="true"/> 
 		<p> 제목 : <form:input path="comment_title"/>
 		<p> 내용 : <form:textarea path="comment_content"/>

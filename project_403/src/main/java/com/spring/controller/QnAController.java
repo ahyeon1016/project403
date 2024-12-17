@@ -28,14 +28,15 @@ public class QnAController {
 	}
 	
 	//comment_root작성 페이지로 이동
-	@GetMapping("/addCommentRoot/{question_serial}")
-	public String addCommentRoot_form(@PathVariable String question_serial, @ModelAttribute("qna") QnA qna) {
+	@GetMapping("/addCommentRoot")
+	public String addCommentRoot_form(@RequestParam String question_serial, @ModelAttribute("qna") QnA qna) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | addCommentRoot_form()도착");
 	    qna.setQuestion_serial(question_serial);
 		return "QnA_addCommentRoot_form";
 	}
 	
+	//폼 페이지에서 작성된 comment_root 정보를 가지고 DB로 이동 
 	@PostMapping("/addCommentRoot")
 	public String addCommentRoot(@ModelAttribute("qna") QnA qna) {
 		System.out.println("==========================================");
@@ -44,7 +45,7 @@ public class QnAController {
 		//qna를 가지고 DB로 이동
 		qnaService.addCommentRoot(qna);
 		
-		return "redirect:/?";
+		return "redirect:/QnA/main";
 	}
 	
 }
