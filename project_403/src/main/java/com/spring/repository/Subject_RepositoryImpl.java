@@ -204,7 +204,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//ResultSet에 데이터를 담아 처리
 			rs = pstmt.executeQuery();
 			String chap = subChapValue(subject);
-			if(rs.next()) {
+			while(rs.next()) {
 				subByChap.setSub_num(rs.getInt(1));
 				subByChap.setSub_name_code(rs.getInt(2));
 				subByChap.setSub_chap_code(rs.getInt(3));

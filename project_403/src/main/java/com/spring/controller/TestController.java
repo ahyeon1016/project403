@@ -1,6 +1,5 @@
 package com.spring.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.spring.domain.Question;
+import com.spring.domain.Subject;
 import com.spring.domain.Test;
+import com.spring.service.Subject_Service;
 import com.spring.service.TestService;
 
 @Controller
@@ -25,6 +27,9 @@ public class TestController {
 	
 	@Autowired
 	private TestService testService;
+	
+	@Autowired
+	private Subject_Service subjectService;
 	
 	// 시험지 전체보기
 	@GetMapping("/testAll")
@@ -39,8 +44,7 @@ public class TestController {
 		}
 				
 		int total_record = testService.getListCount();
-		List<Test> boardlist = new ArrayList<Test>();
-		boardlist = testService.getBoardList(pageNum, limit);
+		List<Test> boardList = testService.getBoardList(pageNum, limit);
 		
 		int total_page;
 		
@@ -57,20 +61,18 @@ public class TestController {
 		model.addAttribute("pageNum", pageNum);
 		model.addAttribute("total_page", total_page);
 		model.addAttribute("total_record",total_record);
-		model.addAttribute("boardlist", boardlist);
-		// 페이징 처리 Read All
-		
-		// 페이징 없이 Read All
-//		List<Test> arr = testService.getAllTestList();		
-//		model.addAttribute("List", arr);
-		// 페이징 없이 Read All
+		model.addAttribute("boardList", boardList);
 		
 		return "testAll";
 	}
 	
 	// 시험지 추가하기 양식 제공
 	@GetMapping("/testAdd")
-	public String testAddForm(@ModelAttribute("NewTest") Test test)	{
+	public String testAddForm(@ModelAttribute("NewTest") Test test, Model model)	{
+		
+		List<Subject> subList = testService.getSubList();
+		
+		model.addAttribute("subList", subList);
 		
 		return "testAdd";
 	}
@@ -118,8 +120,10 @@ public class TestController {
 	public String testOneView(@RequestParam("Num") Integer test_num, Model model) {
 		
 		Test test = testService.getOneTestList(test_num);
+		List<Question> allQuestion = testService.getQuestion(test);
 		
 		model.addAttribute("test", test);
+		model.addAttribute("allQuestion", allQuestion);
 		
 		return "testOneView";
 	}
@@ -129,17 +133,75 @@ public class TestController {
 	@ResponseBody
 	public Map<String, Object> testValue(@RequestParam("password") String password, @RequestParam("test_num") Integer test_num) {
         
-		Map<String, Object> response = new HashMap<>();
+		Map<String, Object> rusultMap = new HashMap<>();
 		
 		Test test = testService.getTestValue(test_num);
 		
 		if (test != null && test.getTest_pw().equals(password)) {
-	        response.put("success", true);
-	        response.put("test_num", test_num);
+			rusultMap.put("success", true);
+	        rusultMap.put("test_num", test_num);
 	    } else {
-	        response.put("success", false);
+	    	rusultMap.put("success", false);
 	    }
 	
-		return response;
+		return rusultMap;
 	}
+	
+	// 시험지 과목+챕터 select 작동 ajax
+	@RequestMapping(value="/subValue", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> subValue(@RequestParam Map<String, Object> params) {
+        
+		Map<String, Object> rusultMap = new HashMap<>();
+		
+		String sub_name = (String)params.get("sub_name");
+		
+		rusultMap.put("chapList", subjectService.getSubByName(sub_name));
+//		rusultMap.put("chapList", testService.subValue(sub_name));
+		
+//		List<Subject> chapList = new ArrayList<Subject>();		
+//		chapList = testService.subValue(sub_name);
+//		rusultMap.put("chapList", chapList);
+	    
+		return rusultMap;
+	}
+	
+	// 과목+챕터 선택시 해당 문제 출력 ajax
+	@RequestMapping(value="/qnaSelectRead", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> qnaSelectRead(@RequestParam Map<String, Object> params) {
+        
+		Map<String, Object> rusultMap = new HashMap<>();
+		
+		String sub_name = (String)params.get("sub_name");
+		String sub_chap = (String)params.get("sub_chap");
+		
+//		rusultMap.put("chapList", subjectService.getSubByName(sub_name));
+//		rusultMap.put("chapList", testService.subValue(sub_name));		
+				
+		String subCodeSum = sub_code_sum(sub_name, sub_chap);
+				
+		rusultMap.put("qnaList", testService.qnaSelectValue(subCodeSum));
+		rusultMap.put("ansList", testService.ansSelectValue(subCodeSum));
+	    
+		return rusultMap;
+	}	
+	
+//	여기서부터 나중에 삭제해야됨->
+	private String sub_code_sum(String sub_name, String sub_chap) {
+	      System.out.println("컨트롤러 | sub_code_sum() 도착");
+	      Subject sub = new Subject();
+	      sub.setSub_name(sub_name); 
+	      sub.setSub_chap(sub_chap);
+	      Subject return_sub = subjectService.getSubByChap(sub);
+	      //가져온 DTO에서 코드를 가져와 문자열로 캐스팅하여 과목의 고유 넘버를 만든다.
+	      String sub_name_code = String.valueOf(return_sub.getSub_name_code()); 
+	      String sub_chap_code = String.valueOf(return_sub.getSub_chap_code());
+	      String sub_code_sum = sub_name_code+"_"+sub_chap_code;
+	      //DTO에 SET
+	      return sub_code_sum;
+	   }
+//	<-여기까지 나중에 삭제해야됨
+	
+	
 }

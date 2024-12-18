@@ -10,6 +10,8 @@ public class Test
 	private String sub_name; // 과목명
 	private String sub_chap; // 챕터명
 	private int test_hit; // 조회수
+	private String[] serial;
+	private boolean visible;
 	
 	// 기본 생성자
 	public Test() 
@@ -18,11 +20,11 @@ public class Test
 	}
 
 	// 일반 생성자
-	public Test(String mem_id, String test_name) 
-	{
-		this.mem_id = mem_id;
-		this.test_name = test_name;
-	}
+//	public Test(String mem_id, String test_name) 
+//	{
+//		this.mem_id = mem_id;
+//		this.test_name = test_name;
+//	}
 
 	// getter + setter
 	public int getTest_num() {
@@ -84,8 +86,24 @@ public class Test
 	public String getSub_chap() {
 		return sub_chap;
 	}
-	
 	public void setSub_chap(String sub_chap) {
 		this.sub_chap = sub_chap;
 	}
+
+	public String[] getSerial() {
+		return serial;
+	}
+
+	public void setSerial(String[] serial) {
+		this.serial = serial;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+	
 }

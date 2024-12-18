@@ -13,7 +13,7 @@ public class QnA {
 	private String comment_content;		//질문 내용
 	private Date comment_date;			//작성날짜
 	private int comment_hit;			//조회수
-	private int comment_good;			//추천수
+	private int comment_good;		//좋아요
 	
 	//Getter() Setter()
 	public int getComment_num() {
