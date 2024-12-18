@@ -1,9 +1,13 @@
 package com.spring.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -172,14 +176,29 @@ public class TestController {
 	public Map<String, Object> qnaSelectRead(@RequestParam Map<String, Object> params) {
         
 		Map<String, Object> rusultMap = new HashMap<>();
+		List<Map<String, Object>> qnaList = new ArrayList<Map<String,Object>>();
 		
-		String sub_name = (String)params.get("sub_name");
-		String sub_chap = (String)params.get("sub_chap");
+		String json = params.get("paramList").toString();
+		ObjectMapper mapper = new ObjectMapper();
+		List<Map<String, Object>> paramList = null;
+		
+	    try {
+	    	String selectedSubject = (String)params.get("selectedSubject");
+	    	
+			paramList = mapper.readValue(json, new TypeReference<ArrayList<Map<String, Object>>>(){});
+			for(int i = 0; i < paramList.size(); i++) {
+				String sub_chap = (String)params.get("name");
+				
+				String subCodeSum = sub_code_sum(selectedSubject, sub_chap);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		
 //		rusultMap.put("chapList", subjectService.getSubByName(sub_name));
 //		rusultMap.put("chapList", testService.subValue(sub_name));		
 				
-		String subCodeSum = sub_code_sum(sub_name, sub_chap);
 				
 		rusultMap.put("qnaList", testService.qnaSelectValue(subCodeSum));
 		rusultMap.put("ansList", testService.ansSelectValue(subCodeSum));
@@ -202,6 +221,7 @@ public class TestController {
 	      return sub_code_sum;
 	   }
 //	<-여기까지 나중에 삭제해야됨
+	
 	
 	
 }

@@ -36,15 +36,15 @@
 	
 	/* 문제 자동 카운터 */
 	.list {
-    counter-reset: numbering;
-}
+		counter-reset: numbering;
+	}
 
 	.list .item:before{
-    counter-increment: numbering; 
-    content: counter(numbering) "번";
-    margin-right: 10px;
-}
-</style>	
+	    counter-increment: numbering; 
+	    content: counter(numbering) "번";
+	    margin-right: 10px;
+	}
+</style>
 <body>
 testAdd 페이지
 <p><a href="../">Home</a>
@@ -74,15 +74,15 @@ testAdd 페이지
 					</c:forEach>
 				</form:select>
 		</div>
-		<div>
-			챕터명: 
-				<form:select path="sub_chap" id="chapSelect">
-					<form:option value="" selected="true">카테고리를 먼저 선택해주세요.</form:option>
-					<!-- <c:forEach items="${chapList}" var="chap">
-	        			<form:option value="${chap.sub_chap}">${chap.sub_chap}</form:option>					
-					</c:forEach> -->
-				</form:select>
+		<div id="chapSelect">			 
+			챕터명: <input type="checkbox" class="chapSelect" value="All" />All
+			
+			
+				<!--<form:select path="sub_chap" id="chapSelect">
+ 
+				</form:select>-->
 		</div>
+		<input type="button" id="" value="문제보기">
 		<div class="input_wrap list">
 			시험지 작성 공간
 			<div class="input_list item" draggable="true">
@@ -109,48 +109,62 @@ $("#subjectSelect").on("change", function() {
 	let chapSelect = $("#chapSelect")
 	chapSelect.empty();
 	let chapterHtml = "";
+	
 	let param = {sub_name : $(this).val()};
 	
 	if ($(this).val() != "") {
 		$.ajax({
 			type: "POST", 
 			url: "subValue", 
-			data: param, 
+			data: param,
 			dataType : "json",
-	        <!-- 전송과 응답이 성공했을 경우의 작업을 설정 -->
+	       	// 전송과 응답이 성공했을 경우의 작업을 설정
 			success: function(data) {
-				chapterHtml += "<option selected value=''>ALL</option>";		
+				chapterHtml += "챕터명: <input type='checkbox' class='chapSelect' value='All' />All";
 				for(let i = 0; i < data.chapList.length; i++) {
-					chapterHtml += "<option>" + data.chapList[i].sub_chap +"</option>";
+					chapterHtml += "<input type='checkbox' class='chapSelect' value='" + data.chapList[i].sub_chap + "' />" + data.chapList[i].sub_chap;
 				}
 				chapSelect.append(chapterHtml);
 			},
-	        <!-- 작업 중 오류가 발생했을 경우에 수행할 작업을 설정 -->
+	        // 작업 중 오류가 발생했을 경우에 수행할 작업을 설정
 			error: function (data) {
 				alert("에러가 발생했습니다.");
 			}
 		});
 	} else {
-		chapterHtml += "<option selected value=''>카테고리를 먼저 선택해주세요.</option>";
+		chapterHtml += "<input type='checkbox' class='chapSelect' value='All' />All";
 		chapSelect.append(chapterHtml);
 	}
 });
 
-$("#chapSelect").on("change", function() {
+$(document).on('change', '.chapSelect', function() {
+	
+	setTimeout(function() {
+	
+	let chapSelectList = [];
+	for(let i = 0; i < $(".chapSelect:checked").length; i++) {
+		if($($(".chapSelect:checked")[i]).val() != "All") {
+			let chapSelectMap = {name : $($(".chapSelect:checked")[i]).val()};
+			
+			chapSelectList.push(chapSelectMap);
+		}
+	}
+	
+	let selectedSubject = $("#subjectSelect").val();
+	
+	let param = {
+			"paramList" : JSON.stringify(chapSelectList), 
+			"selectedSubject" : selectedSubject
+	};
 	
 	let qnaSelect = $("#qnaSelect");
 	qnaSelect.empty();
 	let qnaHtml = "";
-
-	let param = {
-			sub_name : $("#subjectSelect").val(),
-			sub_chap : $(this).val()
-	};
 	
 	$.ajax({
 		type: "POST", 
 		url: "qnaSelectRead", 
-		data: param, 
+		data: param,
 		dataType : 'json',
 		success: function (data) {
 			for(let i = 0; i < data.qnaList.length; i++) {
@@ -172,7 +186,29 @@ $("#chapSelect").on("change", function() {
 			alert("실패");
 		},
 	});
+	}, 500); // 500ms (0.5초) 지연
 });
+
+// All 체크시 전체 선택
+$(document).on('change', '.chapSelect[value="All"]', function() {
+       if ($(this).is(':checked')) {
+           $('.chapSelect:not([value="All"])').prop('checked', true);
+       } else {
+           $('.chapSelect:not([value="All"])').prop('checked', false);
+       }
+   });
+
+// All 체크시 전체 해제
+$(document).on('change', '.chapSelect:not([value="All"])', function() {
+       if ($(this).is(':checked')) {
+           $('.chapSelect[value="All"]').prop('checked', 
+               $('.chapSelect:not([value="All"])').length === 
+               $('.chapSelect:not([value="All"]):checked').length
+           );
+       } else {
+           $('.chapSelect[value="All"]').prop('checked', false);
+       }
+   });
 
 // 드래그 앤 드랍 라이브러리
 const columns = document.querySelectorAll(".input_wrap");

@@ -11,7 +11,7 @@ public class Test
 	private String sub_chap; // 챕터명
 	private int test_hit; // 조회수
 	private String[] serial;
-	private boolean visible;
+	private boolean visible; // 삭제시 감춤
 	
 	// 기본 생성자
 	public Test() 
