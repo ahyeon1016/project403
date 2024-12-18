@@ -1,5 +1,7 @@
 package com.spring.service;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,67 @@ public class MemberServiceImpl implements MemberService {
 	
 	
 	@Override
-	public Member social_login(Member member) {
-		return memberRepository.social_login(member);
+	public void mem_alarm_update(Member member) {
+		memberRepository.mem_alarm_update(member);
 	}
+
+
+
+
+
+	@Override
+	public void mem_alarm_add(String mem_id, String comment_id) {
+		memberRepository.mem_alarm_add(mem_id,comment_id);
+		
+	}
+
+
+
+
+
+	@Override
+	public void mem_nickname_change(Member member) {
+		memberRepository.mem_nickname_change(member);
+	}
+
+
+
+
+
+	@Override
+	public void mem_confirm(int mem_serial) {
+		memberRepository.mem_confirm(mem_serial);
+	}
+
+
+
+
+
+	@Override
+	public int mem_num() {
+		return memberRepository.mem_num();
+	}
+
+
+	
+
+
+	@Override
+	public int mem_serial(String user_mail,String user_id) {
+		return memberRepository.mem_serial(user_mail,user_id);
+	}
+
+
+
+
+
+	@Override
+	public ArrayList read_all_Member(int limit_num) {
+		return memberRepository.read_all_Member(limit_num);
+	}
+
+
+	
 
 
 	@Override
