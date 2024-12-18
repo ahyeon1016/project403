@@ -2,11 +2,13 @@ package com.spring.controller;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
+import org.codehaus.commons.compiler.CompileException;
+import org.codehaus.janino.SimpleCompiler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -300,53 +304,35 @@ public class Question_Controller {
 		System.out.println(map.get("ans_input"));
 		//전처리
         String code = (String) map.get("ans_input"); // 요청에서 코드 가져오기
-        HashMap<String, Object> return_map = new HashMap<>();
+        HashMap<String, Object> returnMap = new HashMap<>();
 
         try {
-            String fileName = "test.java";
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-                writer.write(code);
+            SimpleCompiler compiler = new SimpleCompiler();
+            compiler.cook(code); // 코드 컴파일
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PrintStream printStream = new PrintStream(outputStream);
+            PrintStream originalOut = System.out;
+            System.setOut(printStream);
+
+            try {
+                Class<?> clazz = compiler.getClassLoader().loadClass("test");
+                clazz.getDeclaredMethod("main", String[].class).invoke(null, (Object) new String[]{});
+            } finally {
+                System.setOut(originalOut);
             }
 
-            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            int result = compiler.run(null, null, null, fileName);
-
-            if (result == 0) {
-            	Process process = Runtime.getRuntime().exec("java test");
-            	BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
-
-                StringBuilder output = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    output.append(line);
-                }
-                return_map.put("success", true);
-                return_map.put("output", output.toString());
-            } else {
-                // 컴파일 에러 발생
-                StringBuilder errorOutput = new StringBuilder();
-                errorOutput.append("컴파일 에러 발생 (상태 코드: ").append(result).append("):\n");
-
-                // Diagnostics 수집
-                DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
-                try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null)) {
-                    Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjects(fileName);
-                    compiler.getTask(null, fileManager, diagnostics, null, null, compilationUnits).call();
-                }
-
-                for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
-                    errorOutput.append("오류: ").append(diagnostic.getMessage(null)).append("\n")
-                               .append("행: ").append(diagnostic.getLineNumber()).append("\n");
-                }
-                return_map.put("success", false);
-                return_map.put("output", errorOutput.toString());
-                return_map.put("errorCode", result); // 오류 코드 추가
-            }
+            returnMap.put("success", true);
+            returnMap.put("output", outputStream.toString(StandardCharsets.UTF_8));
+        } catch (CompileException e) {
+            returnMap.put("success", false);
+            returnMap.put("output", "컴파일 오류: " + e.getMessage());
         } catch (Exception e) {
-        	return_map.put("output", "오류 : " + e.getMessage());
+            returnMap.put("success", false);
+            returnMap.put("output", "실행 오류: " + e.getMessage());
         }
 
-        return return_map; // 결과 반환
+        return returnMap; // 결과 반환
     }
 	
 	//question_serial과 일치하는 Question DTO를 가지고 수정 페이지로 이동하는 함수
