@@ -15,6 +15,25 @@ public class MemberServiceImpl implements MemberService {
 	
 	
 	@Override
+	public void mem_alarm_update(Member member) {
+		memberRepository.mem_alarm_update(member);
+	}
+
+
+
+
+
+	@Override
+	public void mem_alarm_add(String mem_id, String comment_id) {
+		memberRepository.mem_alarm_add(mem_id,comment_id);
+		
+	}
+
+
+
+
+
+	@Override
 	public void mem_nickname_change(Member member) {
 		memberRepository.mem_nickname_change(member);
 	}

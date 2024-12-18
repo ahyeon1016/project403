@@ -28,11 +28,14 @@
 <tr>
 <td>경험치:</td><td>${member.getMem_exp()}</td>
 </tr>
+<tr>
+<td>마지막 접속일:</td><td>${member.getMem_date()}</td>
+</tr>
 
 </table>
 <button type="submit" >정보수정</button>
 </form>
-
+<a href="./">뒤로가기</a>
 <script>
 	let mail=document.querySelector("#email");
 	let conf=document.querySelector("#conf");

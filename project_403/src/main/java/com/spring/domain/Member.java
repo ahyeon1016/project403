@@ -1,5 +1,6 @@
 package com.spring.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +18,28 @@ public class Member {
 	private MultipartFile mem_profile; //프사
 	private String mem_profile_name; //프사이름
 	private Date mem_date; //마지막 접속날짜
+	private String mem_alarm;//알림
+	private ArrayList<String> alarm_list;//알림 리스트
 	
+	
+	
+	
+	public ArrayList<String> getAlarm_list() {
+		return alarm_list;
+	}
+	
+	public void setAlarm_list(ArrayList<String> alarm_list) {
+		this.alarm_list = alarm_list;
+	}
+
+
+
+	public String getMem_alarm() {
+		return mem_alarm;
+	}
+	public void setMem_alarm(String mem_alarm) {
+		this.mem_alarm = mem_alarm;
+	}
 	public MultipartFile getMem_profile() {
 		return mem_profile;
 	}

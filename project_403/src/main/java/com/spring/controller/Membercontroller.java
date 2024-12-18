@@ -65,6 +65,8 @@ public class Membercontroller {
 	
 	@Autowired
 	MailSender sender;
+
+	private String alarm;
 	
 	//기본 매핑
 	@GetMapping
@@ -87,7 +89,6 @@ public class Membercontroller {
 		String value=null;
 		Boolean isavail=false;
 		String regex = "^[a-zA-Z0-9]+$";
-		String nick_pattern = "^[가-힣a-zA-Z0-9]+$";
 		System.out.println(map.get("mem_id"));
 		Member member=memberservice.getMyInfo((String)map.get("mem_id"));
 		if(member==null) {
@@ -96,8 +97,7 @@ public class Membercontroller {
 			 if(map.get("mem_id").toString().startsWith("naver_")||
 					 map.get("mem_id").toString().startsWith("kakao_")||
 					 !(map.get("mem_id").toString().matches(regex))||
-					 (map.get("mem_id").toString().length()<3)||
-					 !(map.get("mem_nick").toString().matches(nick_pattern))) {
+					 (map.get("mem_id").toString().length()<3)) {
 					value="잘못된 형식입니다.";
 					isavail=false;
 				}
@@ -125,8 +125,14 @@ public class Membercontroller {
 			String pw=map.get("mem_pw").toString();
 			String pw_sub=map.get("mem_pw_sub").toString();
 			int pw_length=pw.length();
+			String nick_pattern = "^[가-힣a-zA-Z0-9]+$";
 			System.out.println(pw_length);
-			if((pw_length<=15&&pw_length>=3)&&(Pattern.matches(email_pattern, email))&&pw.equals(pw_sub)&&(!(map.get("mem_id").toString().startsWith("naver_")||map.get("mem_id").toString().startsWith("kakao_")))) { //형식에 맞게 입력했을 시 코드 실행
+			if((pw_length<=15&&pw_length>=3)
+					&&(Pattern.matches(email_pattern, email))
+					&&pw.equals(pw_sub)
+					&&(!(map.get("mem_id").toString().startsWith("naver_")
+					||map.get("mem_id").toString().startsWith("kakao_")))
+					||!(map.get("mem_nick").toString().matches(nick_pattern))) { //형식에 맞게 입력했을 시 코드 실행
 			Member member2=memberservice.getMyInfo((String)map.get("mem_id"));
 			if(member2==null) {
 				 value="회원가입 성공!";
@@ -463,7 +469,7 @@ public class Membercontroller {
 //			public void run() {
 //				System.out.println("되냐");
 				memberservice.member_delete(member);
-				
+				memberitemservice.item_bye(member);
 //			}
 //		};
 //		timer.schedule(tt, millis);// 타이머기능
@@ -514,7 +520,6 @@ public class Membercontroller {
 	}
 	
 	//이메일 인증
-	
 	@GetMapping("email/checked")
 	public String check_email(@RequestParam int mem_serial) {
 		System.out.println("이메일 인증 완료를 했다"+mem_serial);
@@ -522,7 +527,36 @@ public class Membercontroller {
 		return "member_home";
 	}
 	
-	
+	//알림 발동
+	@GetMapping("alarm")
+	public String active_alarm() {
+		memberservice.mem_alarm_add("qwer", "asdf");
+		return "member_home";
+	}
+	//알림 확인 및 삭제
+	@GetMapping("alarm/delete")
+	public String alarm_delete(@RequestParam int index,HttpServletRequest req) {
+		System.out.println(index);
+		ArrayList<String> arr=new ArrayList<String>();
+		HttpSession session=req.getSession(false);
+		Member member=(Member)session.getAttribute("member");
+		String mem_alarm=member.getMem_alarm();
+		System.out.println(member.getMem_alarm());
+		String[] mem_alarm_split=mem_alarm.split(",");
+		for(int i=0;i<mem_alarm_split.length;i++) {
+			arr.add(mem_alarm_split[i]);
+			System.out.println(arr.get(i));
+		}
+		arr.remove(index);
+		String alarm=String.join(",",arr);
+		System.out.println(alarm);
+		member.setMem_alarm(alarm);
+		member.setAlarm_list(arr);
+		memberservice.mem_alarm_update(member);
+		session.setAttribute("member", member);
+		
+		return "member_My_page";
+	}
 	//로그아웃
 	@GetMapping("logout")
 	public String logout(HttpSession session) {

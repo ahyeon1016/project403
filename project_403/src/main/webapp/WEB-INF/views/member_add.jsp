@@ -62,12 +62,11 @@ document.querySelector("#sub").addEventListener("click",finalck);
 function memck(){
 	console.log("memck함수 실행");
 	let mem_id=document.querySelector("#mem_id").value;
-	let mem_nick=document.querySelector("#mem_nick").value;
 	let sub=document.querySelector("#sub");
 	$.ajax({
 		url:"check",
 		type:"post",
-		data:JSON.stringify({"mem_id":mem_id,"mem_nick":mem_nick}),
+		data:JSON.stringify({"mem_id":mem_id}),
 		contentType:"application/json; charset=UTF-8",
 		success:function(data){
 			alert(data.key);
@@ -100,7 +99,7 @@ function finalck(event){
 			alert(data.key);
 			console.log(data.key);
 			if(data.key=="회원가입 성공!"){
-			window.location.href="/project_403";
+			window.location.href="./";
 			}
 		},
 		error:function(errorThrown){

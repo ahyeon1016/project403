@@ -47,7 +47,8 @@ public class MemberRepositoryImpl implements MemberRepository {
 	public Member getMyInfo(String mem_id) {
 		System.out.println("셀렉"+mem_id);
 		Member member=new Member();
-		
+		ArrayList<String> arr=new ArrayList<String>();
+
 		try {
 			conn=DBConnection.getConnection();
 			String sql="SELECT * FROM Member WHERE mem_id=?";
@@ -66,6 +67,16 @@ public class MemberRepositoryImpl implements MemberRepository {
 			member.setMem_confirmed(rs.getBoolean("mem_confirmed"));
 			member.setMem_serial(rs.getInt("mem_serial"));
 			member.setMem_profile_name(rs.getString("mem_profile_name"));
+			member.setMem_date(rs.getDate("mem_date"));
+			member.setMem_alarm(rs.getString("mem_alarm"));
+			if(rs.getString("mem_alarm")!=null) {
+				String alm=rs.getString("mem_alarm");
+				String[] almlist=alm.split(",");
+				for(int i=0;i<almlist.length;i++) {
+					arr.add(almlist[i]);
+				}
+			member.setAlarm_list(arr);
+			}
 			rs.close();
 			pstmt.close();
 			conn.close();
@@ -133,7 +144,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 	//로그인 기능
 	@Override
 	public Member member_login(Member member) {
-		
+		ArrayList<String> arr=new ArrayList<String>();
 		try{
 		conn=DBConnection.getConnection();
 		String sql="select * from member where mem_id=? and mem_pw=?";
@@ -153,6 +164,16 @@ public class MemberRepositoryImpl implements MemberRepository {
 			member.setMem_exp(rs.getInt("mem_exp"));
 			member.setMem_confirmed(rs.getBoolean("mem_confirmed"));
 			member.setMem_profile_name(rs.getString("mem_profile_name"));
+			member.setMem_date(rs.getDate("mem_date"));
+			member.setMem_alarm(rs.getString("mem_alarm"));
+			if(rs.getString("mem_alarm")!=null) {
+				String alm=rs.getString("mem_alarm");
+				String[] almlist=alm.split(",");
+				for(int i=0;i<almlist.length;i++) {
+					arr.add(almlist[i]);
+				}
+			member.setAlarm_list(arr);
+			}
 			member_log_date(member);
 		}else {
 			return null;
@@ -302,6 +323,32 @@ public class MemberRepositoryImpl implements MemberRepository {
 		
 	}
 	
+	//알림 생성
+	public void mem_alarm_add(String mem_id,String comment_id) {
+		Member member=getMyInfo(mem_id);
+		try {
+			conn=DBConnection.getConnection();
+			String sql="update member set mem_alarm=? where mem_id=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, member.getMem_alarm()+","+comment_id+"님이"+mem_id+"님의 글에 댓글을 달았습니다.");
+			pstmt.setString(2, mem_id);
+			pstmt.executeUpdate();
+		}catch(Exception e) {e.printStackTrace();}
+		
+	}
+	//알림 업데이트
+	public void mem_alarm_update(Member member) {
+		
+		try {
+			conn=DBConnection.getConnection();
+			String sql="update member set mem_alarm=? where mem_id=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, member.getMem_alarm());
+			pstmt.setString(2, member.getMem_id());
+			pstmt.executeUpdate();
+		}catch(Exception e) {e.printStackTrace();}
+	
+	}
 	
 	//닉네임 변경!
 	@Override
