@@ -2,6 +2,8 @@ package com.spring.service;
 
 import java.util.List;
 
+import com.spring.domain.Question;
+import com.spring.domain.Subject;
 import com.spring.domain.Test;
 
 public interface TestService 
@@ -26,4 +28,14 @@ public interface TestService
 	Test getOneTestList(Integer test_num);
 
 	Test getTestValue(Integer test_num);
+
+	List<Subject> getSubList();
+
+	List<Subject> subValue(String sub_name);
+
+	List<Question> qnaSelectValue(String subCodeSum);
+
+	List<String> ansSelectValue(String subCodeSum);
+
+	List<Question> getQuestion(Test test);
 }

@@ -32,6 +32,9 @@ testUpdate 페이지
 			과목명: <form:input path="sub_name" value="${test.sub_name}" />
 		</div>
 		<div>
+			챕터명: <form:input path="sub_chap" value="${test.sub_chap}" />
+		</div>
+		<div>
 			<input type="submit" value="전송">
 		</div>
 	</fieldset>

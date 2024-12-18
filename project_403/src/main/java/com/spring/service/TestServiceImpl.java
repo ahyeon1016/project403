@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.spring.domain.Question;
+import com.spring.domain.Subject;
 import com.spring.domain.Test;
 import com.spring.repository.TestRepository;
 
@@ -79,7 +81,47 @@ public class TestServiceImpl implements TestService {
 		Test test = testRepository.getTestValue(test_num);
 		
 		return test;
-	}	
+	}
+
+	@Override
+	public List<Subject> getSubList() {
+		
+		List<Subject> list = testRepository.getSubList();
+		
+		return list;
+	}
+
+	@Override
+	public List<Subject> subValue(String sub_name) {
+		
+		List<Subject> list = testRepository.subValue(sub_name);
+		
+		return list;
+	}
+
+	@Override
+	public List<Question> qnaSelectValue(String subCodeSum) {
+		
+		List<Question> list = testRepository.qnaSelectValue(subCodeSum);
+		
+		return list;
+	}
+
+	@Override
+	public List<String> ansSelectValue(String subCodeSum) {
+		
+		List<String> list = testRepository.ansSelectValue(subCodeSum);
+		
+		return list;
+	}
+
+	@Override
+	public List<Question> getQuestion(Test test) {
+		
+		List<Question> question = testRepository.getQuestion(test);
+		
+		return question;
+	}
 	
 	
 	

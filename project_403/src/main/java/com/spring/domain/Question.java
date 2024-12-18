@@ -14,6 +14,7 @@ public class Question {
 	private int mem_serial;				//멤버식별변수
 	private String question_serial;		//문제고유번호(과목코드+문제번호)
 	private String question_id;			//문제식별변수(분류 : 객관식, 주관식, 코딩)
+	private Boolean question_visible;	//문제 삭제(숨김) 여부
 	
 	//Getter(), Setter()
 	public int getQuestion_num() {
@@ -82,5 +83,10 @@ public class Question {
 	public void setQuestion_id(String question_id) {
 		this.question_id = question_id;
 	}
-	
+	public Boolean getQuestion_visible() {
+		return question_visible;
+	}
+	public void setQuestion_visible(Boolean question_visible) {
+		this.question_visible = question_visible;
+	}
 }
