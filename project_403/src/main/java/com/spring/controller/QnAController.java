@@ -95,8 +95,19 @@ public class QnAController {
 		System.out.println("comment_parent를 작성한 root번호 : "+map.get("comment_root"));
 		System.out.println("comment_parent의 내용 : "+map.get("comment_content"));
 		
-		map = qnaService.addCommentParent(map);
-		
+		map = qnaService.addCommentParent(map);		
 		return map;
+	}
+	
+	//페이지가 로딩될 때 그 페이지의 comment_root 정보를 가지고 데이터 베이스로 이동하는 함수
+	@ResponseBody
+	@PostMapping("/getCommentParent")
+	public HashMap<String, ArrayList<QnA>> getCommentParent(
+			@RequestBody HashMap<String, Object> map){
+		System.out.println("==========================================");
+		System.out.println("컨트롤러 | getCommentParent() 도착");
+		System.out.println(map.get("comment_root"));
+		HashMap<String, ArrayList<QnA>> returnMap = qnaService.getCommentParent((Integer)map.get("comment_root"));
+		return returnMap;
 	}
 }

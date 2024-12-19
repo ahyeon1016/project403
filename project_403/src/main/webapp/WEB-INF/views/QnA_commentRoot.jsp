@@ -12,9 +12,9 @@
 	<br>
 	<h2>${qna.getComment_title()}</h2>
 	<h4>${qna.getQuestion_serial()}</h4>
-	<p>게시글 번호 : ${qna.getComment_root()}
+	<p id="root">${qna.getComment_root()}</p>
 	<p>작성자 : ${qna.getMem_id()}
-	<p>${qna.getComment_date()}
+	<p id="comment_date">${qna.getComment_date()}</p>
 	<hr>
 	<p>${qna.getComment_content()}
 	<br>
@@ -52,36 +52,50 @@
 				}
 			});*/
 		}
-		
+		let root = document.querySelector("#root");
+		let comment_date = document.querySelector("#comment_date");
 		let comment_input = document.querySelector("#comment_input");
 		let comment = document.querySelector("#comment");
 		comment.addEventListener("load", comment_load());
 		function comment_load(){
+			let comment_root = parseInt(root.textContent);
 			console.log("페이지가 로드 되었습니다.");
+			let comment_date_format = new Date(comment_date.innerText.trim().replace(' ', 'T')).toLocaleString("ko-KR", {
+				timeZone: "Asia/Seoul"
+		    });
+			comment_date.innerText = comment_date_format;
+			console.log(comment_date_format);
 			$.ajax({
-				url : "",
-				type : "get",
+				url : "getCommentParent",
+				type : "POST",
 				contentType : "application/json",
-				data : ({
-					
+				data : JSON.stringify({
+					"comment_root" : comment_root
 				}),
-				success : function(){
-					
+				success : function(data){
+					console.log("성공");
+					console.log(data.list);
+					let list = data.list;
+					for(let i=0; i<list.length; i++){
+						let date = new Date(list[i].comment_date);
+						let formattedDate = date.toLocaleString("ko-KR", {
+						    timeZone: "Asia/Seoul"
+						});
+						comment.innerHTML += 
+							"<li>"+
+								"작성자 : "+list[i].mem_id+" | 작성시간 : "+formattedDate+"<br>"+
+								list[i].comment_content+
+							"</li>";
+					}
 				},
-				error : function(){
-					
+				error : function(data){
+					console.log("실패");
 				}
 			});
 		}
+		
 		/* 댓글 추가 */
-		function comment_submit(root, id, q_serial){
-			console.log(comment_input.value);
-			console.log(root+"|"+id);
-			comment.innerHTML += 
-				"<li>"+
-					"작성자 : "+id+"<br>"+
-					comment_input.value+
-				"</li>";
+		function comment_submit(root, id, q_serial){	
 			$.ajax({
 				url : "addCommentParent",
 				type : "POST",
@@ -94,7 +108,19 @@
 				}),
 				success : function(data){
 					console.log("성공");
-					alert(data.success);
+					let date_format = new Date(data.time.replace(' ', 'T')).toLocaleString("ko-KR", {
+						timeZone: "Asia/Seoul"
+				    });
+					if(data.success){
+						alert("댓글 작성에 성공했습니다.");
+						comment.innerHTML += 
+							"<li>"+
+								"작성자 : "+id+" | 작성시간 : "+date_format+"<br>"+
+								comment_input.value+
+							"</li>";
+					} else{
+						alert("댓글 작성에 실패했습니다.");
+					}
 				},
 				error : function(data){
 					console.log("실패");
