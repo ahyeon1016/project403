@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Repository;
 
@@ -93,7 +94,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		return rootAll;
 	}
 
-	//comment_root와 일치하고 comment_parent와 comment_child가 0인 컬럼을 가져오는 함수
+	//comment_root와 일치하고 comment_parent와 comment_child가 0인 컬럼을 가져오는 함수 (Read)
 	@Override
 	public QnA getCommentRootOne(int comment_root) {
 		System.out.println("리파지토리 | getCommentRootOne() 도착");
@@ -138,6 +139,54 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		}
 		
 		return qna;
+	}
+
+	//comment_parent를 DB에 추가하는 함수 (Create) 
+	@Override
+	public HashMap<String, Object> addCommentParent(HashMap<String, Object> map) {
+		System.out.println("리파지토리 | addCommentParent() 도착");
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리전송(Read)
+			String SQL_SELECT ="SELECT MAX(comment_parent)+1 FROM QnA WHERE comment_root=?";
+			pstmt = conn.prepareStatement(SQL_SELECT);
+			pstmt.setInt(1, (Integer) map.get("comment_root"));
+			
+			rs = pstmt.executeQuery();
+			int parent = 0;
+			if(rs.next()) {
+				parent = rs.getInt(1);
+			}
+			
+			//쿼리전송(Create)
+			String SQL_INSERT = "INSERT INTO QnA VALUES(NULL, ?, ?, ?, ?, 0, NULL, ?, ?, 0, 0)";
+			pstmt = conn.prepareStatement(SQL_INSERT);
+			pstmt.setString(1, (String) map.get("mem_id"));
+			pstmt.setString(2, (String) map.get("question_serial"));
+			pstmt.setInt(3, (Integer) map.get("comment_root"));
+			pstmt.setInt(4, parent);
+			pstmt.setString(5, (String) map.get("comment_content"));
+			pstmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
+			
+			pstmt.executeUpdate();
+			
+			System.out.println("리파지토리 | addCommentParent() comment_parent 추가 완료");
+			map.put("success", true);
+		} catch (Exception e) {
+			map.put("success", false);
+			e.printStackTrace();
+		} finally {
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		
+		return map;
 	}
 
 	//comment_root, comment_parent, comment_child의 최대값을 구하는 함수
@@ -198,4 +247,5 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		}
 		System.out.println("리파지토리 | commentHitUp() 추가 완료");
 	}
+
 }

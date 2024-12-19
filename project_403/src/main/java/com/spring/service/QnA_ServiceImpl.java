@@ -1,6 +1,7 @@
 package com.spring.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,12 @@ public class QnA_ServiceImpl implements QnA_Service{
 	public QnA getCommentRootOne(int comment_root) {
 		System.out.println("서비스 | getCommentRootOne() 호출");
 		return qnaRepository.getCommentRootOne(comment_root);	
+	}
+
+	@Override
+	public HashMap<String, Object> addCommentParent(HashMap<String, Object> map) {
+		System.out.println("서비스 | addCommentParent() 호출");
+		return qnaRepository.addCommentParent(map);
 	}
 	
 	
