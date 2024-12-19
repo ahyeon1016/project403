@@ -219,7 +219,6 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 				qna.setComment_child(rs.getInt(6));
 				qna.setComment_content(rs.getString(8));
 				qna.setComment_date(rs.getTimestamp(9));
-				System.out.println(rs.getTimestamp(9));
 				list.add(qna);
 			}
 			

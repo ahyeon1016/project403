@@ -85,7 +85,7 @@
 							"<li>"+
 								"작성자 : "+list[i].mem_id+" | 작성시간 : "+formattedDate+"<br>"+
 								list[i].comment_content+
-							"</li>";
+							"</li><button>댓글쓰기</button><br><br>";
 					}
 				},
 				error : function(data){
@@ -117,7 +117,7 @@
 							"<li>"+
 								"작성자 : "+id+" | 작성시간 : "+date_format+"<br>"+
 								comment_input.value+
-							"</li>";
+							"</li><button>댓글쓰기</button><br><br>";
 					} else{
 						alert("댓글 작성에 실패했습니다.");
 					}
