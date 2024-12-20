@@ -6,7 +6,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<<<<<<< HEAD
 <style>
 	body{
 		width : 70%;
@@ -16,23 +15,15 @@
 		
 	}
 </style>
-=======
->>>>>>> origin/shh
 </head>
 <body>
 	HELLO COMMENT ROOT VIEW
 	<br>
-<<<<<<< HEAD
 	<h2>${qna.getComment_title()}</h2>
 	<h4>${qna.getQuestion_serial()}</h4>
 	<p id="root">${qna.getComment_root()}</p>
 	<p>작성자 : ${qna.getMem_id()}
 	<p id="comment_date">${qna.getComment_date()}</p>
-=======
-	<h2>${qna.getComment_title()}</h3>
-	<h4>${qna.getQuestion_serial()}</h4>
-	<p>${qna.getComment_date()}
->>>>>>> origin/shh
 	<hr>
 	<p>${qna.getComment_content()}
 	<br>
@@ -44,16 +35,12 @@
 	</button> 
 	<hr>
 	<h3>댓글</h3>
-<<<<<<< HEAD
 	<textarea id="comment_input"rows="10" cols="60" placeholder="내용을 입력해 주세요."></textarea>
 	<br>
 	<button onclick="comment_submit(${qna.getComment_root()}, '유저', '${qna.getQuestion_serial()}')">입력</button>
 	<hr>
 	<ul id="comment">
 	</ul>
-=======
-	<p>
->>>>>>> origin/shh
 	<script>
 		let good = document.querySelector("#good");
 		function goodUp(){
@@ -74,7 +61,6 @@
 				}
 			});*/
 		}
-<<<<<<< HEAD
 		let root = document.querySelector("#root");
 		let comment_date = document.querySelector("#comment_date");
 		let comment_input = document.querySelector("#comment_input");
@@ -291,8 +277,6 @@
 				}
 			});
 		}
-=======
->>>>>>> origin/shh
 	</script>
 </body>
 </html>
