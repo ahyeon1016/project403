@@ -210,12 +210,13 @@ public class TestController {
 		String json = params.get("paramList").toString();
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Object>> paramList = null;
-		 
+
 	    try {
 	    	String selectedSubject = (String)params.get("selectedSubject");
 	    	
 			paramList = mapper.readValue(json, new TypeReference<ArrayList<Map<String, Object>>>(){});
 			for(int i = 0; i < paramList.size(); i++) {
+
 				String sub_chap = (String)paramList.get(i).get("name");
 				System.out.println(sub_chap);
 				String subCodeSum = sub_code_sum(selectedSubject, sub_chap);
@@ -234,8 +235,7 @@ public class TestController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
+				
 //		rusultMap.put("chapList", subjectService.getSubByName(sub_name));
 //		rusultMap.put("chapList", testService.subValue(sub_name));		
 				
