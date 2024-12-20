@@ -294,6 +294,39 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		return map;
 	}
 
+	//DB에서 comment_child의 content 값을 변경하므로써 지우는 함수(Update)
+	@Override
+	public void removeCommentParent(HashMap<String, Object> map) {
+		System.out.println("리파지토리 | removeCommentParent() 도착");
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리전송(Create)
+			String SQL = "UPDATE QnA "
+					+ "SET comment_content='pDel' "
+					+ "WHERE mem_id=? AND question_serial=? AND comment_root=? "
+					+ "AND comment_parent=? AND comment_child=0";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, (String)map.get("mem_id"));
+			pstmt.setString(2, (String)map.get("question_serial"));
+			pstmt.setInt(3, (Integer)map.get("comment_root"));
+			pstmt.setInt(4, (Integer)map.get("comment_parent"));
+
+			pstmt.executeUpdate();
+			System.out.println("리파지토리 | removeCommentParent() UPDATE 성공");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		
+		
+	}
+	
 	//comment_root, comment_parent, comment_child의 최대값을 구하는 함수
 	private int getCommentDepth(String name) {
 		System.out.println("리파지토리 | getCommentDepth() 도착 "+name+"의 값 설정 시작");

@@ -120,7 +120,21 @@ public class QnAController {
 		System.out.println("컨트롤러 | addCommentChild() 도착");
 		
 		map = qnaService.addCommentChild(map);
+		return map;
+	}
+
+	//ajax로 parent를 지우기 위한 데이터를 받고 DB로 이동하는 함수
+	@ResponseBody
+	@PostMapping("removeCommentParent")
+	public HashMap<String, Object> removeCommentParent(
+			@RequestBody HashMap<String, Object> map){
+		System.out.println("==========================================");
+		System.out.println("컨트롤러 | removeCommentParent() 도착");
+		
+		qnaService.removeCommentParent(map);
 		
 		return map;
 	}
+
+
 }

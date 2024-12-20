@@ -6,6 +6,15 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<style>
+	body{
+		width : 70%;
+		margin : 0 auto;
+		padding : 100px;
+		border : 1px solid black;
+		
+	}
+</style>
 </head>
 <body>
 	HELLO COMMENT ROOT VIEW
@@ -81,23 +90,35 @@
 						let formattedDate = date.toLocaleString("ko-KR", {
 						    timeZone: "Asia/Seoul"
 						});
-						if(list[i].comment_child==0){
+						if(list[i].comment_content=="pDel"){
 							comment.innerHTML += 
 								"<li>"+
-									"작성자 : "+list[i].mem_id+" | 작성시간 : "+formattedDate+"<br>"+
-									list[i].comment_content+"<br>"+
+									"삭제된 댓글입니다."+
+									"<ul></ul>"+
+								"</li>";
+						}
+						else if(list[i].comment_child==0){
+							comment.innerHTML += 
+								"<li>"+
+									"<p>작성자 : "+list[i].mem_id+" | 작성시간 : "+formattedDate+"<br>"+
+									list[i].comment_content+"</p>"+
 									"<textarea></textarea>"+
 									"<button onclick='child_input(this, `"+
-									list[i].question_serial+"`,"+list[i].comment_root+","+
-									list[i].comment_parent+", `유저`"+
+										list[i].question_serial+"`,"+list[i].comment_root+","+
+										list[i].comment_parent+", `유저`"+
 									")'>댓글쓰기</button>"+
+									"<button onclick='deleteParent(this, "+
+										list[i].comment_root+", "+list[i].comment_parent+", `"+
+										list[i].question_serial+"`,"+"`유저`"+
+									")'>삭제하기</button>"+
 									"<ul></ul>"+
 								"</li>";
 						}else{
 							comment.lastElementChild.lastElementChild.innerHTML += 
 								"<li>"+
-									"작성자 : "+list[i].mem_id+" | 작성시간 : "+formattedDate+"<br>"+
-									list[i].comment_content+"<br>"+
+									"<p>작성자 : "+list[i].mem_id+" | 작성시간 : "+formattedDate+"<br>"+
+									list[i].comment_content+"</p>"+
+									"<button>삭제하기</button>"+
 								"</li>"+
 								"<br>";
 						}
@@ -131,13 +152,14 @@
 						alert("댓글 작성에 성공했습니다.");
 						comment.innerHTML += 
 							"<li>"+
-								"작성자 : "+id+" | 작성시간 : "+date_format+"<br>"+
+								"<p>작성자 : "+id+" | 작성시간 : "+date_format+"</p>"+
 								comment_input.value+"<br>"+
 								"<textarea></textarea>"+
 								"<button onclick='child_input(this, `"+
-								data.question_serial+"`,"+data.comment_root+","+
-								data.comment_parent+", `유저`"+
+									data.question_serial+"`,"+data.comment_root+","+
+									data.comment_parent+", `유저`"+
 								")'>댓글쓰기</button>"+
+								"<button>삭제하기</button>"+
 								"<ul></ul>"+
 							"</li>";
 					} else{
@@ -174,9 +196,43 @@
 					console.log(data);
 					element.parentElement.lastElementChild.innerHTML+=
 						"<li>"+
-							"작성자 : "+id+" | 작성시간 : "+date_format+"<br>"+
+							"<p>작성자 : "+id+" | 작성시간 : "+date_format+"</p>"+
 							child+
+							"<button>삭제하기</button>"+
 						"</li><br>";
+				},
+				error: function(data){
+					console.log("실패");
+				}
+			});
+		}
+		
+		function deleteParent(element, root, parent, q_serial, id){
+			console.log("comment_parent 제거버튼");
+			console.log(root);
+			console.log(parent);
+			console.log(q_serial);
+			console.log(id);
+			$.ajax({
+				url: "removeCommentParent",
+				type: "POST",
+				contentType: "application/json",
+				data: JSON.stringify({
+					"comment_root" : root,
+					"comment_parent" : parent,
+					"question_serial" : q_serial,
+					"mem_id" : id
+				}),
+				success: function(data){
+					for(let i=0; i<3; i++){
+						console.log(element.parentElement.children[0]);
+						element.parentElement.removeChild(element.parentElement.children[0]);
+					}
+				
+					let newChild = document.createElement('li');
+			        newChild.innerHTML = '삭제된 댓글입니다.';
+			  
+					element.parentElement.replaceChild(newChild ,element.parentElement.children[0]);
 				},
 				error: function(data){
 					console.log("실패");

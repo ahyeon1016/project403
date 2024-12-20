@@ -50,6 +50,12 @@ public class QnA_ServiceImpl implements QnA_Service{
 		System.out.println("서비스 | addCommentChild() 호출");
 		return qnaRepository.addCommentChild(map);
 	}
+
+	@Override
+	public void removeCommentParent(HashMap<String, Object> map) {
+		System.out.println("서비스 | removeCommentParent() 호출");
+		qnaRepository.removeCommentParent(map);
+	}
 	
 	
 }
