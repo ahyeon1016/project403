@@ -212,6 +212,8 @@ public class TestRepositoryImpl implements TestRepository {
 				test.setSub_name(rs.getString(6));
 				test.setSub_chap(rs.getString(7));
 				test.setTest_hit(rs.getInt(8));
+				String serial=rs.getString(9);
+				test.setSerial(serial.split(","));
 			}	
 		} catch(Exception e) {
 			e.printStackTrace();

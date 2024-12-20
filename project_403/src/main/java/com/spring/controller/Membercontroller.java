@@ -66,7 +66,6 @@ public class Membercontroller {
 	@Autowired
 	MailSender sender;
 
-	private String alarm;
 	
 	//기본 매핑
 	@GetMapping
