@@ -2,11 +2,19 @@ package com.spring.controller;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,6 +28,8 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
+import org.codehaus.janino.ClassBodyEvaluator;
+import org.codehaus.janino.SimpleCompiler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -292,62 +302,63 @@ public class Question_Controller {
 	}
 	
 	//CP 문제를 JSON으로 받아서 컴파일한 후에 결과를 리턴
-	@ResponseBody
-	@PostMapping("/Compile")
-	public HashMap<String, Object> Compile(@RequestBody HashMap<String, Object> map){
-		System.out.println("==========================================");
-		System.out.println("컨트롤러 | Compile() 도착");
-		System.out.println(map.get("ans_input"));
-		//전처리
-        String code = (String) map.get("ans_input"); // 요청에서 코드 가져오기
-        HashMap<String, Object> return_map = new HashMap<>();
+		@ResponseBody
+		@PostMapping("/Compile")
+		public HashMap<String, Object> Compile(@RequestBody HashMap<String, Object> map){
+			System.out.println("==========================================");
+			System.out.println("컨트롤러 | Compile() 도착");
+			System.out.println(map.get("ans_input"));
+			//전처리
+	        String code = (String) map.get("ans_input"); // 요청에서 코드 가져오기
+	        HashMap<String, Object> return_map = new HashMap<>();
 
-        try {
-            String fileName = "test.java";
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-                writer.write(code);
-            }
+	        try {
+	            String fileName = "test.java";
+	            try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+	                writer.write(code);
+	            }
 
-            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            int result = compiler.run(null, null, null, fileName);
+	            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+	            int result = compiler.run(null, null, null, fileName);
 
-            if (result == 0) {
-            	Process process = Runtime.getRuntime().exec("java test");
-            	BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
+	            if (result == 0) {
+	            	Process process = Runtime.getRuntime().exec("java test");
+	            	BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
 
-                StringBuilder output = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    output.append(line);
-                }
-                return_map.put("success", true);
-                return_map.put("output", output.toString());
-            } else {
-                // 컴파일 에러 발생
-                StringBuilder errorOutput = new StringBuilder();
-                errorOutput.append("컴파일 에러 발생 (상태 코드: ").append(result).append("):\n");
+	                StringBuilder output = new StringBuilder();
+	                String line;
+	                while ((line = reader.readLine()) != null) {
+	                    output.append(line);
+	                }
+	                return_map.put("success", true);
+	                return_map.put("output", output.toString());
+	            } else {
+	                // 컴파일 에러 발생
+	                StringBuilder errorOutput = new StringBuilder();
+	                errorOutput.append("컴파일 에러 발생 (상태 코드: ").append(result).append("):\n");
 
-                // Diagnostics 수집
-                DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
-                try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null)) {
-                    Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjects(fileName);
-                    compiler.getTask(null, fileManager, diagnostics, null, null, compilationUnits).call();
-                }
+	                // Diagnostics 수집
+	                DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
+	                try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null)) {
+	                    Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjects(fileName);
+	                    compiler.getTask(null, fileManager, diagnostics, null, null, compilationUnits).call();
+	                }
 
-                for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
-                    errorOutput.append("오류: ").append(diagnostic.getMessage(null)).append("\n")
-                               .append("행: ").append(diagnostic.getLineNumber()).append("\n");
-                }
-                return_map.put("success", false);
-                return_map.put("output", errorOutput.toString());
-                return_map.put("errorCode", result); // 오류 코드 추가
-            }
-        } catch (Exception e) {
-        	return_map.put("output", "오류 : " + e.getMessage());
-        }
+	                for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
+	                    errorOutput.append("오류: ").append(diagnostic.getMessage(null)).append("\n")
+	                               .append("행: ").append(diagnostic.getLineNumber()).append("\n");
+	                }
+	                return_map.put("success", false);
+	                return_map.put("output", errorOutput.toString());
+	                return_map.put("errorCode", result); // 오류 코드 추가
+	            }
+	        } catch (Exception e) {
+	        	return_map.put("output", "오류 : " + e.getMessage());
+	        }
 
-        return return_map; // 결과 반환
-    }
+	        return return_map; // 결과 반환
+	    }
+
 	
 	//question_serial과 일치하는 Question DTO를 가지고 수정 페이지로 이동하는 함수
 	@GetMapping("/Q_updateMCQ/{question_serial}")

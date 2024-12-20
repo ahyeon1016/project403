@@ -135,7 +135,12 @@
             <artifactId>javax.inject</artifactId>
             <version>1</version>
         </dependency>
-    	
+    	<!-- JANINO -->
+    	<dependency>
+		    <groupId>org.codehaus.janino</groupId>
+		    <artifactId>janino</artifactId>
+		    <version>3.1.0</version>
+		</dependency>
   </dependencies>
   
   

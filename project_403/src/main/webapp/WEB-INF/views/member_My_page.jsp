@@ -46,6 +46,12 @@
                         <i class="fas fa-user-edit me-2"></i>아이템
                     </button>
                 </form>
+			<div class="d-flex flex-column align-items-center">
+                <form action="/project_403/fnote/notelist?mem_id=${member.getMem_id()}" method="post" class="mb-3">
+                    <button type="submit" class="btn btn-primary btn-custom">
+                        <i class="fas fa-user-edit me-2"></i>정리노트
+                    </button>
+                </form>
 
 
                 <form action="/project_403/member/delete?mem_id=${member.getMem_id()}" method="post" class="mb-3">
