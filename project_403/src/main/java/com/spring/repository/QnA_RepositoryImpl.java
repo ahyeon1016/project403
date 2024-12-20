@@ -205,7 +205,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			//DB연결
 			conn = DBConnection.getConnection();
 			//쿼리전송(Read)
-			String SQL ="SELECT * FROM QnA WHERE comment_root=? AND NOT comment_parent=0";
+			String SQL ="SELECT * FROM QnA WHERE comment_root=? AND NOT comment_parent=0 AND comment_child=0";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, comment_root);
 			
@@ -234,7 +234,62 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		return returnMap;
 	}
 
-	//comment_root, comment_parent, comment_child의 최대값을 구하는 함수
+	//commit_child를 DB에 추가하는 함수 (Create)
+	@Override
+	public HashMap<String, Object> addCommentChild(HashMap<String, Object> map) {
+		System.out.println("리파지토리 | addCommentChild() 도착");
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리전송(Read)
+			String SQL_SELECT =
+					"SELECT MAX(comment_child)+1 "
+					+ "FROM QnA "
+					+ "WHERE comment_root=? AND comment_parent=?";
+			pstmt = conn.prepareStatement(SQL_SELECT);
+			pstmt.setInt(1, (Integer) map.get("comment_root"));
+			pstmt.setInt(2, (Integer) map.get("comment_parent"));
+			
+			rs = pstmt.executeQuery();
+			int child = 0;
+			if(rs.next()) {
+				child = rs.getInt(1);
+			}
+			System.out.println("리파지토리 | addCommentChild() Read 완료");
+			
+			//쿼리전송(Create)
+			Timestamp stamp = new Timestamp(System.currentTimeMillis());
+			String SQL_INSERT = "INSERT INTO QnA VALUES(NULL, ?, ?, ?, ?, ?, NULL, ?, ?, 0, 0)";
+			pstmt = conn.prepareStatement(SQL_INSERT);
+			pstmt.setString(1, (String) map.get("mem_id"));
+			pstmt.setString(2, (String) map.get("question_serial"));
+			pstmt.setInt(3, (Integer) map.get("comment_root"));
+			pstmt.setInt(4, (Integer) map.get("comment_parent"));
+			pstmt.setInt(5, child);
+			pstmt.setString(6, (String) map.get("comment_content"));
+			pstmt.setTimestamp(7, stamp);
+			
+			pstmt.executeUpdate();
+			
+			System.out.println("리파지토리 | addCommentChild() comment_child 추가 완료");
+			map.put("time", stamp.toString());
+			map.put("success", true);
+		} catch (Exception e) {
+			map.put("success", false);
+			e.printStackTrace();
+		} finally {
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		
+		return map;
+	}
+
 	//comment_root, comment_parent, comment_child의 최대값을 구하는 함수
 	private int getCommentDepth(String name) {
 		System.out.println("리파지토리 | getCommentDepth() 도착 "+name+"의 값 설정 시작");
@@ -266,9 +321,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		
 		return depth;
 	}
-	
-	//comment_hit(조회수) 추가 함수
-	
+		
 	//comment_hit(조회수) 추가 함수
 	private void commentHitUp(int comment_root) {
 		System.out.println("리파지토리 | commentHitUp() 도착");

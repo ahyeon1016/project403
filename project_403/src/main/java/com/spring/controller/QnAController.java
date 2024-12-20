@@ -110,4 +110,17 @@ public class QnAController {
 		HashMap<String, ArrayList<QnA>> returnMap = qnaService.getCommentParent((Integer)map.get("comment_root"));
 		return returnMap;
 	}
+	
+	//ajax로 mem_id, root, parent, question_serial, child 데이터를 받아 DB로 이동하는 함수
+	@ResponseBody
+	@PostMapping("/addCommentChild")
+	public HashMap<String, Object> addCommentChild(
+			@RequestBody HashMap<String, Object> map){
+		System.out.println("==========================================");
+		System.out.println("컨트롤러 | addCommentChild() 도착");
+		
+		map = qnaService.addCommentChild(map);
+		
+		return map;
+	}
 }

@@ -84,8 +84,14 @@
 						comment.innerHTML += 
 							"<li>"+
 								"작성자 : "+list[i].mem_id+" | 작성시간 : "+formattedDate+"<br>"+
-								list[i].comment_content+
-							"</li><button>댓글쓰기</button><br><br>";
+								list[i].comment_content+"<br>"+
+								"<textarea></textarea>"+
+								"<button onclick='child_input(this, `"+
+								list[i].question_serial+"`,"+list[i].comment_root+","+
+								list[i].comment_parent+", `유저`"+
+								")'>댓글쓰기</button>"+
+							"</li>"+
+							"<br><br>";
 					}
 				},
 				error : function(data){
@@ -112,17 +118,56 @@
 						timeZone: "Asia/Seoul"
 				    });
 					if(data.success){
+						console.log(data);
 						alert("댓글 작성에 성공했습니다.");
 						comment.innerHTML += 
 							"<li>"+
 								"작성자 : "+id+" | 작성시간 : "+date_format+"<br>"+
 								comment_input.value+
-							"</li><button>댓글쓰기</button><br><br>";
+							"</li>"+
+							
+							"<br><br>";
 					} else{
 						alert("댓글 작성에 실패했습니다.");
 					}
 				},
 				error : function(data){
+					console.log("실패");
+				}
+			});
+		}
+		
+		function child_input(element, q_serial,root, parent, id){
+			
+			let child = element.previousElementSibling.value;
+			console.log(child+" "+q_serial+" "+root+" "+parent+" "+id);
+			console.log(element.parentElement);
+			$.ajax({
+				url: "addCommentChild",
+				type: "POST",
+				contentType: "application/json",
+				data: JSON.stringify({
+					"comment_content" : child,
+					"question_serial" : q_serial,
+					"comment_root" : root,
+					"comment_parent" : parent,
+					"mem_id" : id
+				}),
+				success: function(data){
+					let date_format = new Date(data.time.replace(' ', 'T')).toLocaleString("ko-KR", {
+						timeZone: "Asia/Seoul"
+				    });
+					console.log("성공~")
+					console.log(data);
+					element.parentElement.innerHTML+=
+						"<ul>"+
+						"작성자 : "+id+" | 작성시간 : "+date_format+"<br>"+
+						child+
+						"</ul>"+
+					
+						"<br>";
+				},
+				error: function(data){
 					console.log("실패");
 				}
 			});

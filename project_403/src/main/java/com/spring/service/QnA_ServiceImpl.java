@@ -44,6 +44,12 @@ public class QnA_ServiceImpl implements QnA_Service{
 		System.out.println("서비스 | getCommentParent() 호출");
 		return qnaRepository.getCommentParent(comment_root);
 	}
+
+	@Override
+	public HashMap<String, Object> addCommentChild(HashMap<String, Object> map) {
+		System.out.println("서비스 | addCommentChild() 호출");
+		return qnaRepository.addCommentChild(map);
+	}
 	
 	
 }
