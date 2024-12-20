@@ -11,7 +11,7 @@ public class Test
 	private String sub_chap; // 챕터명
 	private int test_hit; // 조회수
 	private String[] serial;
-	private boolean visible;
+	private boolean visible; // 삭제시 감춤
 	
 	// 기본 생성자
 	public Test() 
@@ -86,7 +86,6 @@ public class Test
 	public String getSub_chap() {
 		return sub_chap;
 	}
-
 	public void setSub_chap(String sub_chap) {
 		this.sub_chap = sub_chap;
 	}
@@ -106,9 +105,5 @@ public class Test
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
-
-	
-	
-	
 	
 }

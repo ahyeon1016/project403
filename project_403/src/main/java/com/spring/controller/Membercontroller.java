@@ -1,11 +1,16 @@
 package com.spring.controller;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -24,6 +29,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
@@ -36,17 +43,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.domain.Member;
-import com.spring.repository.MemberRepository;
+import com.spring.domain.Member_Item;
 import com.spring.service.MemberItemService;
 import com.spring.service.MemberService;
 
 @Controller
-@RequestMapping
+@RequestMapping("member")
 public class Membercontroller {
 	
 	@Autowired
@@ -55,8 +63,13 @@ public class Membercontroller {
 	@Autowired
 	MemberItemService memberitemservice;
 	
+	@Autowired
+	MailSender sender;
+
+	private String alarm;
+	
 	//기본 매핑
-	@GetMapping("/")
+	@GetMapping
 	public String home(){
 		return "member_home";
 	}
@@ -65,8 +78,6 @@ public class Membercontroller {
 	@GetMapping("/add")
 	public String add(@ModelAttribute Member member,Model model)
 	{	
-		
-		
 		return "member_add";
 	}
 	
@@ -77,12 +88,22 @@ public class Membercontroller {
 		HashMap<String,Object> returnmap=new HashMap<String,Object>();
 		String value=null;
 		Boolean isavail=false;
+		String regex = "^[a-zA-Z0-9]+$";
 		System.out.println(map.get("mem_id"));
 		Member member=memberservice.getMyInfo((String)map.get("mem_id"));
 		if(member==null) {
 			 value="사용 가능한 아이디입니다.";
 			 isavail=true;
-		}else {
+			 if(map.get("mem_id").toString().startsWith("naver_")||
+					 map.get("mem_id").toString().startsWith("kakao_")||
+					 !(map.get("mem_id").toString().matches(regex))||
+					 (map.get("mem_id").toString().length()<3)) {
+					value="잘못된 형식입니다.";
+					isavail=false;
+				}
+		}
+		
+		else {
 			 value="중복된 아이디입니다.";
 			 isavail=false;
 		}
@@ -104,8 +125,14 @@ public class Membercontroller {
 			String pw=map.get("mem_pw").toString();
 			String pw_sub=map.get("mem_pw_sub").toString();
 			int pw_length=pw.length();
+			String nick_pattern = "^[가-힣a-zA-Z0-9]+$";
 			System.out.println(pw_length);
-			if((pw_length<=15&&pw_length>=3)&&(Pattern.matches(email_pattern, email))&&pw.equals(pw_sub)) { //형식에 맞게 입력했을 시 코드 실행
+			if((pw_length<=15&&pw_length>=3)
+					&&(Pattern.matches(email_pattern, email))
+					&&pw.equals(pw_sub)
+					&&(!(map.get("mem_id").toString().startsWith("naver_")
+					||map.get("mem_id").toString().startsWith("kakao_")))
+					||!(map.get("mem_nick").toString().matches(nick_pattern))) { //형식에 맞게 입력했을 시 코드 실행
 			Member member2=memberservice.getMyInfo((String)map.get("mem_id"));
 			if(member2==null) {
 				 value="회원가입 성공!";
@@ -132,30 +159,32 @@ public class Membercontroller {
 		}
 	
 	//member_login 폼 페이지로 이동
-	@GetMapping("/login")
+	@GetMapping("login")
 	public String Login_page(@ModelAttribute("member") Member member,Model model) {
 		model.addAttribute("member",member);				
 		return "member_login";
 	}
 	
 	//세션에 member_login에서 받은 멤버 정보 담으며 로그인하기.
-	@PostMapping("/login")
-	public String login(@ModelAttribute("member") Member member,Model model,HttpServletRequest req) {
+	@PostMapping("login")
+	public String login(@ModelAttribute("member") Member member,HttpServletRequest req) {
 		HttpSession session=req.getSession();
 		member=memberservice.member_login(member);
-		
+		Member_Item mi=memberitemservice.mem_item_info(member.getMem_id());
 		if(member!=null) {
 			System.out.println("logiiiiiiiiiiiiiiiiiiiiin"+member.getMem_nickName());
 			session.setAttribute("member", member);
+			session.setAttribute("member_item", mi);
 			return "member_My_page";
 		}
 		else {
 			return "member_login_fail";
 		}
 	}
+
 	//카카오로 로그인하기
-	@GetMapping("/login/kakao")
-	public String kakao_login(@RequestParam String code) {
+	@GetMapping("login/kakao")
+	public String kakao_login(@RequestParam String code,HttpServletRequest req) {
 		System.out.println("카카오 로그인 실행");
 	    // Jackson ObjectMapper 사용
 	    ObjectMapper objectMapper = new ObjectMapper();
@@ -168,7 +197,7 @@ public class Membercontroller {
 	    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 	    params.add("grant_type", "authorization_code");
 	    params.add("client_id", "17731f8bc4cf09ad45f06addfd541982");
-	    params.add("redirect_uri", "http://localhost:8080/project_403/login/kakao");
+	    params.add("redirect_uri", "http://localhost:8080/project_403/member/login/kakao");
 	    params.add("code", code);
 
 	    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
@@ -208,21 +237,43 @@ public class Membercontroller {
 	    // 필요한 사용자 정보 추출
 	    Map<String, Object> kakaoAccount = (Map<String, Object>) userInfo.get("kakao_account");
 	    Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
-
+	    String user_id=userInfo.get("id").toString();
 	    String email = (String) kakaoAccount.get("email");
 	    String nickname = (String) profile.get("nickname");
-
+	    String profile_img=profile.get("profile_image_url").toString();
 	    // 로그 출력 또는 추가 처리
-	    System.out.println("User ID: " + userInfo.get("id"));
+	    System.out.println("User ID: " + user_id);
 	    System.out.println("Email: " + email);
 	    System.out.println("Nickname: " + nickname);
+	    System.out.println(profile_img);
 	    System.out.println(profile);
 	    // 여기서 사용자 정보를 데이터베이스에 저장하거나 세션 처리 등을 진행
+	    Member member=new Member();
+	    member.setMem_id("kakao_"+user_id);
+	    member.setMem_nickName(nickname);
+	    member.setMem_profile_name(profile_img);
+	    if(memberservice.kakao_info(member)) {
+			//카카오톡에 정보가 존재할 경우
+	    	member=memberservice.getMyInfo(member.getMem_id());
+	    	Member_Item mi=memberitemservice.mem_item_info(member.getMem_id());
+	    	HttpSession session=req.getSession();
+	    	session.setAttribute("member", member);
+	    	session.setAttribute("member_item", mi);
+	    }else {
+	    	//아닐 경우
+	    	memberservice.addMember(member);
+	    	memberitemservice.addMemItem(member);
+
+	    	HttpSession session=req.getSession();
+	    	session.setAttribute("member", member);
+	    }
+	    
+	    
 	    return "member_home";
 	}
 	
 	//네이버로 로그인하기
-	@GetMapping("/login/naver")
+	@GetMapping("login/naver")
 	
 	public String naver_login(@RequestParam String code,HttpServletRequest req) {
 		try {
@@ -285,11 +336,16 @@ public class Membercontroller {
 		
 		if(memberservice.naver_info(member)) { //이미 회원이라면?
 			System.out.println("회원 정보가 있어서 로그인할게용");
+			member=memberservice.getMyInfo(member.getMem_id());
+			Member_Item mi=memberitemservice.mem_item_info(member.getMem_id());
 			HttpSession session=req.getSession();
 			session.setAttribute("member", member);
+			session.setAttribute("member_item", mi);
 			
 		}else {
 			memberservice.addMember(member);
+			memberitemservice.addMemItem(member);//멤버 아이템 데이터 추가
+
 			System.out.println("네이버 계정의 회원정보가 없어용");
 			HttpSession session=req.getSession();
 			session.setAttribute("member", member);
@@ -301,7 +357,7 @@ public class Membercontroller {
 	}
 	
 	//member_My_page에서 정보조회를 눌렀을때 세션에 있는 mem_id를 받아 member_who로 이동
-	@PostMapping("/member")
+	@PostMapping("me")
 	public String mem_info(@RequestParam String mem_id,Model model) {
 		System.out.println(mem_id+"받아온 멤버 아이디");
 		Member member=memberservice.getMyInfo(mem_id);
@@ -318,10 +374,78 @@ public class Membercontroller {
 			return "member_update";
 	}
 	
+	//받은 회원 아이디를 가지고 아이템 페이지로 이동.
+	@PostMapping("item")
+	public String mem_item(@RequestParam String mem_id,Model model) {
+		Member_Item mi=memberitemservice.mem_item_info(mem_id);
+		model.addAttribute("mem_item",mi);
+		return "member_Items";
+	}
+
+	//model에 member dto를 넣고 닉네임 변경 페이지로 이동
+	@PostMapping("item/nick")
+	public String mem_nickname(@RequestParam String mem_id,Model model) {
+		System.out.println("닉네임 페이지의 멤버아이디"+mem_id);
+		Member mb=new Member();
+		mb=memberservice.getMyInfo(mem_id);
+		System.out.println("아이디가 있다~~~~~~~~~~~~~~~~~~~"+mb.getMem_id());
+		model.addAttribute("member", mb);
+		return "member_nick";
+	}
+	
+	//닉네임 변경을 눌렀을 때 기능
+	@PostMapping("item/nick/change")
+	public String mem_nick_change(@RequestParam String mem_id,HttpServletRequest req,Model model) {
+		String nick=(String)req.getParameter("nick");
+		//id를 통한 회원정보 조회
+		Member mb=memberservice.getMyInfo(mem_id);
+		//닉네임 변경 함수
+		mb.setMem_nickName(nick);
+		memberservice.mem_nickname_change(mb);
+		//아이템에서 닉변권 제거 함수
+		memberitemservice.nick_change(mem_id);
+		model.addAttribute("member",mb);
+		
+		return "member_My_page";
+	}
+	
+	//model에 Member dto를 넣고 닉네임 색상 변경 페이지로 이동
+	@PostMapping("item/font")
+	public String mem_font(@RequestParam String mem_id,Model model) {
+		Member_Item mi=new Member_Item();
+		mi=memberitemservice.mem_item_info(mem_id);
+		Member mb=memberservice.getMyInfo(mem_id);
+		model.addAttribute("member",mb);
+		model.addAttribute("member_item",mi);
+		return "member_font";
+	}
+	@PostMapping("item/font/change")
+	public String mem_font_change(@RequestParam String mem_id,HttpServletRequest req) {
+		Member_Item mi=new Member_Item();
+		String color=req.getParameter("color");
+		System.out.println(color);
+		mi=memberitemservice.mem_item_info(mem_id);
+		mi.setMem_color(color);
+		memberitemservice.color_change(mi);
+		return "member_My_page";
+	}
+	
 	//member_update 폼페이지에서 받은 데이터를 member 객체에 삽입 후 session을 종료해 다시 로그인 하게 만듬
 	@PostMapping("update/sequence")
 	public String update_sequence(@ModelAttribute("member")Member member,HttpSession session) {
 		System.out.println(member.getMem_id());
+		System.out.println(member.getMem_profile());
+		String path=session.getServletContext().getRealPath("/resources/images");
+		System.out.println(path);
+		MultipartFile multi=member.getMem_profile();
+		DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+		String dt=LocalDateTime.now().format(formatter);
+		String filename=("RLPL_profile_"+dt+"_"+multi.getOriginalFilename());
+		File file=new File(path,filename);
+		try {
+			multi.transferTo(file);
+		} catch(Exception e) {e.printStackTrace();}
+		member.setMem_profile_name(filename);
 		memberservice.member_update(member);
 		session.invalidate();
 		return "member_home";
@@ -338,17 +462,17 @@ public class Membercontroller {
 	@PostMapping("delete_bye")
 	public String bye(HttpServletRequest req,HttpSession session) {
 		Member member=(Member)session.getAttribute("member");
-		Timer timer=new Timer();//객체생성
-		long millis=10000;//시간
-		TimerTask tt=new TimerTask() { //1주일 후에 실행할 코드		
-			@Override
-			public void run() {
-				System.out.println("되냐");
+//		Timer timer=new Timer();//객체생성
+//		long millis=10000;//시간
+//		TimerTask tt=new TimerTask() { //1주일 후에 실행할 코드		
+//			@Override
+//			public void run() {
+//				System.out.println("되냐");
 				memberservice.member_delete(member);
-				
-			}
-		};
-		timer.schedule(tt, millis);// 타이머기능
+				memberitemservice.item_bye(member);
+//			}
+//		};
+//		timer.schedule(tt, millis);// 타이머기능
 		session.invalidate();
 		return "member_home";
 	}
@@ -359,6 +483,80 @@ public class Membercontroller {
 		return "member_My_page";
 	}
 	
+	//관리자 페이지로 이동
+	@PostMapping("/admin")
+	public String admin_page(@RequestParam("page") int page,Model model) {
+		ArrayList<Member> al=new ArrayList<Member>();
+		int limit_num=(page-1)*10;
+		int mem_num=memberservice.mem_num();
+		al=memberservice.read_all_Member(limit_num);
+		Member mb=al.get(0);
+		System.out.println("첫번째 멤버의 아이디를 조회한다."+mb.getMem_id());
+		model.addAttribute("al",al);
+		model.addAttribute("mem_num",mem_num);
+		return "member_admin";
+	}
+	
+	//이메일 전송
+	@ResponseBody
+	@PostMapping("email")
+	public HashMap<String,Object> email_send(@RequestBody HashMap<String,Object> map){
+		HashMap<String,Object> returnmap=new HashMap<String,Object>();
+		String user_mail=(String)map.get("user_mail");
+		String user_id=(String)map.get("user_id");
+		System.out.println("이메일 접속 완료!!!!!!!!!!!!!!!!!"+user_mail);
+		String host="http://localhost:8080/project_403/member/email/checked";
+		String from="rlpl4033@gmail.com";
+		String to=user_mail;
+		int mem_serial=memberservice.mem_serial(user_mail,user_id);
+		String content="클릭하여 이메일 인증을 완료해주세요!\n"+host+"?mem_serial="+mem_serial;
+		SimpleMailMessage ms=new SimpleMailMessage();
+		ms.setTo(to);
+		ms.setSubject("랠리폴리 이메일 인증메세지");
+		ms.setText(content);
+		ms.setFrom(from);
+		sender.send(ms);
+		return returnmap;
+	}
+	
+	//이메일 인증
+	@GetMapping("email/checked")
+	public String check_email(@RequestParam int mem_serial) {
+		System.out.println("이메일 인증 완료를 했다"+mem_serial);
+		memberservice.mem_confirm(mem_serial);
+		return "member_home";
+	}
+	
+	//알림 발동
+	@GetMapping("alarm")
+	public String active_alarm() {
+		memberservice.mem_alarm_add("qwer", "asdf");
+		return "member_home";
+	}
+	//알림 확인 및 삭제
+	@GetMapping("alarm/delete")
+	public String alarm_delete(@RequestParam int index,HttpServletRequest req) {
+		System.out.println(index);
+		ArrayList<String> arr=new ArrayList<String>();
+		HttpSession session=req.getSession(false);
+		Member member=(Member)session.getAttribute("member");
+		String mem_alarm=member.getMem_alarm();
+		System.out.println(member.getMem_alarm());
+		String[] mem_alarm_split=mem_alarm.split(",");
+		for(int i=0;i<mem_alarm_split.length;i++) {
+			arr.add(mem_alarm_split[i]);
+			System.out.println(arr.get(i));
+		}
+		arr.remove(index);
+		String alarm=String.join(",",arr);
+		System.out.println(alarm);
+		member.setMem_alarm(alarm);
+		member.setAlarm_list(arr);
+		memberservice.mem_alarm_update(member);
+		session.setAttribute("member", member);
+		
+		return "member_My_page";
+	}
 	//로그아웃
 	@GetMapping("logout")
 	public String logout(HttpSession session) {

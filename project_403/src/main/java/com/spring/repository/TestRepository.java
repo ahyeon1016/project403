@@ -35,7 +35,7 @@ public interface TestRepository
 
 	List<Question> qnaSelectValue(String subCodeSum);
 
-	List<String> ansSelectValue(String subCodeSum);
+	List<String[]> ansSelectValue(String subCodeSum);
 
 	List<Question> getQuestion(Test test);
 }

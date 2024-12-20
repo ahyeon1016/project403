@@ -1,13 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
 </head>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <body>
 testAll 페이지
@@ -35,7 +36,7 @@ testAll 페이지
 			<p>비밀번호 입력: ${test.test_pw}
 			<p>조회수: ${test.test_hit}
 			<p>교과명: ${test.sub_name}
-			<p>챕터명: ${test.sub_chap}
+			<p>총 문제 갯수: ${fn:length(test.serial)}개
 			<p><a href="testUpdate?Num=${test.test_num}">수정</a>
 			<p><a href="testDelete?Num=${test.test_num}">삭제</a>
 		</div>
@@ -74,19 +75,17 @@ function ajaxTest(inputValue, test_num) {
 	};
 	
 	$.ajax({
-		type: "POST", <!-- post 방식으로 전송 / -->
-		url: "testValue", <!-- 전송할 서블릿을 지정 -->
-		data: param, <!-- 서버로 매개변수와 값을 설정 -->
+		type: "POST", 
+		url: "testValue", 
+		data: param, 
 		dataType : 'json',
-        <!-- 전송과 응답이 성공했을 경우의 작업을 설정 -->
 		success: function (data) {
 			if(data.success) {
-				window.location.href = "testOneView?Num=" + test_num; <!-- 서버 응답 메시지를 <div> 엘리먼트에 표시 -->
+				window.location.href = "testOneView?Num=" + test_num; 
 			} else {
 				alert("비밀번호가 틀렸습니다.");
 			}
 		},
-        <!-- 작업 중 오류가 발생했을 경우에 수행할 작업을 설정 -->
 		error: function (data) {
 			alert("에러가 발생했습니다.");
 		},

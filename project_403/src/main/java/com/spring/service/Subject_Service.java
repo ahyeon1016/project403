@@ -18,4 +18,5 @@ public interface Subject_Service {
 	void deleteSubName(String sub_name);
 	void deleteSubChap(String sub_name, String sub_chap);
 	public ArrayList<Subject> getSubAllName();
+	HashMap<String, Object> subNameByValue(HashMap<String, Object> map);
 }

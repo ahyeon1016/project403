@@ -108,9 +108,9 @@ public class TestServiceImpl implements TestService {
 	}
 
 	@Override
-	public List<String> ansSelectValue(String subCodeSum) {
+	public List<String[]> ansSelectValue(String subCodeSum) {
 		
-		List<String> list = testRepository.ansSelectValue(subCodeSum);
+		List<String[]> list = testRepository.ansSelectValue(subCodeSum);
 		
 		return list;
 	}
