@@ -81,17 +81,26 @@
 						let formattedDate = date.toLocaleString("ko-KR", {
 						    timeZone: "Asia/Seoul"
 						});
-						comment.innerHTML += 
-							"<li>"+
-								"작성자 : "+list[i].mem_id+" | 작성시간 : "+formattedDate+"<br>"+
-								list[i].comment_content+"<br>"+
-								"<textarea></textarea>"+
-								"<button onclick='child_input(this, `"+
-								list[i].question_serial+"`,"+list[i].comment_root+","+
-								list[i].comment_parent+", `유저`"+
-								")'>댓글쓰기</button>"+
-							"</li>"+
-							"<br><br>";
+						if(list[i].comment_child==0){
+							comment.innerHTML += 
+								"<li>"+
+									"작성자 : "+list[i].mem_id+" | 작성시간 : "+formattedDate+"<br>"+
+									list[i].comment_content+"<br>"+
+									"<textarea></textarea>"+
+									"<button onclick='child_input(this, `"+
+									list[i].question_serial+"`,"+list[i].comment_root+","+
+									list[i].comment_parent+", `유저`"+
+									")'>댓글쓰기</button>"+
+									"<ul></ul>"+
+								"</li>";
+						}else{
+							comment.lastElementChild.lastElementChild.innerHTML += 
+								"<li>"+
+									"작성자 : "+list[i].mem_id+" | 작성시간 : "+formattedDate+"<br>"+
+									list[i].comment_content+"<br>"+
+								"</li>"+
+								"<br>";
+						}
 					}
 				},
 				error : function(data){
@@ -123,10 +132,14 @@
 						comment.innerHTML += 
 							"<li>"+
 								"작성자 : "+id+" | 작성시간 : "+date_format+"<br>"+
-								comment_input.value+
-							"</li>"+
-							
-							"<br><br>";
+								comment_input.value+"<br>"+
+								"<textarea></textarea>"+
+								"<button onclick='child_input(this, `"+
+								data.question_serial+"`,"+data.comment_root+","+
+								data.comment_parent+", `유저`"+
+								")'>댓글쓰기</button>"+
+								"<ul></ul>"+
+							"</li>";
 					} else{
 						alert("댓글 작성에 실패했습니다.");
 					}
@@ -159,13 +172,11 @@
 				    });
 					console.log("성공~")
 					console.log(data);
-					element.parentElement.innerHTML+=
-						"<ul>"+
-						"작성자 : "+id+" | 작성시간 : "+date_format+"<br>"+
-						child+
-						"</ul>"+
-					
-						"<br>";
+					element.parentElement.lastElementChild.innerHTML+=
+						"<li>"+
+							"작성자 : "+id+" | 작성시간 : "+date_format+"<br>"+
+							child+
+						"</li><br>";
 				},
 				error: function(data){
 					console.log("실패");

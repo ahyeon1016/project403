@@ -178,6 +178,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			
 			System.out.println("리파지토리 | addCommentParent() comment_parent 추가 완료");
 			map.put("time", stamp.toString());
+			map.put("comment_parent", parent);
 			map.put("success", true);
 		} catch (Exception e) {
 			map.put("success", false);
@@ -191,7 +192,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		return map;
 	}
 
-	//comment_root의 comment_parent들을 ArrayList에 담고 맵에 넣어 리턴하는 함수(Read)
+	//comment_root의 comment_parent, comment_child들을 ArrayList에 담고 맵에 넣어 리턴하는 함수(Read)
 	@Override
 	public HashMap<String, ArrayList<QnA>> getCommentParent(int comment_root) {
 		System.out.println("리파지토리 | addCommentParent() 도착");
@@ -205,7 +206,10 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			//DB연결
 			conn = DBConnection.getConnection();
 			//쿼리전송(Read)
-			String SQL ="SELECT * FROM QnA WHERE comment_root=? AND NOT comment_parent=0 AND comment_child=0";
+			String SQL =
+					"SELECT * FROM QnA "
+					+ "WHERE comment_root=? AND NOT comment_parent=0 "
+					+ "ORDER BY comment_parent  ASC";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, comment_root);
 			
