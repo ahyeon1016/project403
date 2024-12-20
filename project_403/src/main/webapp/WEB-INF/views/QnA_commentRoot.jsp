@@ -93,11 +93,13 @@
 						if(list[i].comment_content=="pDel"){
 							comment.innerHTML += 
 								"<li>"+
-									"삭제된 댓글입니다."+
+									"삭제된 댓글 입니다."+
 									"<ul></ul>"+
 								"</li>";
-						}
-						else if(list[i].comment_child==0){
+						}else if(list[i].comment_content=="cDel"){
+							comment.lastElementChild.lastElementChild.innerHTML +=
+								"<li>삭제된 댓글 입니다.</li><br>"
+						}else if(list[i].comment_child==0){
 							comment.innerHTML += 
 								"<li>"+
 									"<p>작성자 : "+list[i].mem_id+" | 작성시간 : "+formattedDate+"<br>"+
@@ -118,7 +120,10 @@
 								"<li>"+
 									"<p>작성자 : "+list[i].mem_id+" | 작성시간 : "+formattedDate+"<br>"+
 									list[i].comment_content+"</p>"+
-									"<button>삭제하기</button>"+
+									"<button onclick='deleteChild(this, "+
+									list[i].comment_root+", "+list[i].comment_parent+", `"+
+									list[i].question_serial+"`,"+"`유저`,"+list[i].comment_child+
+									")'>삭제하기</button>"+
 								"</li>"+
 								"<br>";
 						}
@@ -159,7 +164,10 @@
 									data.question_serial+"`,"+data.comment_root+","+
 									data.comment_parent+", `유저`"+
 								")'>댓글쓰기</button>"+
-								"<button>삭제하기</button>"+
+								"<button onclick='deleteParent(this, "+
+								data.comment_root+", "+data.comment_parent+", `"+
+								data.question_serial+"`,"+"`유저`"+
+								")'>삭제하기</button>"+
 								"<ul></ul>"+
 							"</li>";
 					} else{
@@ -198,7 +206,10 @@
 						"<li>"+
 							"<p>작성자 : "+id+" | 작성시간 : "+date_format+"</p>"+
 							child+
-							"<button>삭제하기</button>"+
+							"<button onclick='deleteChild(this, "+
+							data.comment_root+", "+data.comment_parent+", `"+
+							data.question_serial+"`,"+"`유저`,"+data.comment_child+
+							")'>삭제하기</button>"+
 						"</li><br>";
 				},
 				error: function(data){
@@ -230,12 +241,39 @@
 					}
 				
 					let newChild = document.createElement('li');
-			        newChild.innerHTML = '삭제된 댓글입니다.';
+			        newChild.innerHTML = '삭제된 댓글 입니다.';
 			  
 					element.parentElement.replaceChild(newChild ,element.parentElement.children[0]);
 				},
 				error: function(data){
 					console.log("실패");
+				}
+			});
+		}
+		
+		function deleteChild(element, root, parent, q_serial, id, child){
+			console.log("comment_parent 제거버튼");
+			console.log(root);
+			console.log(parent);
+			console.log(q_serial);
+			console.log(id);
+			console.log(child);
+			$.ajax({
+				url: "removeCommentChild",
+				type: "POST",
+				contentType: "application/json",
+				data: JSON.stringify({
+					"comment_root" : root,
+					"comment_parent" : parent,
+					"question_serial" : q_serial,
+					"mem_id" : id,
+					"comment_child" : child
+				}),
+				success: function(data){
+					element.parentElement.innerHTML="<li>삭제된 댓글 입니다.</li>"
+				},
+				error: function(data){
+					console.log("실패");	
 				}
 			});
 		}

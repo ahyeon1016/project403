@@ -135,6 +135,18 @@ public class QnAController {
 		
 		return map;
 	}
-
+	
+	//ajax로 child를 지우기 위한 데이터를 받고 DB로 이동하는 함수
+	@ResponseBody
+	@PostMapping("removeCommentChild")
+	public HashMap<String, Object> removeCommentChild(
+			@RequestBody HashMap<String, Object> map){
+		System.out.println("==========================================");
+		System.out.println("컨트롤러 | removeCommentChild() 도착");
+		
+		qnaService.removeCommentChild(map);
+		
+		return map;
+	}
 
 }
