@@ -43,8 +43,13 @@ public class Fnote_controller {
 	
 	//자신의 모든 노트를 조회하는 페이지로 이동
 	@PostMapping("notelist")
-	public String note_list(@RequestParam String mem_id,Model model) {
-		ArrayList<Fnote> note_list=fnoteservice.note_mine(mem_id);
+	public String note_list(HttpServletRequest req,Model model) {
+		ArrayList<Fnote> note_list=new ArrayList<Fnote>();
+		System.out.println("노트리스트 페이지에 접속을 완료했다.");
+		HttpSession session=req.getSession(false);
+		Member member=(Member)session.getAttribute("member");
+		String mem_id=member.getMem_id();
+		note_list=fnoteservice.note_mine(mem_id);
 		ArrayList<Test> test_list=new ArrayList<Test>();
 		for(int i=0;i<note_list.size();i++) {
 			test_list.add(testservice.getTestByNum(note_list.get(i).getTest_num()));

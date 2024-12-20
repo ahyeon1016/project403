@@ -30,7 +30,8 @@ cursor:pointer;
 				<td>회원 등급포인트</td>
 				<td>회원 이메일</td>
 				<td>회원 마지막 접속일</td>	
-				<td>회원 고유 번호</td>			
+				<td>회원 고유 번호</td>
+				<td>회원 이메일 등록 여부</td>		
 			</tr>
 		
 		<%
@@ -47,6 +48,7 @@ cursor:pointer;
 				<td><%=member.getMem_email() %></td>
 				<td><%=member.getMem_date() %></td>
 				<td><%=member.getMem_serial() %></td>
+				<td><%=member.isMem_confirmed() %></td>
 			</tr>
 			<%} %>
 			</table>

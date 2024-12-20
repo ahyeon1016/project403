@@ -65,11 +65,12 @@
     <% } %>
     
     <script>
-    	let editbut=document.querySelector("#note_pre");
+    	let up_but=document.querySelector("#note_pre");
     	let delete_but=document.querySelector("#note_delete");
-    	editbut.addEventListener("click",note_pre_up);
+    	up_but.addEventListener("click",note_pre_up);
     	delete_but.addEventListener("click",del);
-	    	function note_pre_up(){
+	    	function note_pre_up(e){
+	    		e.preventDefault();
 	    		let areas=document.querySelectorAll(".note_area");
 	    		let notes="";
 	    		for(let j=0;j<areas.length;j++){
@@ -82,7 +83,7 @@
 	    			data:JSON.stringify({"notes":notes}),
 	    			contentType:"application/json;charset=UTF-8",
 	    			success:function(data){
-	    				alert("임시저장 완료");
+	    				alert("저장 완료");
 	    			},
 	    			error:function(errorThrown)
 	    			{alert("실패")}
