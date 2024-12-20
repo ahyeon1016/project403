@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.spring.domain.QnA;
 import com.spring.service.QnA_Service;
 
@@ -83,7 +82,7 @@ public class QnAController {
 		
 		return "QnA_commentRoot";
 	}
-	
+
 	//comment_parent를 추가하기 위해 ajax로 데이터를 받아 처리하는 함수
 	@ResponseBody
 	@PostMapping("/addCommentParent")
@@ -148,5 +147,4 @@ public class QnAController {
 		
 		return map;
 	}
-
 }

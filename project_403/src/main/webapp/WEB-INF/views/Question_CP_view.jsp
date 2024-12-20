@@ -30,7 +30,11 @@
 			$.ajax({
 				url : "../Compile",
 				type : "POST",
+<<<<<<< HEAD
 				contentType : "application/json;charset=UTF-8",
+=======
+				contentType : "application/json",
+>>>>>>> origin/shh
 				data : JSON.stringify({"ans_input" : ans_input.value}),
 				success : function(data){
 					if(data.success){

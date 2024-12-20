@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -28,7 +27,7 @@ public class TestRepositoryImpl implements TestRepository {
 //		int total_record = getListCount();
 	    int start = (pageNum - 1) * limit;
 //	    int index = start + 1;
-	    
+	    String[] serial_split = null;
 	    List<Test> list = new ArrayList<Test>();	    
 	    
 	    try {
@@ -41,7 +40,14 @@ public class TestRepositoryImpl implements TestRepository {
 	        rs = pstmt.executeQuery();
 	        
             while (rs.next()) {
-                Test test = new Test();
+            	Test test = new Test();
+            	String serialString = rs.getString(9);
+            	if (serialString != null) {
+            	    serial_split = serialString.split(",");
+            	} else {
+            	    serial_split = null;
+            	}
+
                 test.setTest_num(rs.getInt(1));
                 test.setMem_id(rs.getString(2));
                 test.setTest_name(rs.getString(3));
@@ -50,6 +56,8 @@ public class TestRepositoryImpl implements TestRepository {
                 test.setSub_name(rs.getString(6));
                 test.setSub_chap(rs.getString(7));
                 test.setTest_hit(rs.getInt(8));
+                test.setSerial(serial_split);
+				test.setVisible(rs.getBoolean(10));
                 list.add(test);
                 
 //                if (index < (start + limit) && index <= total_record) {
@@ -122,22 +130,21 @@ public class TestRepositoryImpl implements TestRepository {
 		
 		String[] serial = test.getSerial();
 		String serials = serial[0];
-		for(int i =1; i<serial.length;i++) {
-			serials = serials+","+serial[i];
+		for(int i =1; i<serial.length; i++) {
+			serials = serials + "," + serial[i];
 		}
 		
 		try {
 			conn = DBConnection.getConnection();
 			//SQL쿼리 전송
-			String sql = "INSERT INTO Test(mem_id, test_name, test_pw, test_openYN, sub_name, sub_chap, serial) VALUES (?, ?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO Test(mem_id, test_name, test_pw, test_openYN, sub_name, serial) VALUES (?, ?, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1,test.getMem_id());
 			pstmt.setString(2,test.getTest_name());
 			pstmt.setString(3,test.getTest_pw());
 			pstmt.setString(4,test.getTest_openYN());
 			pstmt.setString(5,test.getSub_name());
-			pstmt.setString(6,test.getSub_chap());
-			pstmt.setString(7,serials);
+			pstmt.setString(6,serials);
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -245,6 +252,17 @@ public class TestRepositoryImpl implements TestRepository {
 			pstmt.executeUpdate();
 		} catch(Exception e) {
 			e.printStackTrace();
+		} finally {
+		    try {
+		        if (pstmt != null) {
+		            pstmt.close();
+		        }
+		        if (conn != null) {
+		            conn.close();
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
 		}
 	}
 
@@ -477,9 +495,9 @@ public class TestRepositoryImpl implements TestRepository {
 
 	// sub_code_sum(과목탭터코드) 값에 해당하는 question_ans(정답) 값을 Question 테이블에서 가져오기
 	@Override
-	public List<String> ansSelectValue(String subCodeSum) {
+	public List<String[]> ansSelectValue(String subCodeSum) {
 		
-		List<String> list = new ArrayList<String>();
+		List<String[]> list = new ArrayList<String[]>();
 		
 		try {
 			conn = DBConnection.getConnection();
@@ -489,11 +507,12 @@ public class TestRepositoryImpl implements TestRepository {
 	        pstmt.setString(1, subCodeSum);
 	        rs = pstmt.executeQuery();
 	        
-	        if(rs.next()) {
+	        while(rs.next()) {
 	        	String ans = rs.getString(1);
 	        	String[] ansList = ans.split("\\|★\\|");
 	        	
-	        	list =  Arrays.asList(ansList);
+//	        	List<String> a =  Arrays.asList(ansList);
+	        	list.add(ansList);
 	        }
 	    } catch(Exception e) {
 			e.printStackTrace();
@@ -529,7 +548,7 @@ public class TestRepositoryImpl implements TestRepository {
 //		}
 //		
 //		String[] serial_split = serials.split(",");
-		
+	
 		try {
 			conn = DBConnection.getConnection();
 			for(int i = 0; i < serial.length; i++) {
@@ -571,7 +590,7 @@ public class TestRepositoryImpl implements TestRepository {
 		    } catch (Exception e) {
 		        e.printStackTrace();
 		    }
-		}		
+		}
 		
 		return list;
 	}

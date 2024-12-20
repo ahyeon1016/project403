@@ -1,9 +1,13 @@
 package com.spring.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,7 +68,7 @@ public class TestController {
 		model.addAttribute("boardList", boardList);
 		
 		return "testAll";
-	}
+	}	
 	
 	// 시험지 추가하기 양식 제공
 	@GetMapping("/testAdd")
@@ -128,6 +132,34 @@ public class TestController {
 		return "testOneView";
 	}
 	
+	// 시험 시작하기
+	@GetMapping("/testStart")
+	public String testStart(@RequestParam("Num") Integer test_num, Model model) {
+		
+		Test test = testService.getOneTestList(test_num);
+		List<Question> allQuestion = testService.getQuestion(test);
+		
+		model.addAttribute("test", test);
+		model.addAttribute("allQuestion", allQuestion);
+		
+		return "testStart";
+	}
+	
+	@RequestMapping(value="/callQuestion", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> callQuestion(@RequestParam("test_num") Integer test_num) {
+        
+		Map<String, Object> rusultMap = new HashMap<>();
+		
+		Test test = testService.getOneTestList(test_num);
+		List<Question> allQuestion = testService.getQuestion(test);
+//		List<String[]> answerValue = testService.ansSelectValue(subCodeSum);
+		
+		rusultMap.put("allQuestion", allQuestion);
+	
+		return rusultMap;
+	}
+	
 	// 시험지 상세보기 비밀번호 입력 ajax
 	@RequestMapping(value="/testValue", method=RequestMethod.POST)
 	@ResponseBody
@@ -169,22 +201,47 @@ public class TestController {
 	// 과목+챕터 선택시 해당 문제 출력 ajax
 	@RequestMapping(value="/qnaSelectRead", method=RequestMethod.POST)
 	@ResponseBody
+//	@SuppressWarnings("unchecked")
 	public Map<String, Object> qnaSelectRead(@RequestParam Map<String, Object> params) {
         
-		Map<String, Object> rusultMap = new HashMap<>();
+		Map<String, Object> resultMap = new HashMap<>();
+		List<Object> qnaList = new ArrayList<Object>();
 		
-		String sub_name = (String)params.get("sub_name");
-		String sub_chap = (String)params.get("sub_chap");
-		
+		String json = params.get("paramList").toString();
+		ObjectMapper mapper = new ObjectMapper();
+		List<Map<String, Object>> paramList = null;
+
+	    try {
+	    	String selectedSubject = (String)params.get("selectedSubject");
+	    	
+			paramList = mapper.readValue(json, new TypeReference<ArrayList<Map<String, Object>>>(){});
+			for(int i = 0; i < paramList.size(); i++) {
+
+				String sub_chap = (String)paramList.get(i).get("name");
+				System.out.println(sub_chap);
+				String subCodeSum = sub_code_sum(selectedSubject, sub_chap);
+				System.out.println(subCodeSum);
+				
+//				Map<String, Object> questionValue = (Map<String, Object>) testService.qnaSelectValue(subCodeSum);
+//				Map<String, Object> answerValue = (Map<String, Object>) testService.ansSelectValue(subCodeSum);
+				
+				List<Question> questionValue = testService.qnaSelectValue(subCodeSum);
+				List<String[]> answerValue = testService.ansSelectValue(subCodeSum);
+				System.out.println(answerValue);
+				
+				qnaList.add(questionValue);
+				qnaList.add(answerValue);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+				
 //		rusultMap.put("chapList", subjectService.getSubByName(sub_name));
 //		rusultMap.put("chapList", testService.subValue(sub_name));		
 				
-		String subCodeSum = sub_code_sum(sub_name, sub_chap);
-				
-		rusultMap.put("qnaList", testService.qnaSelectValue(subCodeSum));
-		rusultMap.put("ansList", testService.ansSelectValue(subCodeSum));
+	    resultMap.put("qnaList", qnaList);	
 	    
-		return rusultMap;
+		return resultMap;
 	}	
 	
 //	여기서부터 나중에 삭제해야됨->
@@ -202,6 +259,7 @@ public class TestController {
 	      return sub_code_sum;
 	   }
 //	<-여기까지 나중에 삭제해야됨
+	
 	
 	
 }

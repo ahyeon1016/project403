@@ -14,7 +14,8 @@ public class QnA {
 	private Date comment_date;			//작성날짜
 	private int comment_hit;			//조회수
 	private int comment_good;			//좋아요
-	
+
+
 	//Getter() Setter()
 	public int getComment_num() {
 		return comment_num;

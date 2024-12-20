@@ -359,7 +359,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		}
 		
 	}
-
+	
 	//comment_root, comment_parent, comment_child의 최대값을 구하는 함수
 	private int getCommentDepth(String name) {
 		System.out.println("리파지토리 | getCommentDepth() 도착 "+name+"의 값 설정 시작");
@@ -391,7 +391,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		
 		return depth;
 	}
-		
+
 	//comment_hit(조회수) 추가 함수
 	private void commentHitUp(int comment_root) {
 		System.out.println("리파지토리 | commentHitUp() 도착");
@@ -418,5 +418,5 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		}
 		System.out.println("리파지토리 | commentHitUp() 추가 완료");
 	}
-
+	
 }
