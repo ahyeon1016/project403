@@ -57,15 +57,33 @@ public class QnAController {
 	
 	//모든 comment_root정보를 가져오기 위해 DB로 이동하는 함수
 	@GetMapping("/commentRootAll")
-	public String getCommentRootAll(Model model) {
+	public String getCommentRootAll(Model model, @RequestParam int page) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | getCommentRootAll() 도착");
 		
 		//DB로 이동하여 모든 comment_root 정보를 가져옴
-		ArrayList<QnA> rootAll = qnaService.getCommentRootAll();
+		ArrayList<QnA> rootAll = qnaService.getCommentRootAll();		
+		
+		//페이지 처리
+		int index = ((page - 1) * 5); 		// 시작 인덱스를 계산
+		int maxPage = 5*page; 				// 최대 페이지 수를 계산
+		if( !(maxPage<=rootAll.size()) ){	// maxPage값이 List의 size를 넘어가지 않게 처리
+			maxPage=rootAll.size();
+		}
+		int totalPage;						// 페이징 처리를 위한 페이지의 갯수 계산
+		if(rootAll.size()%5==0) {
+			totalPage=rootAll.size()/5;
+		}else {
+			totalPage=(rootAll.size()/5)+1;
+		}
+		
+		
 		//모델에 저장		
 		model.addAttribute("rootAll", rootAll);
-	
+		model.addAttribute("index", index);
+		model.addAttribute("maxPage", maxPage);
+		model.addAttribute("totalPage", totalPage);
+		
 		return "QnA_commentRootAll";
 	}
 	

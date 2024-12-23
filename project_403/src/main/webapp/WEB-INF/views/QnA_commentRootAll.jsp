@@ -3,6 +3,9 @@
 <%@ page import="java.util.ArrayList" %>
 <%
 	ArrayList<QnA> rootAll = (ArrayList<QnA>) request.getAttribute("rootAll");
+	int index = (int)request.getAttribute("index");
+	int maxPage = (int)request.getAttribute("maxPage");
+	int totalPage = (int)request.getAttribute("totalPage");
 %>
 <!DOCTYPE html>
 <html>
@@ -14,7 +17,7 @@
 	HELLO COMMENT ROOT ALL
 	<hr>
 	<%
-	for(int i=0; i<rootAll.size(); i++){
+	for(int i=index; i<maxPage; i++){
 		QnA qna = rootAll.get(i);
 	%>
 		<span>작성자 : <%=qna.getMem_id()%> | </span>
@@ -35,6 +38,13 @@
 				comment_root=<%=qna.getComment_root()%>
 				">확인하기</a>
 		<hr>
+	<%
+	}
+	%>
+	<%
+	for(int i=1; i<totalPage+1; i++){
+	%>
+		<a href="commentRootAll?page=<%=i%>"><%=i%></a>
 	<%
 	}
 	%>

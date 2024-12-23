@@ -61,7 +61,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			//쿼리전송
 			String SQL = 
 					"SELECT * FROM QnA "
-					+ "WHERE comment_parent=0 AND comment_child=0";
+					+ "WHERE comment_parent=0 AND comment_child=0 ";
 			pstmt = conn.prepareStatement(SQL);
 			
 			rs =  pstmt.executeQuery();

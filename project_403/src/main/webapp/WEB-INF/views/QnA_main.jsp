@@ -9,6 +9,6 @@
 <body>
 	HELLO QNA MAIN
 	<hr>
-	<p><a href="commentRootAll">모든 질문(root) 확인하러가기</a>
+	<p><a href="commentRootAll?page=1">모든 질문(root) 확인하러가기</a>
 </body>
 </html>
