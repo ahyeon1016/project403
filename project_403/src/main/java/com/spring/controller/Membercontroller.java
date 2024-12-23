@@ -126,12 +126,15 @@ public class Membercontroller {
 			int pw_length=pw.length();
 			String nick_pattern = "^[가-힣a-zA-Z0-9]+$";
 			System.out.println(pw_length);
-			if((pw_length<=15&&pw_length>=3)
-					&&(Pattern.matches(email_pattern, email))
-					&&pw.equals(pw_sub)
-					&&(!(map.get("mem_id").toString().startsWith("naver_")
-					||map.get("mem_id").toString().startsWith("kakao_")))
-					||!(map.get("mem_nick").toString().matches(nick_pattern))) { //형식에 맞게 입력했을 시 코드 실행
+			if (
+				    pw_length <= 15 && pw_length >= 3 &&
+				    Pattern.matches(email_pattern, email) &&
+				    pw.equals(pw_sub) &&
+				    !map.get("mem_id").toString().startsWith("naver_") &&
+				    !map.get("mem_id").toString().startsWith("kakao_") &&
+				    Pattern.matches(nick_pattern, map.get("mem_nick").toString())
+				)
+ { //형식에 맞게 입력했을 시 코드 실행
 			Member member2=memberservice.getMyInfo((String)map.get("mem_id"));
 			if(member2==null) {
 				 value="회원가입 성공!";
@@ -169,8 +172,8 @@ public class Membercontroller {
 	public String login(@ModelAttribute("member") Member member,HttpServletRequest req) {
 		HttpSession session=req.getSession();
 		member=memberservice.member_login(member);
-		Member_Item mi=memberitemservice.mem_item_info(member.getMem_id());
 		if(member!=null) {
+			Member_Item mi=memberitemservice.mem_item_info(member.getMem_id());
 			System.out.println("logiiiiiiiiiiiiiiiiiiiiin"+member.getMem_nickName());
 			session.setAttribute("member", member);
 			session.setAttribute("member_item", mi);
@@ -477,7 +480,7 @@ public class Membercontroller {
 	}
 		
 	//마이페이지로 이동
-	@PostMapping("/mypage")
+	@GetMapping("/mypage")
 	public String My_page() {
 		return "member_My_page";
 	}

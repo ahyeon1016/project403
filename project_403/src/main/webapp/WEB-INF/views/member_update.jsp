@@ -10,6 +10,7 @@
 
 </head>
 <body>
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
 
 
 <form:form modelAttribute="member" action="update/sequence" method="post" id="form" enctype="multipart/form-data">

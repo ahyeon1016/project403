@@ -7,7 +7,8 @@
 <title>닉네임 변경 페이지</title>
 </head>
 <body>
-	<% Member member=(Member)request.getAttribute("member"); %>
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
+	
 	<form action="nick/change?mem_id=<%=member.getMem_id()%>"method="post">
 	
 		닉네임 :<input type="text" value="<%=member.getMem_nickName()%>" maxlength="10" name="nick" pattern="^[가-힣a-zA-Z0-9]+$" required> 변경할 닉네임을 써주세요 <br> 

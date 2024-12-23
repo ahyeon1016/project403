@@ -19,6 +19,12 @@ cursor:pointer;
 <title>Insert title here</title>
 </head>
 <body>
+
+	<%
+		Member member=(Member)session.getAttribute("member"); 
+		if(member.isMem_admin()){
+	%>
+	
 	<div>
 		<div>
 			<h1>회원 조회</h1>
@@ -38,17 +44,17 @@ cursor:pointer;
 		ArrayList<Member> al=(ArrayList<Member>)request.getAttribute("al");
 		int mem_num=(int)request.getAttribute("mem_num");
 		for(int i=0;i<al.size();i++){
-			Member member=(Member)al.get(i);
+			Member members=(Member)al.get(i);
 		%>
 			<tr>
-				<td><%=member.getMem_id() %></td>
-				<td><%=member.getMem_nickName() %></td>
-				<td><%=member.getMem_point() %></td>
-				<td><%=member.getMem_exp() %></td>
-				<td><%=member.getMem_email() %></td>
-				<td><%=member.getMem_date() %></td>
-				<td><%=member.getMem_serial() %></td>
-				<td><%=member.isMem_confirmed() %></td>
+				<td><%=members.getMem_id() %></td>
+				<td><%=members.getMem_nickName() %></td>
+				<td><%=members.getMem_point() %></td>
+				<td><%=members.getMem_exp() %></td>
+				<td><%=members.getMem_email() %></td>
+				<td><%=members.getMem_date() %></td>
+				<td><%=members.getMem_serial() %></td>
+				<td><%=members.isMem_confirmed() %></td>
 			</tr>
 			<%} %>
 			</table>
@@ -70,6 +76,7 @@ cursor:pointer;
 			
 					
 		</div>
+		<%} %>
 		<a href="./">홈</a>
 	
 	</div>

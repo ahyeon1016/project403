@@ -18,6 +18,8 @@ button{
 </style>
 </head>
 <body>
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
+
 <% ArrayList<Test> test_list=(ArrayList<Test>)request.getAttribute("testlist"); %>
 
 	<ul>

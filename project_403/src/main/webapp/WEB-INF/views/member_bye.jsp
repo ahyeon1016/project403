@@ -6,12 +6,14 @@
 <title>탈퇴 페이지</title>
 </head>
 <body>
-<form action="delete_bye" method="post" id="fom">
-<p>${mem_id}님 정말로 탈퇴하시겠습니까?</p>
-<p>탈퇴를 하시려면 버튼을 눌러주세요</p>
-<input type="submit" value="탈퇴하기" id="but">
-<a href="/project_403">취소하기</a>
-</form>
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
+
+	<form action="delete_bye" method="post" id="fom">
+		<p>${mem_id}님 정말로 탈퇴하시겠습니까?</p>
+		<p>탈퇴를 하시려면 버튼을 눌러주세요</p>
+		<input type="submit" value="탈퇴하기" id="but">
+		<a href="/project_403">취소하기</a>
+	</form>
 
 
 <script>

@@ -86,16 +86,16 @@ img {
     <div class="container">
         <h2>로그인</h2>
         <label for="mem_id">아이디</label>
-        <form:input path="mem_id" id="mem_id" /><br>
+        <form:input path="mem_id" id="mem_id" autocomplete="off" /><br>
         <label for="mem_pw">비밀번호</label>
         <form:input path="mem_pw" id="mem_pw" type="password" required="true" /><br>
         <button type="submit">로그인</button>
         <div class="link-container">
             <a href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=dYy4lyrqfeCoc7Q3NRsE&state=STATE_STRING&redirect_uri=http://localhost:8080/project_403/member/login/naver">
-                <img src="/project_403/resources/images/btnG_축약형.png" width="80px" height="35px"/>
+                <img src="/project_403/resources/images/btnG_축약형.png" width="80px" height="30px"/>
             </a>
             <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=17731f8bc4cf09ad45f06addfd541982&redirect_uri=http://localhost:8080/project_403/member/login/kakao">
-                <img src="/project_403/resources/images/kakao_login_small.png" width="80px" height="35px"/>
+                <img src="/project_403/resources/images/kakao_login_small.png" width="80px" height="30px"/>
             </a>
         </div>
         <a href="./">뒤로가기</a>

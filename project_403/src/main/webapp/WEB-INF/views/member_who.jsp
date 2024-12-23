@@ -8,6 +8,8 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
+
 <form action="update?mem_id=${member.getMem_id()}" method="post">
 <table>
 <tr>

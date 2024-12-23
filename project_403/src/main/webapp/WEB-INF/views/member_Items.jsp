@@ -9,9 +9,10 @@
 <title>Insert title here</title>
 </head>
 <body>
+<%@include file="/WEB-INF/views/member_home.jsp" %>
+
 <%
 	Member_Item mi=(Member_Item)request.getAttribute("mem_item");
-	Member member=(Member)session.getAttribute("member");
 %>
 
 <div>

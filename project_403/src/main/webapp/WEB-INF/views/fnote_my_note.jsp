@@ -23,7 +23,9 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script> <%--아작스 사용을 위한 코오드 --%>
 </head>
 <body>
-	<%if(session.getAttribute("member")==null){ %>
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
+
+	<%if(member==null){ %>
 		<h1>로그인해주세요!</h1>
 	<%} %>
     <% if (request.getAttribute("questionlist") != null) {

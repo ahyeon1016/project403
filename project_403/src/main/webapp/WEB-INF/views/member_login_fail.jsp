@@ -7,6 +7,8 @@
 <title>로그인 실패</title>
 </head>
 <body>
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
+
 	로그인에 실패하셨습니다.
 	<a href="./">뒤로가기</a>
 </body>

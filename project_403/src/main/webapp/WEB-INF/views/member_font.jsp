@@ -23,8 +23,9 @@
 </style>
 </head>
 <body>
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
+
 	<%
-		Member member=(Member)request.getAttribute("member");
 		Member_Item mi=(Member_Item)request.getAttribute("member_item");
 	%>
 	<span id="nick_name" class="<%=mi.getMem_color()%>"><%=member.getMem_nickName() %></span>
