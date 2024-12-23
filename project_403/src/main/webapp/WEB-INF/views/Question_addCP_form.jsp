@@ -15,7 +15,9 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
-	HELLO QUESTION addSAQ FORM PAGE
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
+	HELLO QUESTION addCP FORM PAGE
+	<p>${member.getMem_serial()}
 	<form:form modelAttribute="question" action="Q_addCP" method="post" enctype="multipart/form-data">
 		<p> 과목명 
 		<select name="name_select" id="name_selector">

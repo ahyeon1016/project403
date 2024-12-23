@@ -15,7 +15,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 
 	//DB에 객관식 문제 저장하는 함수 (CREATE)
 	@Override
-	public void addMCQ(Question question) {
+	public void addMCQ(Question question, int mem_serial) {
 		System.out.println("리파지토리 | addMCQ() 도착");
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -26,14 +26,14 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+addQuestionNum();
 			question.setQuestion_serial(question_serial);
-			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, 'MCQ', true)";
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, ?, ?, 'MCQ', true)";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, question.getQuestion_content());
 			pstmt.setString(2, question.getQuestion_ans());
 			pstmt.setString(3, question.getQuestion_img_name());
 			pstmt.setString(4, question.getSub_code_sum());
-			pstmt.setString(5, question_serial);
-			//pstmt.setString(6, question.getQuestion_id());
+			pstmt.setInt(5, mem_serial);
+			pstmt.setString(6, question_serial);
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -46,7 +46,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 	
 	//DB에 주관식 문제를 저장하는 함수 (CREATE)
 	@Override
-	public void addSAQ(Question question) {
+	public void addSAQ(Question question, int mem_serial) {
 		System.out.println("리파지토리 | addSAQ() 도착");
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -57,14 +57,14 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+addQuestionNum();
 			question.setQuestion_serial(question_serial);
-			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, 'SAQ', true)";
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, ?, ?, 'SAQ', true)";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, question.getQuestion_content());
 			pstmt.setString(2, question.getQuestion_ans());
 			pstmt.setString(3, question.getQuestion_img_name());
 			pstmt.setString(4, question.getSub_code_sum());
-			pstmt.setString(5, question_serial);
-			//pstmt.setString(6, question.getQuestion_id());
+			pstmt.setInt(5, mem_serial);
+			pstmt.setString(6, question_serial);
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -77,7 +77,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 
 	//DB에 코딩 문제를 저장하는 함수 (CREATE)
 	@Override
-	public void addCP(Question question) {
+	public void addCP(Question question, int mem_serial) {
 		System.out.println("리파지토리 | addCP() 도착");
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -88,14 +88,14 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+addQuestionNum();
 			question.setQuestion_serial(question_serial);
-			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, NULL, ?, 'CP', true)";
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, ?, ?, 'CP', true)";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, question.getQuestion_content());
 			pstmt.setString(2, question.getQuestion_ans());
 			pstmt.setString(3, question.getQuestion_img_name());
 			pstmt.setString(4, question.getSub_code_sum());
-			pstmt.setString(5, question_serial);
-			//pstmt.setString(6, question.getQuestion_id());
+			pstmt.setInt(5, mem_serial);
+			pstmt.setString(6, question_serial);
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {

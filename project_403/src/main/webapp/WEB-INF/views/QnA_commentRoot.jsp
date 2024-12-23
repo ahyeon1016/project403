@@ -29,7 +29,7 @@
 	<br>
 	<br>
 	<p>조회수 ${qna.getComment_hit()}  |  
-	<button onclick="goodUp()">
+	<button onclick="goodUp(true)">
 		<p>추천</p>
 		(<span id="good">${qna.getComment_good()}</span>)
 	</button> 
@@ -43,23 +43,28 @@
 	</ul>
 	<script>
 		let good = document.querySelector("#good");
-		function goodUp(){
-			good.textContent = parseInt(good.textContent)+1;
-			console.log(good.textContent);
-			/*$.ajax({
-				url : "",
-				type : "get",
+		function goodUp(isClicked){
+			console.log(isClicked);
+			if(isClicked=='true'){
+				isClicked==true;
+				console.log("이거 문자열임.")
+			}
+			$.ajax({
+				url : "../favorite/good",
+				type : "POST",
 				contentType : "application/json",
-				data : ({
-					"count" : parseInt(good.textContent)+1
+				data : JSON.stringify({
+					"isClicked" : isClicked
 				}),
 				success : function(data){
-					good.textContent = data.count;
+					console.log(data);
 				},
 				error : function(data){
-					alert("조회수 증가 실패");
+					console.log(data.isClicked);
 				}
-			});*/
+			});
+			
+			
 		}
 		let root = document.querySelector("#root");
 		let comment_date = document.querySelector("#comment_date");

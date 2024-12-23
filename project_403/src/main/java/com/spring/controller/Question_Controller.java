@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.SimpleCompiler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.spring.domain.Member;
 import com.spring.domain.Question;
 import com.spring.domain.Subject;
+import com.spring.service.MemberService;
 import com.spring.service.Question_Service;
 import com.spring.service.Subject_Service;
 
@@ -36,6 +41,9 @@ public class Question_Controller {
 	@Autowired
 	private Subject_Service subjectService;
 	
+	@Autowired
+	private MemberService memberService;
+	
 	//question 메인 페이지 임시로 지정함. 추후 수정 예정
 	@RequestMapping("/main")
 	public String temporary() {
@@ -46,6 +54,7 @@ public class Question_Controller {
 	@GetMapping("/Q_addMCQ")
 	public String Q_addMCQ_form(@ModelAttribute Question question, Model model) {
 		System.out.println("==========================================");
+		//과목과 챕터를 선택하기 위해 subject를 가져옴.
 		ArrayList<Subject> sub_all = subjectService.getSubAll();
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
 		model.addAttribute("sub_all", sub_all);
@@ -60,11 +69,16 @@ public class Question_Controller {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addMCQ() 도착");
 		//전처리
+		//세션에서 작성자의 member DTO를 가져와 mem_serial을 구한다.
+		HttpSession session = request.getSession(false);
+		Member member = (Member)session.getAttribute("member");
+		int mem_serial = member.getMem_serial();
+		
 		//폼 페이지에서 select한 과목과 챕터를 가져와 DB에서 일치하는 DTO를 가져오는 작업
 		String sub_name = request.getParameter("name_select");
 		String sub_chap = request.getParameter("chap_select");
-		
 		question.setSub_code_sum(sub_code_sum(sub_name, sub_chap));
+		
 		//정답의 쉼표를 다른 문자로 변환
 		question.setQuestion_ans(question.getQuestion_ans().replace(",", "|★|"));
 		System.out.println("컨트롤러 | Q_addMCQ() 정답 : "+question.getQuestion_ans());
@@ -75,9 +89,10 @@ public class Question_Controller {
 		}else {
 			System.out.println("컨트롤러 | Q_addMCQ() 이미지 파일이 없음");
 		}
+		
 		//서비스 이동
 		System.out.println("컨트롤러 | addMCQ() 호출");
-		questionService.addMCQ(question);
+		questionService.addMCQ(question, mem_serial);
 		
 		return "Question_view";
 	}
@@ -87,6 +102,7 @@ public class Question_Controller {
 	public String Q_addSAQ_form(@ModelAttribute Question question, Model model) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addSAQ() 도착");
+		//과목과 챕터를 선택하기 위해 subject를 가져옴.
 		ArrayList<Subject> sub_all = subjectService.getSubAll();
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
 		model.addAttribute("sub_all", sub_all);
@@ -99,10 +115,15 @@ public class Question_Controller {
 	public String Q_addSAQ(@ModelAttribute Question question, HttpServletRequest request) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addSAQ() 도착");
+		//전처리
+		//세션에서 작성자의 member DTO를 가져와 mem_serial을 구한다.
+		HttpSession session = request.getSession(false);
+		Member member = (Member)session.getAttribute("member");
+		int mem_serial = member.getMem_serial();
+		
 		//선택한 과목과 챕터를 가져와 변수에 넣고 과목코드를 만드는 함수에 파라미터로 넘김
 		String sub_name = request.getParameter("name_select");
 		String sub_chap = request.getParameter("chap_select");
-		
 		question.setSub_code_sum(sub_code_sum(sub_name, sub_chap));
 		
 		//이미지 파일 처리
@@ -114,7 +135,7 @@ public class Question_Controller {
 		
 		//서비스 이동
 		System.out.println("컨트롤러 | addSAQ() 호출");
-		questionService.addSAQ(question);
+		questionService.addSAQ(question, mem_serial);
 		
 		return "Question_view";
 	}
@@ -124,10 +145,12 @@ public class Question_Controller {
 	public String Q_addCP_form(@ModelAttribute Question question, Model model){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addCP_form() 도착");
+		//과목과 챕터를 선택하기 위해 subject를 가져옴.
 		ArrayList<Subject> sub_all = subjectService.getSubAll();
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
 		model.addAttribute("sub_all", sub_all);
 		model.addAttribute("sub_all_name", sub_all_name);
+		//코드 입력 양식 작성
 		String content 
 				= "public class test {\n"
 				+ "\n"
@@ -147,17 +170,20 @@ public class Question_Controller {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addCP() 도착");
 		System.out.println("컨트롤러 | 작성한 문제 내용 : \n"+question.getQuestion_content());
-		
+		//전처리
+		//세션에서 작성자의 member DTO를 가져와 mem_serial을 구한다.
+		HttpSession session = request.getSession(false);
+		Member member = (Member)session.getAttribute("member");
+		int mem_serial = member.getMem_serial();
+
 		//문제 내용과 코드 내용 합치기
 		String text = request.getParameter("question_content_text");
 		question.setQuestion_content(text+"|★|"+question.getQuestion_content());
 		System.out.println("컨트롤러 | Q_addCP() 문제 내용 : "+question.getQuestion_content());
 		
-		
 		//과목 코드 만들기
 		String sub_name = request.getParameter("name_select");
 		String sub_chap = request.getParameter("chap_select");
-		
 		question.setSub_code_sum(sub_code_sum(sub_name, sub_chap));
 		
 		//이미지 파일 처리
@@ -169,7 +195,7 @@ public class Question_Controller {
 		
 		//서비스 이동
 		System.out.println("컨트롤러 | addCP() 호출");
-		questionService.addCP(question); 
+		questionService.addCP(question, mem_serial); 
 		
 		return "Question_view";
 	}
@@ -189,8 +215,17 @@ public class Question_Controller {
  	public String Q_all(Model model){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_all() 도착");
+		//모든 문제와 과목이름을 ArrayList에 담고, 
+		//question에서 mem_serial을 통해 mem_nickName의 값을 설정한 후에 model에 담는다.
 		ArrayList<Question>	question_all = questionService.getQuestionAll();
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
+		
+		for(Question question : question_all) {
+			int serial = question.getMem_serial();
+			String nickName = memberService.getNickNameBySerial(serial);
+			question.setMem_nickName(nickName);
+		}
+		
 		model.addAttribute("question_all", question_all);
 		model.addAttribute("sub_all_name", sub_all_name);
 		return "Question_all";
@@ -208,6 +243,13 @@ public class Question_Controller {
 		//변환된 코드를 가지고 Question_Repository로 이동
 		ArrayList<Question> question = questionService.getQuestionsBySubCode(sub_code);
 		
+		//question에서 mem_serial을 통해 mem_nickName의 값을 설정한다.
+		for(Question q : question) {
+			int serial = q.getMem_serial();
+			String nickName = memberService.getNickNameBySerial(serial);
+			q.setMem_nickName(nickName);
+		}
+		
 		HashMap<String, Object> search = new HashMap<String, Object>();
 		search.put("question", question);
 		return search;
@@ -221,8 +263,15 @@ public class Question_Controller {
 		//파라미터로 받은 question_serial 변수를 가지고 DB로 이동
 		System.out.println("컨트롤러 | Q_readMCQ() 파라미터로 받은 값을 가지고 서비스의 getQuestionBySerial()호출");
 		Question question = questionService.getQuestionBySerial(question_serial);
-		System.out.println(question.getQuestion_count());
 		
+		//question에서 mem_serial을 통해 mem_nickName의 값을 설정한다.
+		if(question!=null) {
+			int serial = question.getMem_serial();
+			String nickName = memberService.getNickNameBySerial(serial);
+			question.setMem_nickName(nickName);
+		}
+		
+		//배열로 들어가있는 정답을 split 메서드로 잘라 배열에 담는다.
 		String[] ans = question.getQuestion_ans().split("\\|★\\|");
 		model.addAttribute("ans", ans);
 		model.addAttribute("question", question);
@@ -239,6 +288,13 @@ public class Question_Controller {
 		System.out.println("컨트롤러 | Q_readSAQ() 파라미터로 받은 값을 가지고 서비스의 getQuestionBySerial()호출");
 		Question question = questionService.getQuestionBySerial(question_serial);
 		
+		//question에서 mem_serial을 통해 mem_nickName의 값을 설정한다.
+		if(question!=null) {
+			int serial = question.getMem_serial();
+			String nickName = memberService.getNickNameBySerial(serial);
+			question.setMem_nickName(nickName);
+		}
+		
 		model.addAttribute("question", question);
 		System.out.println("컨트롤러 | Q_readSAQ() 뷰로 이동");
 		return "Question_SAQ_view";
@@ -254,6 +310,14 @@ public class Question_Controller {
 		//파라미터로 받은 question_serial 변수를 가지고 DB로 이동
 		Question question = questionService.getQuestionBySerial(question_serial);
 		
+		//question에서 mem_serial을 통해 mem_nickName의 값을 설정한다.
+		if(question!=null) {
+			int serial = question.getMem_serial();
+			String nickName = memberService.getNickNameBySerial(serial);
+			question.setMem_nickName(nickName);
+		}
+		
+		//배열로 들어가있는 정답을 split 메서드로 잘라 배열에 담는다.
 		String[] ans = question.getQuestion_content().split("\\|★\\|");
 		System.out.println(ans[1]);
 		model.addAttribute("ans", ans);
@@ -326,13 +390,24 @@ public class Question_Controller {
 	public String Q_updateMCQ_form(
 			@PathVariable String question_serial, 
 			@ModelAttribute Question question, 
-			Model model) {
+			Model model,
+			HttpServletRequest request) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_updateMCQ_form() 도착");
+		//작성자와 동일한 사람인지 확인 
+		HttpSession session = request.getSession(false);
+		Member member = (Member)session.getAttribute("member");	
+		if(member.getMem_serial()!= question.getMem_serial()) {
+			System.out.println("작성한 멤버가 z다릅니다.");
+			return "redirect:/Q/Q_all";
+		}
+
 		//question_serial을 통해 Question DTO를 가지고온 후에 model에 추가한다.
 		question = questionService.getQuestionBySerial(question_serial);
+		
+		//정답을 split 메서드로 분리하여 배열에 담은 다음에 마지막 인덱스의 값만 모델에 담는다. 
 		String[] ans = question.getQuestion_ans().split("\\|★\\|");
-		question.setQuestion_ans(ans[4]);
+		question.setQuestion_ans(ans[ans.length-1]);
  		model.addAttribute("ans", ans);
 		model.addAttribute("question", question);
 		return "Question_updateMCQ";
@@ -368,12 +443,22 @@ public class Question_Controller {
 	public String Q_updateSAQ_form(
 			@PathVariable String question_serial, 
 			@ModelAttribute Question question,
-			Model model){
+			Model model,
+			HttpServletRequest request){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_updateSAQ_form() 도착");
+		//작성자와 동일한 사람인지 확인 
+		HttpSession session = request.getSession(false);
+		Member member = (Member)session.getAttribute("member");	
+		if(member.getMem_serial()!= question.getMem_serial()) {
+			System.out.println("작성한 멤버가 z다릅니다.");
+			return "redirect:/Q/Q_all";
+		}
+		
 		//Question DTO를 구한 뒤에 model에 추가
 		question = questionService.getQuestionBySerial(question_serial);
 		model.addAttribute("question", question);
+		
 		//업데이트 폼 페이지 이동
 		return "Question_updateSAQ";
 	}	
@@ -401,17 +486,29 @@ public class Question_Controller {
 	public String Q_updateCP_form(
 			@PathVariable String question_serial,
 			@ModelAttribute Question question,
-			Model model){
+			Model model,
+			HttpServletRequest request){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_updateCP() 도착");
+		//작성자와 동일한 사람인지 확인 
+		HttpSession session = request.getSession(false);
+		Member member = (Member)session.getAttribute("member");	
+		if(member.getMem_serial()!= question.getMem_serial()) {
+			System.out.println("작성한 멤버가 z다릅니다.");
+			return "redirect:/Q/Q_all";
+		}
+		
 		//Question DTO를 구한 뒤에 전처리
 		question = questionService.getQuestionBySerial(question_serial);
+		
 		//ans가 아닌 content를 split함
 		String[] content = question.getQuestion_content().split("\\|★\\|");
 		question.setQuestion_content(content[1]);
+		
 		//model에 DTO및 배열변수 추가
 		model.addAttribute("content", content);
 		model.addAttribute("question", question);
+		
 		//폼 페이지로 이동
 		return "Question_updateCP";
 	}

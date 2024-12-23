@@ -14,6 +14,7 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
 	HELLO QUESTION ALL PAGE
 	<select name="name_select" id="name_selector">
 		<option selected>선택</option>
@@ -97,6 +98,7 @@
 						let div = document.createElement("div")
 						div.classList.add(question[i].question_id, "question_div");
 						div.innerHTML = 
+							"<p>작성자명 : "+question[i].mem_nickName+"</p>"+
 							"<p>"+question[i].question_id+"</p>"+
 							"<p>"+question[i].sub_code_sum+"</p>"+
 							"<p>"+question[i].question_serial+"</p>"+

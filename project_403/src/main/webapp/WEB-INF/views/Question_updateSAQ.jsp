@@ -9,8 +9,10 @@
 </head>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <body>
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
 	HELLO QUESTION updateSAQ FORM PAGE!
 	<form:form modelAttribute="question" action="../Q_updateSAQ" method="post" enctype="multipart/form-data">
+		<p> <form:hidden path="mem_serial"/>
 		<p> <form:input path="sub_code_sum" readonly="true"/>
 		<p> <form:input path="question_serial" readonly="true"/>
 		<p> 문제분류 	<form:radiobutton path="question_id" value="SAQ" checked="checked"/>

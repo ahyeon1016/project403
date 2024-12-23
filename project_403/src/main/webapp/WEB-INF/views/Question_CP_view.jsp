@@ -8,7 +8,9 @@
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
-	HELLO MCQ VIEW
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
+	HELLO CP VIEW
+	<p> 작성자 : ${question.getMem_nickName()}
 	<p> 문제 고유 번호 : ${question.question_serial}
 	<p> 과목 : ${question.sub_code_sum}
 	<p>

@@ -7,7 +7,9 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
 	HELLO QUESTION MAIN
+	<p>${member.getMem_serial()}
 	<hr>
 	<p><a href="Q_addMCQ">객관식 문제 만들기</a>
 	<p><a href="Q_addSAQ">주관식 문제 만들기</a>

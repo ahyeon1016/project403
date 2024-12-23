@@ -7,7 +7,9 @@
 </head>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <body>
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
 	HELLO SUBJECT NAME FORM
+	<p>${member.getMem_id()}
 	<form method="POST" action="sub_name_form">
 		<p>과목 이름 : <input type="text" name="sub_name" id="n_sub_name" required/>
 		<span style="display: none;" id="n_duplication">중복된 과목입니다.</span>

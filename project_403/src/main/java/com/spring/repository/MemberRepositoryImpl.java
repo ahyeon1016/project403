@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import org.springframework.stereotype.Repository;
 import com.spring.domain.Member;
@@ -185,8 +186,34 @@ public class MemberRepositoryImpl implements MemberRepository {
 		return member;
 	}
 	
-
-	
+	//Question DTO에서 mem_serial을 가져와 DB에서 mem_nickName을 가지고 리턴하는 함수
+	@Override
+	public String getNickNameBySerial(int serial) {
+		System.out.println("==========================================");
+		System.out.println("리파지토리 | getNickNameBySerial() 도착");
+		String nickName="";
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			
+			//쿼리 전송
+			String SQL = "SELECT mem_nickName FROM Member WHERE mem_serial=?";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setInt(1, serial);
+			
+			rs = pstmt.executeQuery();
+			//ResultSet에 결과를 담아 문자열에 값 저장
+			if(rs.next()) {
+				nickName = rs.getString("mem_nickName");
+			}
+			System.out.println("리파지토리 | getNickNameBySerial() nickName 추출 성공");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return nickName;
+	}
 
 	//로그인 할때 마지막 접속날짜 업데이트
 	public void member_log_date(Member member) {

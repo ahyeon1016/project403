@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import com.spring.domain.Question;
 
 public interface Question_Service {
-	void addMCQ(Question question);
-	void addSAQ(Question question);
-	void addCP(Question question);
+	void addMCQ(Question question, int mem_serial);
+	void addSAQ(Question question, int mem_serial);
+	void addCP(Question question, int mem_serial);
 	ArrayList<Question> getQuestionAll();
 	ArrayList<Question> getQuestionsBySubCode(String sub_code);
 	Question getQuestionBySerial(String question_serial);

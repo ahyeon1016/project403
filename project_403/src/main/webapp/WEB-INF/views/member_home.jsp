@@ -60,6 +60,7 @@
             } else {
         %>
             <a href="/project_403/member/mypage">마이페이지</a>
+            <a href="/project_403/member/logout">로그아웃</a>
             <% if (member.isMem_admin()) { %>
                 <form action="/project_403/member/admin?page=1"><button type="submit">관리자페이지</button></form>
             <% } %>

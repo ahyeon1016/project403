@@ -15,6 +15,7 @@ public class Question {
 	private String question_serial;		//문제고유번호(과목코드+문제번호)
 	private String question_id;			//문제식별변수(분류 : 객관식, 주관식, 코딩)
 	private Boolean question_visible;	//문제 삭제(숨김) 여부
+	private String mem_nickName;		//멤버 닉네임 DB저장 X
 	
 	//Getter(), Setter()
 	public int getQuestion_num() {
@@ -89,4 +90,11 @@ public class Question {
 	public void setQuestion_visible(Boolean question_visible) {
 		this.question_visible = question_visible;
 	}
+	public String getMem_nickName() {
+		return mem_nickName;
+	}
+	public void setMem_nickName(String mem_nickName) {
+		this.mem_nickName = mem_nickName;
+	}
+	
 }

@@ -117,5 +117,11 @@ public class MemberServiceImpl implements MemberService {
 	public void member_delete(Member member) {
 		memberRepository.member_delete(member);
 	}
+
+
+	@Override
+	public String getNickNameBySerial(int serial) {
+		return memberRepository.getNickNameBySerial(serial);
+	}
 	
 }

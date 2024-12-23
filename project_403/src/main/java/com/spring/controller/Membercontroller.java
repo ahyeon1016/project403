@@ -477,7 +477,7 @@ public class Membercontroller {
 	}
 		
 	//마이페이지로 이동
-	@PostMapping("/mypage")
+	@GetMapping("/mypage")
 	public String My_page() {
 		return "member_My_page";
 	}

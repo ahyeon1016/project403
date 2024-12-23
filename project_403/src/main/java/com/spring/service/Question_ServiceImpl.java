@@ -15,21 +15,21 @@ public class Question_ServiceImpl implements Question_Service{
 	Question_Repository questionRepository;
 	
 	@Override
-	public void addMCQ(Question question) {
+	public void addMCQ(Question question, int mem_serial) {
 		System.out.println("서비스 | addMCQ() 호출");
-		questionRepository.addMCQ(question);
+		questionRepository.addMCQ(question, mem_serial);
 	}
 
 	@Override
-	public void addSAQ(Question question) {
+	public void addSAQ(Question question, int mem_serial) {
 		System.out.println("서비스 | addSAQ() 호출");
-		questionRepository.addSAQ(question);
+		questionRepository.addSAQ(question, mem_serial);
 	}
 
 	@Override
-	public void addCP(Question question) {
+	public void addCP(Question question, int mem_serial) {
 		System.out.println("서비스 | addCP() 호출");
-		questionRepository.addCP(question);
+		questionRepository.addCP(question, mem_serial);
 	}
 
 	@Override
