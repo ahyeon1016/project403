@@ -563,6 +563,6 @@ public class Membercontroller {
 	@GetMapping("logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "member_home";
+		return "redirect:/";
 	}
 }

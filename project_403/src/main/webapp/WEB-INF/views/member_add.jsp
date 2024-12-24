@@ -98,7 +98,7 @@ a:hover {
 		        <button type="submit" id="sub" disabled>회원 가입하기</button>
 		        <h5>아이디 중복검사 후 활성화됩니다.</h5>
 		
-		        <a href="./">뒤로가기</a>
+		        <a href="/project_403">뒤로가기</a>
 		    </div>
 		</form:form>
 	<script>

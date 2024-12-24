@@ -1,5 +1,3 @@
-<!-- nav.jsp -->
-
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
     import="com.spring.domain.Member"
 %>
@@ -9,17 +7,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Navigation</title>
-    <!-- Bootstrap CSS CDN -->
+    <!-- 폰트 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap">
+  	<!-- 부트스트랩 적용 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
     
-    	
+    	* {
+    	 font-family: 'Open Sans', sans-serif;
+    	 }
         .navbar-dark .navbar-nav .nav-link {
             color: rgba(255,255,255,.75);
         }
         .navbar-dark .navbar-nav .nav-link:hover {
             color: rgba(255,255,255,1);
         }
+        
         #left-a {
             color: white;
             font-weight: bold;
@@ -28,6 +31,17 @@
         #left-a:hover {
             color: white;
         }
+        .nav-item{
+        	margin:10px 0;
+        	align-content: center;
+        	padding-right:10px;
+        }
+        
+        .nav-item form{
+        	margin:10px 10px;
+        }
+        
+       
     </style>
 </head>
 <body>
@@ -37,9 +51,24 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <div class="collapse navbar-collapse justify-content-around" id="navbarNav">
                 <ul class="navbar-nav">
-                    <%
+                	<li class="nav-item">
+                		<a class="nav-link" href="/project_403/"></a>
+                	</li>
+                	<li class="nav-item">
+                		<a class="nav-link" href="/project_403/Q/main">문제 작성하기</a>
+                	</li>
+                	<li class="nav-item">
+                		<a class="nav-link" href="/project_403/test/testAdd">시험지 추가하기</a>
+                	</li>
+                	<li class="nav-item">
+                		<a class="nav-link" href="/project_403/test/testAll">시험지 보기</a>
+                	</li>
+                	<li class="nav-item">
+                		<a class="nav-link" href="/project_403/QnA/main">질문 게시판</a>
+                	</li>
+                                    <%
                         Member member = (Member) session.getAttribute("member");
                         if (member == null) {
                     %>
@@ -58,8 +87,11 @@
                         <% if (member.isMem_admin()) { %>
                             <li class="nav-item">
                                 <form action="/project_403/member/admin?page=1" method="post" class="form-inline">
-                                    <button type="submit" class="nav-link btn btn-link">관리자페이지</button>
+                                    <button type="submit" class="nav-link btn btn-link">모든 회원 조회</button>
                                 </form>
+                            </li>
+                            <li class="nav-item">
+                            	<a href="/project_403/sub" class="nav-link">Subject</a>
                             </li>
                         <% } %>
                         <li class="nav-item">
@@ -73,9 +105,6 @@
         </div>
     </nav>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
 </body>
 </html>
