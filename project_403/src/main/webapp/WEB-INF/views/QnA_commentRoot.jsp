@@ -32,10 +32,8 @@
 	<br>
 	<br>
 	<p>조회수 ${qna.getComment_hit()}  |  
-	<button onclick="goodUp(true)">
-		<p>추천</p>
-		(<span id="good">${qna.getComment_good()}</span>)
-	</button> 
+	<button id="goodBtn" style="background-color: white" onclick="goodUp(true, ${qna.getComment_num()})">좋아요</button>
+	<span id="good">${qna.getComment_good()}</span> 
 	<hr>
 	<h3>댓글</h3>
 	<textarea id="comment_input"rows="10" cols="60" placeholder="내용을 입력해 주세요."></textarea>
@@ -46,6 +44,7 @@
 	</ul>
 	<script>
 		let good = document.querySelector("#good");
+		let goodBtn = document.querySelector("#goodBtn");
 		let nickName = document.querySelector("#nickName").textContent;
 		let root = document.querySelector("#root");
 		let comment_date = document.querySelector("#comment_date");
@@ -53,24 +52,42 @@
 		let comment = document.querySelector("#comment");
 		comment.addEventListener("load", comment_load());
 		
-		function goodUp(isClicked){
-			console.log(isClicked);
-			if(isClicked=='true'){
-				isClicked==true;
-				console.log("이거 문자열임.")
+		function goodUp(isClicked, qnaNum){
+			console.log(goodBtn.style.backgroundColor);
+			console.log(qnaNum);
+			/* 버튼 색상 변경 */
+			if(goodBtn.style.backgroundColor=='white'){
+				goodBtn.style.backgroundColor='gray';
+			}else{
+				goodBtn.style.backgroundColor='white';
 			}
+			/* 버튼의 파라미터 변경 */
+			console.log(isClicked);
+			if(isClicked){
+				goodBtn.setAttribute("onclick", "goodUp(false, "+qnaNum+")");
+			}else{
+				goodBtn.setAttribute("onclick", "goodUp(true, "+qnaNum+")");
+			}		
+			/* comment_good true/false 설정 */
+			
 			$.ajax({
 				url : "../favorite/good",
 				type : "POST",
 				contentType : "application/json",
 				data : JSON.stringify({
-					"isClicked" : isClicked
+					"isClicked" : isClicked,
+					"qnaNum" : qnaNum
 				}),
 				success : function(data){
-					console.log(data);
+					console.log("성공"+data.isClicked);
+					if(data.isClicked){
+						good.textContent = parseInt(good.textContent)+1;
+					} else{
+						good.textContent = parseInt(good.textContent)-1;	
+					}
 				},
 				error : function(data){
-					console.log(data.isClicked);
+					console.log("실패");
 				}
 			});
 			

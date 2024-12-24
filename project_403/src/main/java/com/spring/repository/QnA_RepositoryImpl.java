@@ -216,6 +216,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				QnA qna = new QnA();
+				qna.setComment_num(rs.getInt(1));
 				qna.setMem_id(rs.getString(2));
 				qna.setQuestion_serial(rs.getString(3));
 				qna.setComment_root(rs.getInt(4));

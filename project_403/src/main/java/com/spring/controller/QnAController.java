@@ -37,7 +37,6 @@ public class QnAController {
 	@Autowired
 	MemberService memberService;
 
-	
 	@RequestMapping("/main")
 	public String main() {
 		return "QnA_main";
@@ -230,4 +229,5 @@ public class QnAController {
 		
 		return map;
 	}
+
 }
