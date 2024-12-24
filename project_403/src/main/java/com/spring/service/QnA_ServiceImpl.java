@@ -16,9 +16,9 @@ public class QnA_ServiceImpl implements QnA_Service{
 	QnA_Repository qnaRepository;
 
 	@Override
-	public void addCommentRoot(QnA qna) {
+	public void addCommentRoot(QnA qna, String mem_id) {
 		System.out.println("서비스 | addCommentRoot() 호출");
-		qnaRepository.addCommentRoot(qna);
+		qnaRepository.addCommentRoot(qna, mem_id);
 	}
 
 	@Override

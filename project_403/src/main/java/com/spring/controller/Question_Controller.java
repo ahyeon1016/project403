@@ -394,17 +394,17 @@ public class Question_Controller {
 			HttpServletRequest request) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_updateMCQ_form() 도착");
+		//question_serial을 통해 Question DTO를 가지고온 후에 model에 추가한다.
+		question = questionService.getQuestionBySerial(question_serial);
+
 		//작성자와 동일한 사람인지 확인 
 		HttpSession session = request.getSession(false);
-		Member member = (Member)session.getAttribute("member");	
+		Member member = (Member)session.getAttribute("member");
 		if(member.getMem_serial()!= question.getMem_serial()) {
-			System.out.println("작성한 멤버가 z다릅니다.");
+			System.out.println("작성한 멤버가 다릅니다.");
 			return "redirect:/Q/Q_all";
 		}
 
-		//question_serial을 통해 Question DTO를 가지고온 후에 model에 추가한다.
-		question = questionService.getQuestionBySerial(question_serial);
-		
 		//정답을 split 메서드로 분리하여 배열에 담은 다음에 마지막 인덱스의 값만 모델에 담는다. 
 		String[] ans = question.getQuestion_ans().split("\\|★\\|");
 		question.setQuestion_ans(ans[ans.length-1]);
@@ -447,6 +447,9 @@ public class Question_Controller {
 			HttpServletRequest request){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_updateSAQ_form() 도착");
+		//Question DTO를 구한다. 
+		question = questionService.getQuestionBySerial(question_serial);
+
 		//작성자와 동일한 사람인지 확인 
 		HttpSession session = request.getSession(false);
 		Member member = (Member)session.getAttribute("member");	
@@ -455,8 +458,7 @@ public class Question_Controller {
 			return "redirect:/Q/Q_all";
 		}
 		
-		//Question DTO를 구한 뒤에 model에 추가
-		question = questionService.getQuestionBySerial(question_serial);
+		//model에 추가
 		model.addAttribute("question", question);
 		
 		//업데이트 폼 페이지 이동
@@ -490,6 +492,9 @@ public class Question_Controller {
 			HttpServletRequest request){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_updateCP() 도착");
+		//Question DTO를 구한 뒤에 전처리
+		question = questionService.getQuestionBySerial(question_serial);
+
 		//작성자와 동일한 사람인지 확인 
 		HttpSession session = request.getSession(false);
 		Member member = (Member)session.getAttribute("member");	
@@ -497,9 +502,6 @@ public class Question_Controller {
 			System.out.println("작성한 멤버가 z다릅니다.");
 			return "redirect:/Q/Q_all";
 		}
-		
-		//Question DTO를 구한 뒤에 전처리
-		question = questionService.getQuestionBySerial(question_serial);
 		
 		//ans가 아닌 content를 split함
 		String[] content = question.getQuestion_content().split("\\|★\\|");

@@ -7,6 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
+	<p>${member.getMem_nickName()}
 	HELLO ADD COMMENT ROOT!
 	<hr>
 	<form:form modelAttribute="qna" action="addCommentRoot" method="post">

@@ -14,7 +14,7 @@ public class QnA {
 	private Date comment_date;			//작성날짜
 	private int comment_hit;			//조회수
 	private int comment_good;			//좋아요
-
+	private String mem_nickName;		//회원 닉네임(DB X)
 
 	//Getter() Setter()
 	public int getComment_num() {
@@ -82,6 +82,12 @@ public class QnA {
 	}
 	public void setComment_good(int comment_good) {
 		this.comment_good = comment_good;
+	}
+	public String getMem_nickName() {
+		return mem_nickName;
+	}
+	public void setMem_nickName(String mem_nickName) {
+		this.mem_nickName = mem_nickName;
 	}
 
 }

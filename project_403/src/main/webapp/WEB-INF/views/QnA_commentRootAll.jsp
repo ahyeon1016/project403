@@ -14,13 +14,15 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
+	<p>${member.getMem_nickName()}
 	HELLO COMMENT ROOT ALL
 	<hr>
 	<%
 	for(int i=index; i<maxPage; i++){
 		QnA qna = rootAll.get(i);
 	%>
-		<span>작성자 : <%=qna.getMem_id()%> | </span>
+		<span>작성자 : <%=qna.getMem_nickName()%> | </span>
 		<span>질문 문제 고유 넘버 : <%=qna.getQuestion_serial()%> | </span>
 		<span>번호 <%=i+1%> </span>
 		<br>

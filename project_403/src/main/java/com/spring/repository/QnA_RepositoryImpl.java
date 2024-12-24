@@ -17,7 +17,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 
 	//CommentRoot를 DB에 추가 (Create)
 	@Override
-	public void addCommentRoot(QnA qna) {
+	public void addCommentRoot(QnA qna, String mem_id) {
 		System.out.println("리파지토리 | addCommentRoot() 도착");
 		
 		Connection conn = null;
@@ -29,7 +29,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			qna.setComment_root(getCommentDepth("comment_root"));
 			String SQL = "INSERT INTO QnA VALUES(NULL, ?, ?, ?, 0, 0, ?, ?, ?, 0, 0)";
 			pstmt = conn.prepareStatement(SQL);
-			pstmt.setString(1, "NULL");
+			pstmt.setString(1, mem_id);
 			pstmt.setString(2, qna.getQuestion_serial());
 			pstmt.setInt(3, qna.getComment_root());
 			pstmt.setString(4, qna.getComment_title());
@@ -303,6 +303,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
+			System.out.println(map.get("mem_id"));
 			//DB연결
 			conn = DBConnection.getConnection();
 			//쿼리전송(Create)
@@ -315,7 +316,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			pstmt.setString(2, (String)map.get("question_serial"));
 			pstmt.setInt(3, (Integer)map.get("comment_root"));
 			pstmt.setInt(4, (Integer)map.get("comment_parent"));
-
+			
 			pstmt.executeUpdate();
 			System.out.println("리파지토리 | removeCommentParent() UPDATE 성공");
 		} catch (Exception e) {
