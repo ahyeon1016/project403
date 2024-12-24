@@ -91,4 +91,20 @@ public class Subject_ServiceImpl implements Subject_Service {
 		return subjectRepository.subNameByValue(map);
 	}
 	
+	//선택된 과목의 고유 넘버를 만드는 함수로 다른 컨트롤러에서 사용하기 때문에 서비스계층으로 올렸음.
+	@Override
+	public String sub_code_sum(String sub_name, String sub_chap) {
+ 		System.out.println("서비스 | sub_code_sum() 도착");
+		Subject sub = new Subject();
+		sub.setSub_name(sub_name); 
+		sub.setSub_chap(sub_chap);
+		Subject return_sub = subjectRepository.getSubByChap(sub);
+		//가져온 DTO에서 코드를 가져와 문자열로 캐스팅하여 과목의 고유 넘버를 만든다.
+		String sub_name_code = String.valueOf(return_sub.getSub_name_code()); 
+		String sub_chap_code = String.valueOf(return_sub.getSub_chap_code());
+		String sub_code_sum = sub_name_code+"_"+sub_chap_code;
+		System.out.println("서비스 | sub_code_sum 값 : "+sub_code_sum);
+		return sub_code_sum;
+	}
+	
 }

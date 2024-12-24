@@ -19,4 +19,5 @@ public interface Subject_Service {
 	void deleteSubChap(String sub_name, String sub_chap);
 	public ArrayList<Subject> getSubAllName();
 	HashMap<String, Object> subNameByValue(HashMap<String, Object> map);
+	String sub_code_sum(String sub_name, String sub_chap);
 }

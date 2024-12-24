@@ -2,6 +2,8 @@ package com.spring.service;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.spring.domain.Question;
 
 public interface Question_Service {
@@ -14,4 +16,5 @@ public interface Question_Service {
 	void updateQuestionCount(String question_serial, int question_count);
 	void updateQuestion(Question question);
 	void visibleQuestion(String question_serial);
+	void img_file_processing(Question question, HttpServletRequest request);
 }

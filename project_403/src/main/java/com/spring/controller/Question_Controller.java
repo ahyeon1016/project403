@@ -77,7 +77,7 @@ public class Question_Controller {
 		//폼 페이지에서 select한 과목과 챕터를 가져와 DB에서 일치하는 DTO를 가져오는 작업
 		String sub_name = request.getParameter("name_select");
 		String sub_chap = request.getParameter("chap_select");
-		question.setSub_code_sum(sub_code_sum(sub_name, sub_chap));
+		question.setSub_code_sum(subjectService.sub_code_sum(sub_name, sub_chap));
 		
 		//정답의 쉼표를 다른 문자로 변환
 		question.setQuestion_ans(question.getQuestion_ans().replace(",", "|★|"));
@@ -85,7 +85,7 @@ public class Question_Controller {
 		
 		//ModelAttribute로 데이터를 받은 DTO에서 이미지 파일을 처리
 		if(question.getQuestion_img().getSize()!=0) {
-			img_file_processing(question, request);
+			questionService.img_file_processing(question, request);
 		}else {
 			System.out.println("컨트롤러 | Q_addMCQ() 이미지 파일이 없음");
 		}
@@ -124,11 +124,11 @@ public class Question_Controller {
 		//선택한 과목과 챕터를 가져와 변수에 넣고 과목코드를 만드는 함수에 파라미터로 넘김
 		String sub_name = request.getParameter("name_select");
 		String sub_chap = request.getParameter("chap_select");
-		question.setSub_code_sum(sub_code_sum(sub_name, sub_chap));
+		question.setSub_code_sum(subjectService.sub_code_sum(sub_name, sub_chap));
 		
 		//이미지 파일 처리
 		if(question.getQuestion_img().getSize()!=0) {
-			img_file_processing(question, request);
+			questionService.img_file_processing(question, request);
 		}else {
 			System.out.println("컨트롤러 | Q_addSAQ() 이미지 파일이 없음");
 		}
@@ -184,11 +184,11 @@ public class Question_Controller {
 		//과목 코드 만들기
 		String sub_name = request.getParameter("name_select");
 		String sub_chap = request.getParameter("chap_select");
-		question.setSub_code_sum(sub_code_sum(sub_name, sub_chap));
+		question.setSub_code_sum(subjectService.sub_code_sum(sub_name, sub_chap));
 		
 		//이미지 파일 처리
 		if(question.getQuestion_img().getSize()!=0) {
-			img_file_processing(question, request);
+			questionService.img_file_processing(question, request);
 		} else {
 			System.out.println("컨트롤러 | Q_addCP() 이미지 파일 없음.");
 		}
@@ -238,7 +238,7 @@ public class Question_Controller {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_search() 도착");
 		//Map에 저장된 sub_name과 sub_chap을 꺼내 과목코드로 변환
-		String sub_code = sub_code_sum((String)map.get("name"), (String)map.get("chap"));
+		String sub_code = subjectService.sub_code_sum((String)map.get("name"), (String)map.get("chap"));
 
 		//변환된 코드를 가지고 Question_Repository로 이동
 		ArrayList<Question> question = questionService.getQuestionsBySubCode(sub_code);
@@ -427,7 +427,7 @@ public class Question_Controller {
 
 		//ModelAttribute로 데이터를 받은 DTO에서 이미지 파일을 처리
 		if(question.getQuestion_img().getSize()!=0) {
-			img_file_processing(question, request);
+			questionService.img_file_processing(question, request);
 		}else {
 			System.out.println("컨트롤러 | Q_updateMCQ() 이미지 파일이 없음");
 		}
@@ -471,7 +471,7 @@ public class Question_Controller {
 		
 		//ModelAttribute로 데이터를 받은 DTO에서 이미지 파일을 처리
 		if(question.getQuestion_img().getSize()!=0) {
-			img_file_processing(question, request);
+			questionService.img_file_processing(question, request);
 		}else {
 			System.out.println("컨트롤러 | Q_updateSAQ() 이미지 파일이 없음");
 		}
@@ -524,7 +524,7 @@ public class Question_Controller {
 		
 		//ModelAttribute로 데이터를 받은 DTO에서 이미지 파일을 처리
 		if(question.getQuestion_img().getSize()!=0) {
-			img_file_processing(question, request);
+			questionService.img_file_processing(question, request);
 		}else {
 			System.out.println("컨트롤러 | Q_updateCP() 이미지 파일이 없음");
 		}
@@ -542,52 +542,5 @@ public class Question_Controller {
 		return "redirect:/Q/Q_all";
 	}
 	
-	//선택된 과목의 고유 넘버를 만드는 함수로 모듈화 하였음.
- 	private String sub_code_sum(String sub_name, String sub_chap) {
- 		System.out.println("컨트롤러 | sub_code_sum() 도착");
-		Subject sub = new Subject();
-		sub.setSub_name(sub_name); 
-		sub.setSub_chap(sub_chap);
-		Subject return_sub = subjectService.getSubByChap(sub);
-		//가져온 DTO에서 코드를 가져와 문자열로 캐스팅하여 과목의 고유 넘버를 만든다.
-		String sub_name_code = String.valueOf(return_sub.getSub_name_code()); 
-		String sub_chap_code = String.valueOf(return_sub.getSub_chap_code());
-		String sub_code_sum = sub_name_code+"_"+sub_chap_code;
-		System.out.println("컨트롤러 | sub_code_sum 값 : "+sub_code_sum);
-		return sub_code_sum;
-	}
-	
-	//이미지 파일을 처리하는 함수로 다른 문제에도 사용되는 경우가 많을 것이라 판단해서 따로 모듈화를 진행했음.
-	private void img_file_processing(Question question, HttpServletRequest request) {
-		System.out.println("컨트롤러 | img_file_processing() 도착");
-		//파일 저장 경로
-		String path = request.getServletContext().getRealPath("/resources/images");
-		System.out.println("컨트롤러 | 이미지파일 저장 경로 : "+path);
-		//파일 이름 만들기
-		//파일의 확장자를 분리하는 작업
-		MultipartFile multi = question.getQuestion_img();
-		String file_name = multi.getOriginalFilename();
-		String[] file_names = file_name.split("\\.");
-		String extension = file_names[file_names.length-1];
-		//파일의 이름을 현재시간으로 사용하기 위한 작업
-		long time = System.currentTimeMillis();
-		SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmssSSS");
-		//결합 : RLPL209912311030123.확장자
-		String img_name = "RLPL"+sdf.format(time)+"."+extension;
-		System.out.println("저장되는 파일 : "+img_name);
-		//DTO에 SET
-		question.setQuestion_img_name(img_name);
-		
-		//빈 파일 생성
-		File file = new File(path, img_name); 
-	
-		//빈 파일에 작성
-		try {
-			multi.transferTo(file);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-	}
 
 }
