@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.domain.Member;
 import com.spring.domain.QnA;
+import com.spring.service.Favorite_Service;
 import com.spring.service.MemberService;
 import com.spring.service.QnA_Service;
 
@@ -37,6 +38,9 @@ public class QnAController {
 	@Autowired
 	MemberService memberService;
 
+	@Autowired
+	Favorite_Service favoriteService;
+	
 	@RequestMapping("/main")
 	public String main() {
 		return "QnA_main";
@@ -87,6 +91,10 @@ public class QnAController {
 		for(QnA qna : rootAll) {
 			Member member = memberService.getMyInfo(qna.getMem_id());
 			qna.setMem_nickName(member.getMem_nickName());
+			//좋아요 싫어요의 갯수를 QnA DTO의 변수에 담는다.
+			int qnaNum = qna.getComment_num();
+			int totalGood = favoriteService.getTotalGood(qnaNum);
+			qna.setComment_totalGood(totalGood);
 		}
 		
 		//페이지 처리
@@ -127,6 +135,10 @@ public class QnAController {
 			Member member = memberService.getMyInfo(qna.getMem_id());
 			qna.setMem_nickName(member.getMem_nickName());
 		}
+		//좋아요 싫어요의 갯수를 QnA DTO의 변수에 담는다.
+		int qnaNum = qna.getComment_num();
+		int totalGood = favoriteService.getTotalGood(qnaNum);
+		qna.setComment_totalGood(totalGood);
 		
 		model.addAttribute("qna", qna);
 		

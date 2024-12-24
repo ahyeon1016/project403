@@ -83,6 +83,43 @@ public class Favorite_RepositoryImpl implements Favorite_Repository{
 		}
 	}
 	
+	//활성화된 좋아요의 갯수를 가져오는 함수(Read)
+	@Override
+	public int getTotalGood(int qnaNum) {
+		System.out.println("리파지토리 | getTotalGood()도착");
+		int totalGood = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리전송
+			String SQL = 
+					"SELECT COUNT(comment_good) FROM Favorite "
+					+ "WHERE comment_num=? AND comment_good=1";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setInt(1, qnaNum);
+			System.out.println(pstmt);
+			//COUNT값을 totalGood에 대입한다.
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				totalGood = rs.getInt(1);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		System.out.println("리파지토리 | getTotalGood()완료 totalGood값 리턴 : "+totalGood);
+		
+		return totalGood;
+	}
+
 	//DB에 파라미터로 받은 값이 포함된 row가 있는지 확인하고 Boolean값을 반환하는 함수
 	private Boolean hasFeedBack(String type, String mem_id, int qnaNum) {
 		System.out.println("리파지토리 | hasFeedBack()도착");

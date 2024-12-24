@@ -33,7 +33,7 @@
 	<br>
 	<p>조회수 ${qna.getComment_hit()}  |  
 	<button id="goodBtn" style="background-color: white" onclick="goodUp(true, ${qna.getComment_num()})">좋아요</button>
-	<span id="good">${qna.getComment_good()}</span> 
+	<span id="good">${qna.getComment_totalGood()}</span> 
 	<hr>
 	<h3>댓글</h3>
 	<textarea id="comment_input"rows="10" cols="60" placeholder="내용을 입력해 주세요."></textarea>

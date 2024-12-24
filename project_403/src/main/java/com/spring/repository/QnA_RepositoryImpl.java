@@ -27,7 +27,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			conn = DBConnection.getConnection();
 			//쿼리전송(Create)
 			qna.setComment_root(getCommentDepth("comment_root"));
-			String SQL = "INSERT INTO QnA VALUES(NULL, ?, ?, ?, 0, 0, ?, ?, ?, 0, 0)";
+			String SQL = "INSERT INTO QnA VALUES(NULL, ?, ?, ?, 0, 0, ?, ?, ?, 0)";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, mem_id);
 			pstmt.setString(2, qna.getQuestion_serial());
@@ -78,7 +78,6 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 				qna.setComment_content(rs.getString(8));
 				qna.setComment_date(rs.getTimestamp(9));
 				qna.setComment_hit(rs.getInt(10));
-				qna.setComment_good(rs.getInt(11));
 				
 				rootAll.add(qna);
 			}
@@ -127,7 +126,6 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 				qna.setComment_content(rs.getString(8));
 				qna.setComment_date(rs.getTimestamp(9));
 				qna.setComment_hit(rs.getInt(10));
-				qna.setComment_good(rs.getInt(11));
 			}
 			System.out.println("리파지토리 | getCommentRootAll() 처리 완료");
 		} catch (Exception e) {
@@ -137,7 +135,6 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
 			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 		}
-		
 		return qna;
 	}
 
@@ -165,7 +162,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			
 			//쿼리전송(Create)
 			Timestamp stamp = new Timestamp(System.currentTimeMillis());
-			String SQL_INSERT = "INSERT INTO QnA VALUES(NULL, ?, ?, ?, ?, 0, NULL, ?, ?, 0, 0)";
+			String SQL_INSERT = "INSERT INTO QnA VALUES(NULL, ?, ?, ?, ?, 0, NULL, ?, ?, 0)";
 			pstmt = conn.prepareStatement(SQL_INSERT);
 			pstmt.setString(1, (String) map.get("mem_id"));
 			pstmt.setString(2, (String) map.get("question_serial"));
@@ -268,7 +265,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			
 			//쿼리전송(Create)
 			Timestamp stamp = new Timestamp(System.currentTimeMillis());
-			String SQL_INSERT = "INSERT INTO QnA VALUES(NULL, ?, ?, ?, ?, ?, NULL, ?, ?, 0, 0)";
+			String SQL_INSERT = "INSERT INTO QnA VALUES(NULL, ?, ?, ?, ?, ?, NULL, ?, ?, 0)";
 			pstmt = conn.prepareStatement(SQL_INSERT);
 			pstmt.setString(1, (String) map.get("mem_id"));
 			pstmt.setString(2, (String) map.get("question_serial"));

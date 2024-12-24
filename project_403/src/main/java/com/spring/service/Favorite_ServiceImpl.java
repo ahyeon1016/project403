@@ -23,4 +23,10 @@ public class Favorite_ServiceImpl implements Favorite_Service{
 		favoriteRepository.goodDisable(mem_id, qnaNum);
 	}
 
+	@Override
+	public int getTotalGood(int qnaNum) {
+		System.out.println("서비스 | getTotalGood() 도착");
+		return favoriteRepository.getTotalGood(qnaNum);
+	}
+
 }

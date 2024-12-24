@@ -13,7 +13,8 @@ public class QnA {
 	private String comment_content;		//질문 내용
 	private Date comment_date;			//작성날짜
 	private int comment_hit;			//조회수
-	private int comment_good;			//좋아요
+	private int comment_totalGood;		//좋아요 갯수(DB X)
+	private int comment_totalBad;		//좋아요 갯수(DB X)
 	private String mem_nickName;		//회원 닉네임(DB X)
 
 	//Getter() Setter()
@@ -77,17 +78,23 @@ public class QnA {
 	public void setComment_hit(int comment_hit) {
 		this.comment_hit = comment_hit;
 	}
-	public int getComment_good() {
-		return comment_good;
-	}
-	public void setComment_good(int comment_good) {
-		this.comment_good = comment_good;
-	}
 	public String getMem_nickName() {
 		return mem_nickName;
 	}
 	public void setMem_nickName(String mem_nickName) {
 		this.mem_nickName = mem_nickName;
+	}
+	public int getComment_totalGood() {
+		return comment_totalGood;
+	}
+	public void setComment_totalGood(int comment_totalGood) {
+		this.comment_totalGood = comment_totalGood;
+	}
+	public int getComment_totalBad() {
+		return comment_totalBad;
+	}
+	public void setComment_totalBad(int comment_totalBad) {
+		this.comment_totalBad = comment_totalBad;
 	}
 
 }

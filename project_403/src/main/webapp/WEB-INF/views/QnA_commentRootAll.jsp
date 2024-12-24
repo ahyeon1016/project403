@@ -34,7 +34,8 @@
 		</span>
 		<h3>제목 : <%=qna.getComment_title()%></h3>
 		<p>조회수 : <%=qna.getComment_hit()%>
-		<span>추천수 : <%=qna.getComment_good()%></span>
+		<span>좋아요 : <%=qna.getComment_totalGood()%></span>
+		<span>싫어요 : <%=qna.getComment_totalBad()%></span>
 		<br>
 		<a href="commentRootOne?
 				comment_root=<%=qna.getComment_root()%>
