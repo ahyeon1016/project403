@@ -20,4 +20,5 @@ public interface MemberRepository {
 	void mem_alarm_add(String mem_id,String comment_id);
 	void mem_alarm_update(Member member);
 	String getNickNameBySerial(int serial);
+	void member_lvup(int point,int exp,String mem_id);
 }

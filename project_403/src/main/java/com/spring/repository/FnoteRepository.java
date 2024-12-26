@@ -10,4 +10,6 @@ public interface FnoteRepository {
 	Fnote note_by_testnum(int test_num);
 	void note_update(String mem_id,int test_num,String note);
 	void note_delete(String mem_id,int test_num);
+	void all_note_delete(String mem_id);
+
 }

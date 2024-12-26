@@ -62,7 +62,9 @@ public class FnoteRepositoryImpl implements FnoteRepository {
 		}catch(Exception e) {e.printStackTrace();}
 		return arr;
 	}
+	
 	//테스트 번호와 맞는 노트를 조회
+	@Override
 	public Fnote note_by_testnum(int test_num) {
 		Fnote fnote=new Fnote();
 		try {
@@ -85,6 +87,7 @@ public class FnoteRepositoryImpl implements FnoteRepository {
 	}
 	
 	//테스트번호와 mem_id가 맞는 로우에 note 쓰기
+	@Override
 	public void note_update(String mem_id,int test_num,String note) {
 		try {
 		conn=DBConnection.getConnection();
@@ -98,6 +101,7 @@ public class FnoteRepositoryImpl implements FnoteRepository {
 	}
 	
 	//테스트번호와 mem_id가 맞는 row 삭제
+	@Override
 	public void note_delete(String mem_id,int test_num) {
 		try {
 			conn=DBConnection.getConnection();
@@ -107,6 +111,19 @@ public class FnoteRepositoryImpl implements FnoteRepository {
 			pstmt.setInt(2, test_num);
 			pstmt.executeUpdate();
 		}catch(Exception e) {e.printStackTrace();}
+	}
+
+	//회원 탈퇴시 모든 노트 삭제!
+	@Override
+	public void all_note_delete(String mem_id) {
+		try {
+			conn=DBConnection.getConnection();
+			String sql="delete from fnote where mem_id=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, mem_id);
+			pstmt.executeUpdate();
+		}catch(Exception e) {e.printStackTrace();}
+		
 	}
 	
 	

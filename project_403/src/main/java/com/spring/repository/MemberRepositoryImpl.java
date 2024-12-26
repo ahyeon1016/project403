@@ -363,6 +363,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 		}catch(Exception e) {e.printStackTrace();}
 		
 	}
+	
 	//알림 업데이트
 	public void mem_alarm_update(Member member) {
 		
@@ -391,6 +392,22 @@ public class MemberRepositoryImpl implements MemberRepository {
 			conn.close();
 		}catch(Exception e) {e.printStackTrace();}
 		
+	} 
+	
+	
+	//문제를 풀 시 포인트,경험치 추가
+	public void member_lvup(int point,int exp,String mem_id) {
+		try {
+		conn=DBConnection.getConnection();
+		String sql="update member set mem_point=mem_point+?,mem_exp=mem_exp+? where mem_id=?";
+		pstmt=conn.prepareStatement(sql);
+		pstmt.setInt(1, point);
+		pstmt.setInt(2, exp);
+		pstmt.setString(3, mem_id);
+		pstmt.executeUpdate();
+		pstmt.close();
+		conn.close();
+		}catch(Exception e) {e.printStackTrace();}
 	}
 
 	//회원 탈퇴 기능

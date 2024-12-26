@@ -50,6 +50,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.domain.Member;
 import com.spring.domain.Member_Item;
+import com.spring.service.FnoteService;
 import com.spring.service.MemberItemService;
 import com.spring.service.MemberService;
 
@@ -57,6 +58,8 @@ import com.spring.service.MemberService;
 @RequestMapping("member")
 public class Membercontroller {
 	
+	@Autowired
+	FnoteService fnoteservice;
 	@Autowired
 	MemberService memberservice;
 	
@@ -126,12 +129,15 @@ public class Membercontroller {
 			int pw_length=pw.length();
 			String nick_pattern = "^[가-힣a-zA-Z0-9]+$";
 			System.out.println(pw_length);
-			if((pw_length<=15&&pw_length>=3)
-					&&(Pattern.matches(email_pattern, email))
-					&&pw.equals(pw_sub)
-					&&(!(map.get("mem_id").toString().startsWith("naver_")
-					||map.get("mem_id").toString().startsWith("kakao_")))
-					||!(map.get("mem_nick").toString().matches(nick_pattern))) { //형식에 맞게 입력했을 시 코드 실행
+			if (
+				    pw_length <= 15 && pw_length >= 3 &&
+				    Pattern.matches(email_pattern, email) &&
+				    pw.equals(pw_sub) &&
+				    !map.get("mem_id").toString().startsWith("naver_") &&
+				    !map.get("mem_id").toString().startsWith("kakao_") &&
+				    Pattern.matches(nick_pattern, map.get("mem_nick").toString())
+				)
+ { //형식에 맞게 입력했을 시 코드 실행
 			Member member2=memberservice.getMyInfo((String)map.get("mem_id"));
 			if(member2==null) {
 				 value="회원가입 성공!";
@@ -159,8 +165,7 @@ public class Membercontroller {
 	
 	//member_login 폼 페이지로 이동
 	@GetMapping("login")
-	public String Login_page(@ModelAttribute("member") Member member,Model model) {
-		model.addAttribute("member",member);				
+	public String Login_page(@ModelAttribute("member") Member member) {
 		return "member_login";
 	}
 	
@@ -169,8 +174,8 @@ public class Membercontroller {
 	public String login(@ModelAttribute("member") Member member,HttpServletRequest req) {
 		HttpSession session=req.getSession();
 		member=memberservice.member_login(member);
-		Member_Item mi=memberitemservice.mem_item_info(member.getMem_id());
 		if(member!=null) {
+			Member_Item mi=memberitemservice.mem_item_info(member.getMem_id());
 			System.out.println("logiiiiiiiiiiiiiiiiiiiiin"+member.getMem_nickName());
 			session.setAttribute("member", member);
 			session.setAttribute("member_item", mi);
@@ -355,16 +360,7 @@ public class Membercontroller {
 		return "member_My_page";
 	}
 	
-	//member_My_page에서 정보조회를 눌렀을때 세션에 있는 mem_id를 받아 member_who로 이동
-	@PostMapping("me")
-	public String mem_info(@RequestParam String mem_id,Model model) {
-		System.out.println(mem_id+"받아온 멤버 아이디");
-		Member member=memberservice.getMyInfo(mem_id);
-		System.out.println(member.getMem_id());
-		model.addAttribute("member",member);
-		return "member_who";
-	}
-	
+
 	//member_who 페이지에서 dto를 가지고 member_update 폼 페이지로 이동
 	@PostMapping("update")
 	public String update_member(@ModelAttribute("member") Member member,@RequestParam String mem_id,Model model) {
@@ -395,15 +391,17 @@ public class Membercontroller {
 	//닉네임 변경을 눌렀을 때 기능
 	@PostMapping("item/nick/change")
 	public String mem_nick_change(@RequestParam String mem_id,HttpServletRequest req,Model model) {
+		HttpSession session=req.getSession(false);
+		
 		String nick=(String)req.getParameter("nick");
 		//id를 통한 회원정보 조회
-		Member mb=memberservice.getMyInfo(mem_id);
+		Member mb=(Member)session.getAttribute("member");
 		//닉네임 변경 함수
 		mb.setMem_nickName(nick);
 		memberservice.mem_nickname_change(mb);
 		//아이템에서 닉변권 제거 함수
 		memberitemservice.nick_change(mem_id);
-		model.addAttribute("member",mb);
+		
 		
 		return "member_My_page";
 	}
@@ -418,6 +416,8 @@ public class Membercontroller {
 		model.addAttribute("member_item",mi);
 		return "member_font";
 	}
+
+	//닉네임 색상 변경
 	@PostMapping("item/font/change")
 	public String mem_font_change(@RequestParam String mem_id,HttpServletRequest req) {
 		Member_Item mi=new Member_Item();
@@ -436,6 +436,10 @@ public class Membercontroller {
 		System.out.println(member.getMem_profile());
 		String path=session.getServletContext().getRealPath("/resources/images");
 		System.out.println(path);
+		
+		Member mb=(Member)session.getAttribute("member");
+		
+		if(mb.getMem_profile_name()==null) {
 		MultipartFile multi=member.getMem_profile();
 		DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
 		String dt=LocalDateTime.now().format(formatter);
@@ -445,9 +449,14 @@ public class Membercontroller {
 			multi.transferTo(file);
 		} catch(Exception e) {e.printStackTrace();}
 		member.setMem_profile_name(filename);
+		}
+		else
+		{
+			member.setMem_profile_name(mb.getMem_profile_name());
+		}
 		memberservice.member_update(member);
 		session.invalidate();
-		return "member_home";
+		return "redirect:/";
 	}
 	
 	//member_My_page에서 회원탈퇴를 누를 시 회원 탈퇴 페이지 이동
@@ -461,19 +470,15 @@ public class Membercontroller {
 	@PostMapping("delete_bye")
 	public String bye(HttpServletRequest req,HttpSession session) {
 		Member member=(Member)session.getAttribute("member");
-//		Timer timer=new Timer();//객체생성
-//		long millis=10000;//시간
-//		TimerTask tt=new TimerTask() { //1주일 후에 실행할 코드		
-//			@Override
-//			public void run() {
-//				System.out.println("되냐");
-				memberservice.member_delete(member);
-				memberitemservice.item_bye(member);
-//			}
-//		};
-//		timer.schedule(tt, millis);// 타이머기능
+		ArrayList arr=fnoteservice.note_mine(member.getMem_id());
+		if(arr!=null) {
+			fnoteservice.all_note_delete(member.getMem_id());
+		}
+		memberitemservice.item_bye(member);
+		memberservice.member_delete(member);
+
 		session.invalidate();
-		return "member_home";
+		return "redirect:/";
 	}
 		
 	//마이페이지로 이동
@@ -532,6 +537,7 @@ public class Membercontroller {
 		memberservice.mem_alarm_add("qwer", "asdf");
 		return "member_home";
 	}
+	
 	//알림 확인 및 삭제
 	@GetMapping("alarm/delete")
 	public String alarm_delete(@RequestParam int index,HttpServletRequest req) {
@@ -556,10 +562,11 @@ public class Membercontroller {
 		
 		return "member_My_page";
 	}
+	
 	//로그아웃
 	@GetMapping("logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "member_home";
+		return "redirect:/";
 	}
 }

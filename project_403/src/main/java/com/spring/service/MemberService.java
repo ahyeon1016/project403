@@ -20,4 +20,6 @@ public interface MemberService {
 	void mem_alarm_add(String mem_id,String comment_id);//알림기능
 	void mem_alarm_update(Member member);//알림 삭제
 	String getNickNameBySerial(int serial);
+	void member_lvup(int point,int exp,String mem_id);
 }
+
