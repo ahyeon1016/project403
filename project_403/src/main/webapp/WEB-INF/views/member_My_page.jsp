@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.spring.domain.Member"%>
+<%@ page import="com.spring.domain.Member_Item" %>
 <%@ page import="javax.servlet.http.HttpSession"%>
 
 <!DOCTYPE html>
@@ -57,7 +58,9 @@
     <%@ include file="/WEB-INF/views/member_home.jsp" %>
 
     <%
+    	
         if (member != null) {
+        	Member_Item mi=(Member_Item)session.getAttribute("member_item");
             String profile = member.getMem_profile_name();
     %>
     <div class="container mypage-container">
@@ -102,14 +105,14 @@
                 <% } else { %>
                     <img src="/project_403/resources/images/<%= profile %>" width="100" height="100" alt="Profile Image">
                 <% } %>
-                <h2><%= member.getMem_nickName() %>님, 환영합니다!</h2>
+                <h2><b class="<%=mi.getMem_color()%>"><%= member.getMem_nickName() %></b>님, 환영합니다!</h2>
             </div>
             <div class="member_inf inner-card p-3">
                 <h3>현재 정보</h3>
                 <% if (!(member.getMem_id().startsWith("kakao_") || member.getMem_id().startsWith("naver_"))) { %>
                     <p>아이디 : <span id="id"><%= member.getMem_id() %></span></p>
                 <% } %>
-                <p>닉네임 : <%= member.getMem_nickName() %></p>
+                <p>닉네임 : <span class="<%=mi.getMem_color()%>"><%= member.getMem_nickName() %></span></p>
                 <p>경험치 : <%= member.getMem_exp() %></p>
                 <p>포인트 : <%= member.getMem_point() %></p>
                 <p>마지막 접속일 : <%= member.getMem_date() %></p>

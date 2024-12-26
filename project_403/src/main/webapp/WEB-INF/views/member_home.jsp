@@ -2,6 +2,7 @@
     import="com.spring.domain.Member"
 %>
 <%@ page import="java.util.*" %>
+<%@ page import="com.spring.domain.Member_Item" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -68,9 +69,10 @@
                 	<li class="nav-item">
                 		<a class="nav-link" href="/project_403/QnA/main">질문 게시판</a>
                 	</li>
-                                    <%
+                    <%
                         Member member = (Member) session.getAttribute("member");
                         if (member == null) {
+                        	
                     %>
                         <li class="nav-item">
                             <a class="nav-link" href="/project_403/member/add">회원가입</a>
@@ -80,6 +82,7 @@
                         </li>
                     <%
                         } else {
+                        	Member_Item mi=(Member_Item)session.getAttribute("member_item");
                     %>
                         <li class="nav-item">
                             <a class="nav-link" href="/project_403/member/mypage">마이페이지</a>
