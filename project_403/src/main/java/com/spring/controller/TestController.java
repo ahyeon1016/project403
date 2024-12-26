@@ -95,8 +95,12 @@ public class TestController {
 	public String testUpdateForm(@ModelAttribute("UpdateTest") Test test, @RequestParam("Num") Integer test_num, Model model) {
 		
 		Test testByNum = testService.getTestByNum(test_num);
+		List<Subject> subList = testService.getSubList();
+		List<Question> allQuestion = testService.getQuestion(testByNum);
 		
 		model.addAttribute("test", testByNum);
+		model.addAttribute("subList", subList);
+		model.addAttribute("allQuestion", allQuestion);
 		
 		return "testUpdate";
 	}
@@ -144,7 +148,7 @@ public class TestController {
 		
 		return "testStart";
 	}
-	
+	//시험시작하기 버튼을 눌렀을때 기능
 	@RequestMapping(value="/callQuestion", method=RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> callQuestion(@RequestParam("test_num") Integer test_num) {
@@ -207,6 +211,25 @@ public class TestController {
 		Map<String, Object> resultMap = new HashMap<>();
 		List<Object> qnaList = new ArrayList<Object>();
 		
+		String serials = null;
+		
+		if(params.get("test") != null) {
+			String testNum = (String) params.get("test");
+			
+			int test_num = Integer.parseInt(testNum);
+			Test testByNum = testService.getTestByNum(test_num);
+			
+			String[] serial = testByNum.getSerial();
+			for(int i = 0; i < serial.length; i++) {
+				if(i == 0) {
+					serials = serial[i];
+				} else {
+					serials = serials + "," + serial[i];
+				}
+			}			
+		}
+		 
+		// ajax에서 List 형태로 넘어올때 받는 코드
 		String json = params.get("paramList").toString();
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Object>> paramList = null;
@@ -218,31 +241,33 @@ public class TestController {
 			for(int i = 0; i < paramList.size(); i++) {
 
 				String sub_chap = (String)paramList.get(i).get("name");
-				System.out.println(sub_chap);
 				String subCodeSum = sub_code_sum(selectedSubject, sub_chap);
-				System.out.println(subCodeSum);
 				
 //				Map<String, Object> questionValue = (Map<String, Object>) testService.qnaSelectValue(subCodeSum);
 //				Map<String, Object> answerValue = (Map<String, Object>) testService.ansSelectValue(subCodeSum);
-				
-				List<Question> questionValue = testService.qnaSelectValue(subCodeSum);
+			
+				if(serials != null) {
+					List<Question> questionValue = testService.qnaSelectValue(subCodeSum, serials);
+					qnaList.add(questionValue);
+				} else {
+					List<Question> questionValue = testService.qnaSelectValue(subCodeSum);
+					qnaList.add(questionValue);
+				}
 				List<String[]> answerValue = testService.ansSelectValue(subCodeSum);
-				System.out.println(answerValue);
 				
-				qnaList.add(questionValue);
 				qnaList.add(answerValue);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-				
+		
 //		rusultMap.put("chapList", subjectService.getSubByName(sub_name));
-//		rusultMap.put("chapList", testService.subValue(sub_name));		
+//		rusultMap.put("chapList", testService.subValue(sub_name));
 				
 	    resultMap.put("qnaList", qnaList);	
 	    
 		return resultMap;
-	}	
+	}
 	
 //	여기서부터 나중에 삭제해야됨->
 	private String sub_code_sum(String sub_name, String sub_chap) {

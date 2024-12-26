@@ -47,7 +47,7 @@ public class Question {
 	}
 	public void setQuestion_img_name(String question_img_name) {
 		this.question_img_name = question_img_name;
-	}
+	}	
 	public int getQuestion_level() {
 		return question_level;
 	}

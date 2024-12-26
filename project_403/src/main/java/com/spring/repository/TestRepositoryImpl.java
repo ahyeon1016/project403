@@ -129,9 +129,13 @@ public class TestRepositoryImpl implements TestRepository {
 	public void setNewTest(Test test) {
 		
 		String[] serial = test.getSerial();
-		String serials = serial[0];
-		for(int i =1; i<serial.length; i++) {
-			serials = serials + "," + serial[i];
+		String serials = null;
+		for(int i = 0; i < serial.length; i++) {
+			if(i == 0) {
+				serials = serial[i];
+			} else {
+				serials = serials + "," + serial[i];
+			}
 		}
 		
 		try {
@@ -231,8 +235,7 @@ public class TestRepositoryImpl implements TestRepository {
 		    } catch (Exception e) {
 		        e.printStackTrace();
 		    }
-		}
-		
+		}		
 		return test;
 	}
 
@@ -240,16 +243,26 @@ public class TestRepositoryImpl implements TestRepository {
 	@Override
 	public void setUpdateTest(Test test) {
 		
+		String[] serial = test.getSerial();
+		String serials = null;
+		for(int i = 0; i < serial.length; i++) {
+			if(i == 0) {
+				serials = serial[i];
+			} else {
+				serials = serials + "," + serial[i];
+			}
+		}
+		
 		try {
 			conn = DBConnection.getConnection();
 			//SQL쿼리 전송
-			String sql = "UPDATE Test SET test_name=?, test_pw=?, test_openYN=?, sub_name=?, sub_chap=? WHERE test_num=?";
+			String sql = "UPDATE Test SET test_name=?, test_pw=?, test_openYN=?, sub_name=?, serial=? WHERE test_num=?";
 			pstmt = conn.prepareStatement(sql);			
 			pstmt.setString(1, test.getTest_name());
 			pstmt.setString(2, test.getTest_pw());
 			pstmt.setString(3, test.getTest_openYN());
 			pstmt.setString(4, test.getSub_name());
-			pstmt.setString(5, test.getSub_chap());
+			pstmt.setString(5, serials);
 			pstmt.setInt(6, test.getTest_num());
 			pstmt.executeUpdate();
 		} catch(Exception e) {
@@ -366,7 +379,7 @@ public class TestRepositoryImpl implements TestRepository {
 		return test;
 	}
 
-	// Subject 테이블 sub_name 칼럼값 가져오기(중복제외)
+	// Subject 테이블 sub_name(과목) 칼럼값 가져오기(중복제외)
 	@Override
 	public List<Subject> getSubList() {
 		
@@ -447,8 +460,58 @@ public class TestRepositoryImpl implements TestRepository {
 
 	// Question 테이블 sub_code_sum(과목챕터코드)=subCodeSum 일치하는 모든 값 가져오기
 	@Override
-	public List<Question> qnaSelectValue(String subCodeSum) {
+	public List<Question> qnaSelectValue(String subCodeSum, String serials) {
 		
+		List<Question> list = new ArrayList<Question>();
+		
+		String serialsChange = serials.replace(",", "','");
+		
+		try {
+	    	conn = DBConnection.getConnection();
+	    	//SQL쿼리 전송
+	    	String sql = "SELECT * FROM Question WHERE sub_code_sum=? AND question_serial NOT IN ('" + serialsChange + "')";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, subCodeSum);
+	        rs = pstmt.executeQuery();
+	        
+            while(rs.next()) {
+            	Question question = new Question();
+            	question.setQuestion_num(rs.getInt(1));
+            	question.setQuestion_content(rs.getString(2));
+            	question.setQuestion_ans(rs.getString(3));
+            	question.setQuestion_img_name(rs.getString(4));
+            	question.setQuestion_level(rs.getInt(5));
+            	question.setQuestion_count(rs.getInt(6));
+            	question.setSub_code_sum(rs.getString(7));
+            	question.setMem_serial(rs.getInt(8));
+            	question.setQuestion_serial(rs.getString(9));
+            	question.setQuestion_id(rs.getString(10));
+            	list.add(question);
+	        }
+	    } catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+		    try {
+		    	if (rs != null) {
+		    		rs.close();
+		        }
+		        if (pstmt != null) {
+		            pstmt.close();
+		        }
+		        if (conn != null) {
+		            conn.close();
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}
+		
+		return list;
+	}
+
+	@Override
+	public List<Question> qnaSelectValue(String subCodeSum) {
+
 		List<Question> list = new ArrayList<Question>();
 		
 		try {
@@ -465,7 +528,7 @@ public class TestRepositoryImpl implements TestRepository {
             	question.setQuestion_content(rs.getString(2));
             	question.setQuestion_ans(rs.getString(3));
             	question.setQuestion_img_name(rs.getString(4));
-            	question.setQuestion_plus(rs.getInt(5));
+            	question.setQuestion_level(rs.getInt(5));
             	question.setQuestion_count(rs.getInt(6));
             	question.setSub_code_sum(rs.getString(7));
             	question.setMem_serial(rs.getInt(8));
@@ -566,7 +629,7 @@ public class TestRepositoryImpl implements TestRepository {
 		        	question.setQuestion_content(rs.getString(2));
 		        	question.setQuestion_ans(rs.getString(3));
 		        	question.setQuestion_img_name(rs.getString(4));
-		        	question.setQuestion_plus(rs.getInt(5));
+		        	question.setQuestion_level(rs.getInt(5));
 		        	question.setQuestion_count(rs.getInt(6));
 		        	question.setSub_code_sum(rs.getString(7));
 		        	question.setMem_serial(rs.getInt(8));

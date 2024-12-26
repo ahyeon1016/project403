@@ -4,13 +4,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<!-- 드래그 앤 드랍 라이브러리 -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 	<meta charset="UTF-8">
 	<title>시험 제출 공간</title>
 </head>
-	<style>
+<style>
 	.container {
 		display: flex;
 		justify-content: space-around;
@@ -67,8 +68,8 @@ testAdd 페이지
 		</div>
 		<div>
 			과목명: 
-				<form:select path="sub_name" id="subjectSelect">
-					<form:option value="" selected="true">카테고리를 선택해주세요.</form:option>
+				<form:select path="sub_name" id="subjectSelect" >
+					<form:option value="" selected="true" disabled="true" hidden="true">카테고리를 선택해주세요.</form:option>
 					<c:forEach items="${subList}" var="sub">
 	        			<form:option value="${sub.sub_name}">${sub.sub_name}</form:option>					
 					</c:forEach>
@@ -103,9 +104,10 @@ testAdd 페이지
 </div>
 </body>
 <script type="text/javascript">
+//과목 선택시 챕터 체크박스 생성
 $("#subjectSelect").on("change", function() {
 
-	let chapSelect = $("#chapSelect")
+	let chapSelect = $("#chapSelect");
 	chapSelect.empty();
 	let chapterHtml = "";
 	
@@ -117,7 +119,6 @@ $("#subjectSelect").on("change", function() {
 			url: "subValue", 
 			data: param,
 			dataType : "json",
-	       	// 전송과 응답이 성공했을 경우의 작업을 설정
 			success: function(data) {
 				chapterHtml += "챕터명: <input type='checkbox' class='chapSelect' value='All' />All";
 				for(let i = 0; i < data.chapList.length; i++) {
@@ -125,7 +126,6 @@ $("#subjectSelect").on("change", function() {
 				}
 				chapSelect.append(chapterHtml);
 			},
-	        // 작업 중 오류가 발생했을 경우에 수행할 작업을 설정
 			error: function (data) {
 				alert("에러가 발생했습니다.");
 			}
@@ -136,14 +136,14 @@ $("#subjectSelect").on("change", function() {
 	}
 });
 
+//등록문제보기 클릭시 저장되어있는 문제 불러오기
 $(document).on('click', '#questionSelect', function() {
 	
-	setTimeout(function() {
-		
+	// ajax로 List에 Map담아서 넘기기
 	let chapSelectList = [];
 	for (let i = 0; i < $(".chapSelect:checked").length; i++) {
-		if ($($('.chapSelect:checked')[i]).val() != "All") {			
-			let chapSelectMap = {name : $($('.chapSelect:checked')[i]).val()};
+		if ($($(".chapSelect:checked")[i]).val() != "All") {			
+			let chapSelectMap = {name : $($(".chapSelect:checked")[i]).val()};
 			
 			chapSelectList.push(chapSelectMap);
 		}
@@ -174,7 +174,7 @@ $(document).on('click', '#questionSelect', function() {
 						qnaHtml += "<input type='text' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>";
 						qnaHtml += "<br>문제: " + data.qnaList[i][j].question_content + "<br>";
 					    let answers = data.qnaList[i+1][j];
-					    let formattedAnswers = answers.map(function(answer, index) {
+					    let formattedAnswers = answers.slice(0, -1).map(function(answer, index) {
 					        return (index + 1) + "번: " + answer;
 					    }).join(", ");
 					    
@@ -190,38 +190,34 @@ $(document).on('click', '#questionSelect', function() {
 			alert("실패");
 		},
 	});
-	}, 500); // 500ms (0.5초) 지연
 });
 
 // All 체크시 전체 선택
 $(document).on('change', '.chapSelect[value="All"]', function() {
-       if ($(this).is(':checked')) {
-           $('.chapSelect:not([value="All"])').prop('checked', true);
-       } else {
-           $('.chapSelect:not([value="All"])').prop('checked', false);
-       }
-   });
+	if ($(this).is(':checked')) {
+		$('.chapSelect:not([value="All"])').prop('checked', true);
+	} else {
+		$('.chapSelect:not([value="All"])').prop('checked', false);
+	}
+});
 
 // All 체크시 전체 해제
 $(document).on('change', '.chapSelect:not([value="All"])', function() {
-       if ($(this).is(':checked')) {
-           $('.chapSelect[value="All"]').prop('checked', 
-               $('.chapSelect:not([value="All"])').length === 
-               $('.chapSelect:not([value="All"]):checked').length
-           );
-       } else {
-           $('.chapSelect[value="All"]').prop('checked', false);
-       }
-   });
+	if ($(this).is(':checked')) {
+		$('.chapSelect[value="All"]').prop('checked', $('.chapSelect:not([value="All"])').length === $('.chapSelect:not([value="All"]):checked').length);
+	} else {
+		$('.chapSelect[value="All"]').prop('checked', false);
+	}
+});
 
 // 드래그 앤 드랍 라이브러리
 const columns = document.querySelectorAll(".input_wrap");
 columns.forEach((column) => {
-  new Sortable(column, {
-    group: "shared",
-    animation: 150,
-    ghostClass: "blue-background-class"
-  });
+	new Sortable(column, {
+		group: "shared",
+		animation: 150,
+		ghostClass: "blue-background-class"
+	});
 });
 </script>
 </html>
