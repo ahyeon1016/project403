@@ -25,7 +25,7 @@
 	<p><a href="/project_403/QnA/addCommentRoot?question_serial=${question.question_serial}">질문하기</a>
 	<script>
 		let index = 0;
-		function grading(ans, question_serial, question_count){
+		function grading(ans, question_serial, question_count, question_level){
 			let ans_input = document.querySelector("#ans_input");
 			let ans_error = document.querySelector("#ans_error");
 			let plus = document.querySelector("#plus");
@@ -41,9 +41,10 @@
 						if(data.output==ans){
 							alert(index+"회만에 정답!");
 							window.location.href=
-									"../Q_plusCount?serial="+question_serial+
-									"&count="+question_count+
-									"&plus="+index;
+								"../Q_plusCount?serial="+question_serial+
+								"&count="+question_count+
+								"&plus="+index+
+								"&level="+question_level;
 						} else{
 							alert("땡!");
 						}

@@ -325,7 +325,7 @@ public class Question_Controller {
 		return "Question_CP_view";
 	}
 	
-	//요청 파라미터로 question_serial, question_count, question_plus을 받아 전처리 후 DB로 가져가는 함수
+	//요청 파라미터로 question_serial, question_count, plus, question_level을 받아 전처리 후 DB로 가져가는 함수
 	@GetMapping("/Q_plusCount")
 	public String Q_plusCount(HttpServletRequest request){
 		System.out.println("==========================================");
@@ -333,9 +333,18 @@ public class Question_Controller {
 		//전처리
 		String question_serial = request.getParameter("serial");
 		int question_count = Integer.parseInt(request.getParameter("count"));
-		int question_plus = Integer.parseInt(request.getParameter("plus"));
-		question_count+=question_plus;
-		//System.out.println(question_serial+"|"+question_count+"|"+question_plus);
+		int plus = Integer.parseInt(request.getParameter("plus"));
+		question_count+=plus;
+		int question_level = Integer.parseInt(request.getParameter("level"));
+		
+		//사용자의 Member 정보에 question_level을 보내 mem_exp의 값을 증가시키는 함수
+		HttpSession session = request.getSession(false);
+		Member member = (Member) session.getAttribute("member");
+		int point = question_level*2;
+		int exp = question_level;
+		String mem_id = member.getMem_id();
+		//memberService.member_lvup(point, exp, mem_id);
+		
 		//전처리한 변수를 가지고 DB로 이동
 		System.out.println("컨트롤러 | 서비스의 updateQuestionCount() 호출");
 		questionService.updateQuestionCount(question_serial, question_count);
