@@ -10,6 +10,7 @@
 <body>
 	<%@include file="/WEB-INF/views/member_home.jsp" %>
 	HELLO CP VIEW
+	<p> 문제 난이도 : ${question.question_level} 단계
 	<p> 작성자 : ${question.getMem_nickName()}
 	<p> 문제 고유 번호 : ${question.question_serial}
 	<p> 과목 : ${question.sub_code_sum}
@@ -32,11 +33,7 @@
 			$.ajax({
 				url : "../Compile",
 				type : "POST",
-<<<<<<< HEAD
 				contentType : "application/json;charset=UTF-8",
-=======
-				contentType : "application/json",
->>>>>>> origin/shh
 				data : JSON.stringify({"ans_input" : ans_input.value}),
 				success : function(data){
 					if(data.success){

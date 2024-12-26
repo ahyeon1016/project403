@@ -26,14 +26,15 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+addQuestionNum();
 			question.setQuestion_serial(question_serial);
-			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, ?, ?, 'MCQ', true)";
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, ?, 0, ?, ?, ?, 'MCQ', true)";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, question.getQuestion_content());
 			pstmt.setString(2, question.getQuestion_ans());
 			pstmt.setString(3, question.getQuestion_img_name());
-			pstmt.setString(4, question.getSub_code_sum());
-			pstmt.setInt(5, mem_serial);
-			pstmt.setString(6, question_serial);
+			pstmt.setInt(4, question.getQuestion_level());
+			pstmt.setString(5, question.getSub_code_sum());
+			pstmt.setInt(6, mem_serial);
+			pstmt.setString(7, question_serial);
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -57,14 +58,15 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+addQuestionNum();
 			question.setQuestion_serial(question_serial);
-			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, ?, ?, 'SAQ', true)";
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, ?, 0, ?, ?, ?, 'SAQ', true)";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, question.getQuestion_content());
 			pstmt.setString(2, question.getQuestion_ans());
 			pstmt.setString(3, question.getQuestion_img_name());
-			pstmt.setString(4, question.getSub_code_sum());
-			pstmt.setInt(5, mem_serial);
-			pstmt.setString(6, question_serial);
+			pstmt.setInt(4, question.getQuestion_level());
+			pstmt.setString(5, question.getSub_code_sum());
+			pstmt.setInt(6, mem_serial);
+			pstmt.setString(7, question_serial);
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -88,14 +90,15 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+addQuestionNum();
 			question.setQuestion_serial(question_serial);
-			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, 0, ?, ?, ?, 'CP', true)";
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, ?, 0, ?, ?, ?, 'CP', true)";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, question.getQuestion_content());
 			pstmt.setString(2, question.getQuestion_ans());
 			pstmt.setString(3, question.getQuestion_img_name());
-			pstmt.setString(4, question.getSub_code_sum());
-			pstmt.setInt(5, mem_serial);
-			pstmt.setString(6, question_serial);
+			pstmt.setInt(4, question.getQuestion_level());
+			pstmt.setString(5, question.getSub_code_sum());
+			pstmt.setInt(6, mem_serial);
+			pstmt.setString(7, question_serial);
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -128,7 +131,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 				question.setQuestion_content(rs.getString(2));
 				question.setQuestion_ans(rs.getString(3));
 				question.setQuestion_img_name(rs.getString(4));
-				question.setQuestion_plus(rs.getInt(5));
+				question.setQuestion_level(rs.getInt(5));
 				question.setQuestion_count(6);
 				question.setSub_code_sum(rs.getString(7));
 				question.setMem_serial(rs.getInt(8));
@@ -172,7 +175,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 				question.setQuestion_content(rs.getString(2));
 				question.setQuestion_ans(rs.getString(3));
 				question.setQuestion_img_name(rs.getString(4));
-				question.setQuestion_plus(rs.getInt(5));
+				question.setQuestion_level(rs.getInt(5));
 				question.setQuestion_count(6);
 				question.setSub_code_sum(rs.getString(7));
 				question.setMem_serial(rs.getInt(8));
@@ -214,7 +217,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 				question.setQuestion_content(rs.getString(2));
 				question.setQuestion_ans(rs.getString(3));
 				question.setQuestion_img_name(rs.getString(4));
-				question.setQuestion_plus(rs.getInt(5));
+				question.setQuestion_level(rs.getInt(5));
 				question.setQuestion_count(rs.getInt(6));
 				question.setSub_code_sum(rs.getString(7));
 				question.setMem_serial(rs.getInt(8));

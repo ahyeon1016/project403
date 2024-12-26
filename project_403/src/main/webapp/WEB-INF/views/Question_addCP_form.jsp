@@ -41,7 +41,16 @@
 		<p> 코드 내용 <form:textarea path="question_content" rows="20" cols="70"/>
 		<p> 정답<form:input path="question_ans"/>
 		<p> 문제 이미지 <form:input type="file" path="question_img"/>
-		<p> 문제풀이 추가 카운트 <form:input path="question_plus"/>
+		<p> 문제 난이도<form:radiobutton path="question_level" value="1"/>
+						<label for="1">1</label>
+					<form:radiobutton path="question_level" value="2"/>
+						<label for="2">2</label>
+					<form:radiobutton path="question_level" value="3"/>
+						<label for="3">3</label>
+					<form:radiobutton path="question_level" value="4"/>
+						<label for="4">4</label>
+					<form:radiobutton path="question_level" value="5"/>
+						<label for="5">5</label>
 		<p> 문제풀이 횟수 <form:input path="question_count"/>
 
 		<p> <input type="submit" value="전송">

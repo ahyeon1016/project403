@@ -192,7 +192,6 @@ public class Question_Controller {
 		} else {
 			System.out.println("컨트롤러 | Q_addCP() 이미지 파일 없음.");
 		}
-		
 		//서비스 이동
 		System.out.println("컨트롤러 | addCP() 호출");
 		questionService.addCP(question, mem_serial); 

@@ -9,6 +9,7 @@
 <body>
 	<%@include file="/WEB-INF/views/member_home.jsp" %>
 	HELLO SAQ VIEW
+	<p> 문제 난이도 : ${question.question_level} 단계
 	<p> 작성자 : ${question.getMem_nickName()}
 	<p> 문제 고유 번호 : ${question.question_serial}
 	<p> 과목 : ${question.sub_code_sum}

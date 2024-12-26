@@ -24,7 +24,16 @@
 		<p><img src="/project_403/resources/images/${question.getQuestion_img_name()}">
 		<p> 문제 이미지 
 		<p><form:input type="file" path="question_img"/>
-		<p> 문제풀이 추가 카운트 <form:input path="question_plus" disabled="true"/>
+		<p> 문제 난이도<form:radiobutton path="question_level" value="1"/>
+						<label for="1">1</label>
+					<form:radiobutton path="question_level" value="2"/>
+						<label for="2">2</label>
+					<form:radiobutton path="question_level" value="3"/>
+						<label for="3">3</label>
+					<form:radiobutton path="question_level" value="4"/>
+						<label for="4">4</label>
+					<form:radiobutton path="question_level" value="5"/>
+						<label for="5">5</label>
 		<p> 문제풀이 횟수 <form:input path="question_count" disabled="true"/>
 
 		<p> <input type="submit" value="전송">
