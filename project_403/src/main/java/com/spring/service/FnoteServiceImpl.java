@@ -16,6 +16,12 @@ public class FnoteServiceImpl implements FnoteService {
 	
 	
 	@Override
+	public void all_note_delete(String mem_id) {
+		fnoteRepository.all_note_delete(mem_id);
+	}
+
+
+	@Override
 	public void note_delete(String mem_id, int test_num) {
 		fnoteRepository.note_delete(mem_id,test_num);
 	}

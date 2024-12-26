@@ -32,7 +32,7 @@
             </div>
         </form>
     </div>
-
+<%@include file="/WEB-INF/views/footer.jsp" %>
     <script>
         document.querySelector("#but").addEventListener("click", del);
         let form = document.querySelector("#form");

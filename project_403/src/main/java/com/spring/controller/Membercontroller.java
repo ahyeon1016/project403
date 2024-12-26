@@ -50,6 +50,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.domain.Member;
 import com.spring.domain.Member_Item;
+import com.spring.service.FnoteService;
 import com.spring.service.MemberItemService;
 import com.spring.service.MemberService;
 
@@ -57,6 +58,8 @@ import com.spring.service.MemberService;
 @RequestMapping("member")
 public class Membercontroller {
 	
+	@Autowired
+	FnoteService fnoteservice;
 	@Autowired
 	MemberService memberservice;
 	
@@ -163,7 +166,6 @@ public class Membercontroller {
 	//member_login 폼 페이지로 이동
 	@GetMapping("login")
 	public String Login_page(@ModelAttribute("member") Member member,Model model) {
-		model.addAttribute("member",member);				
 		return "member_login";
 	}
 	
@@ -358,15 +360,15 @@ public class Membercontroller {
 		return "member_My_page";
 	}
 	
-	//member_My_page에서 정보조회를 눌렀을때 세션에 있는 mem_id를 받아 member_who로 이동
-	@PostMapping("me")
-	public String mem_info(@RequestParam String mem_id,Model model) {
-		System.out.println(mem_id+"받아온 멤버 아이디");
-		Member member=memberservice.getMyInfo(mem_id);
-		System.out.println(member.getMem_id());
-		model.addAttribute("member",member);
-		return "member_who";
-	}
+//	//member_My_page에서 정보조회를 눌렀을때 세션에 있는 mem_id를 받아 member_who로 이동
+//	@PostMapping("me")
+//	public String mem_info(@RequestParam String mem_id,Model model) {
+//		System.out.println(mem_id+"받아온 멤버 아이디");
+//		Member member=memberservice.getMyInfo(mem_id);
+//		System.out.println(member.getMem_id());
+//		model.addAttribute("member",member);
+//		return "member_who";
+//	}
 	
 	//member_who 페이지에서 dto를 가지고 member_update 폼 페이지로 이동
 	@PostMapping("update")
@@ -398,15 +400,17 @@ public class Membercontroller {
 	//닉네임 변경을 눌렀을 때 기능
 	@PostMapping("item/nick/change")
 	public String mem_nick_change(@RequestParam String mem_id,HttpServletRequest req,Model model) {
+		HttpSession session=req.getSession(false);
+		
 		String nick=(String)req.getParameter("nick");
 		//id를 통한 회원정보 조회
-		Member mb=memberservice.getMyInfo(mem_id);
+		Member mb=(Member)session.getAttribute("member");
 		//닉네임 변경 함수
 		mb.setMem_nickName(nick);
 		memberservice.mem_nickname_change(mb);
 		//아이템에서 닉변권 제거 함수
 		memberitemservice.nick_change(mem_id);
-		model.addAttribute("member",mb);
+		
 		
 		return "member_My_page";
 	}
@@ -464,19 +468,13 @@ public class Membercontroller {
 	@PostMapping("delete_bye")
 	public String bye(HttpServletRequest req,HttpSession session) {
 		Member member=(Member)session.getAttribute("member");
-//		Timer timer=new Timer();//객체생성
-//		long millis=10000;//시간
-//		TimerTask tt=new TimerTask() { //1주일 후에 실행할 코드		
-//			@Override
-//			public void run() {
-//				System.out.println("되냐");
-				memberservice.member_delete(member);
-				memberitemservice.item_bye(member);
-//			}
-//		};
-//		timer.schedule(tt, millis);// 타이머기능
+
+		fnoteservice.all_note_delete(member.getMem_id());
+		memberitemservice.item_bye(member);
+		memberservice.member_delete(member);
+
 		session.invalidate();
-		return "redirect:/project_403";
+		return "redirect:/";
 	}
 		
 	//마이페이지로 이동

@@ -66,7 +66,7 @@ public class MemberItemRepositoryImpl implements MemberItemRepository{
 			conn.close();
 		}catch (Exception e) {e.printStackTrace();}
 	}
-
+	//닉네임 색상 변경
 	@Override
 	public void color_change(Member_Item mi) {
 		try {
@@ -80,7 +80,7 @@ public class MemberItemRepositoryImpl implements MemberItemRepository{
 		conn.close();
 		}catch(Exception e) {e.printStackTrace();}
 	}
-	
+	//회원탈퇴시 member_item테이블에서도 삭제!
 	public void item_bye(Member member) {
 		try {
 			conn=DBConnection.getConnection();

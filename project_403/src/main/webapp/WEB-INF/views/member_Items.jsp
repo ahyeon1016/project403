@@ -9,8 +9,10 @@
     </head>
 <body>
     <%@ include file="/WEB-INF/views/member_home.jsp" %>
-
+	
+	
     <%
+    	if(member!=null){
         Member_Item mi = (Member_Item)request.getAttribute("mem_item");
         String mem_color = mi.getMem_color();
     %>
@@ -74,5 +76,9 @@
             }
         }
     </script>
+    <%}else{ %>
+    	<h1>로그인해주세요!</h1>
+    <%} %>
+    <%@ include file="/WEB-INF/views/footer.jsp" %>
 </body>
 </html>
