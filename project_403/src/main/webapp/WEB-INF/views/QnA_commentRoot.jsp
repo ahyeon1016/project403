@@ -18,6 +18,7 @@
 </head>
 <body>
 	<%@include file="/WEB-INF/views/member_home.jsp" %>
+	<div style="display: none" id=isClicked_btn>${isClicked_btn}</div>
 	<div style="display: none" id="nickName">${member.getMem_nickName()}</div>
 	<p>${member.getMem_id()}
 	HELLO COMMENT ROOT VIEW
@@ -32,7 +33,7 @@
 	<br>
 	<br>
 	<p>조회수 ${qna.getComment_hit()}  |  
-	<button id="goodBtn" style="background-color: white" onclick="goodUp(true, ${qna.getComment_num()})">좋아요</button>
+	<button id="goodBtn" style="background-color: ${color}" onclick="goodUp(${isClicked_btn}, ${qna.getComment_num()})">좋아요</button>
 	<span id="good">${qna.getComment_totalGood()}</span> 
 	<hr>
 	<h3>댓글</h3>
@@ -55,21 +56,17 @@
 		function goodUp(isClicked, qnaNum){
 			console.log(goodBtn.style.backgroundColor);
 			console.log(qnaNum);
-			/* 버튼 색상 변경 */
-			if(goodBtn.style.backgroundColor=='white'){
-				goodBtn.style.backgroundColor='gray';
-			}else{
-				goodBtn.style.backgroundColor='white';
-			}
-			/* 버튼의 파라미터 변경 */
+			/* 버튼의 파라미터와 색상 변경 */
 			console.log(isClicked);
 			if(isClicked){
 				goodBtn.setAttribute("onclick", "goodUp(false, "+qnaNum+")");
+				goodBtn.style.backgroundColor='gray';
 			}else{
 				goodBtn.setAttribute("onclick", "goodUp(true, "+qnaNum+")");
-			}		
-			/* comment_good true/false 설정 */
+				goodBtn.style.backgroundColor='white';
+			}	
 			
+			/* comment_good true/false 설정 */
 			$.ajax({
 				url : "../favorite/good",
 				type : "POST",
@@ -94,7 +91,7 @@
 			
 		}
 		
-		function comment_load(){
+		function comment_load(){			
 			let comment_root = parseInt(root.textContent);
 			console.log("페이지가 로드 되었습니다.");
 			let comment_date_format = new Date(comment_date.innerText.trim().replace(' ', 'T')).toLocaleString("ko-KR", {

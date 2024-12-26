@@ -29,4 +29,10 @@ public class Favorite_ServiceImpl implements Favorite_Service{
 		return favoriteRepository.getTotalGood(qnaNum);
 	}
 
+	@Override
+	public Boolean isGoodClicked(String user_id, int qnaNum) {
+		System.out.println("서비스 | getTotalGood() 도착");
+		return favoriteRepository.isGoodClicked(user_id, qnaNum);
+	}
+
 }

@@ -101,7 +101,7 @@ public class Favorite_RepositoryImpl implements Favorite_Repository{
 					+ "WHERE comment_num=? AND comment_good=1";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, qnaNum);
-			System.out.println(pstmt);
+
 			//COUNT값을 totalGood에 대입한다.
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
@@ -118,6 +118,47 @@ public class Favorite_RepositoryImpl implements Favorite_Repository{
 		System.out.println("리파지토리 | getTotalGood()완료 totalGood값 리턴 : "+totalGood);
 		
 		return totalGood;
+	}
+
+	//사용자가 해당 질문에 좋아요를 눌렀는지 확인하는 함수 (Read)
+	@Override
+	public Boolean isGoodClicked(String user_id, int qnaNum) {
+		System.out.println("리파지토리 | isGoodClicked()도착");
+		Boolean isClicked_btn = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리전송
+			String SQL = 
+					"SELECT comment_good "
+					+ "FROM Favorite "
+					+ "WHERE mem_id=? AND comment_num=? AND comment_good=1";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, user_id);
+			pstmt.setInt(2, qnaNum);
+			
+			rs = pstmt.executeQuery();
+			//ResultSet에 담긴 데이터에 따른 isClicked의 값을 설정
+			if(!rs.next()) {
+				isClicked_btn = false;
+			}else {
+				isClicked_btn = true;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		System.out.println("리파지토리 | isGoodClicked()완료 isClicked_btn값 리턴 : "+isClicked_btn);
+		
+		return isClicked_btn;
 	}
 
 	//DB에 파라미터로 받은 값이 포함된 row가 있는지 확인하고 Boolean값을 반환하는 함수

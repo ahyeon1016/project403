@@ -123,11 +123,37 @@ public class QnAController {
 	@GetMapping("/commentRootOne")
 	public String getCommentRootOne(
 			@RequestParam int comment_root,
-			Model model) {
+			Model model,
+			HttpServletRequest request) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | getCommentRootOne() 도착");
 		//comment_root를 가지고 QnA DTO를 가져온다.
 		QnA qna = qnaService.getCommentRootOne(comment_root);
+		
+		//좋아요 싫어요의 갯수를 QnA DTO의 변수에 담는다.
+		int qnaNum = qna.getComment_num();
+		int totalGood = favoriteService.getTotalGood(qnaNum);
+		qna.setComment_totalGood(totalGood);
+
+		//세션 연결
+		HttpSession session = request.getSession(false);
+		Member user = (Member)session.getAttribute("member");
+		
+		//세션에 저장된 Member DTO의 mem_id가 해당 질문에 좋아요를 눌렀는지 확인하기 위함
+		Boolean isClicked_btn = null;
+		String color = "";
+		if(user != null) {
+			String user_id = user.getMem_id();
+			isClicked_btn = favoriteService.isGoodClicked(user_id, qnaNum);
+		}else {
+			isClicked_btn = false;
+		}
+		
+		if(isClicked_btn) {
+			color = "gray";
+		}else {
+			color = "white";
+		}
 		
 		//mem_id를 통해 mem_nickName을 구하고 QnA DTO의 변수에 설정한다.
 		System.out.println("컨트롤러 | 작성자의 nickName을 구하기 위해 memberService로 이동");
@@ -135,13 +161,10 @@ public class QnAController {
 			Member member = memberService.getMyInfo(qna.getMem_id());
 			qna.setMem_nickName(member.getMem_nickName());
 		}
-		//좋아요 싫어요의 갯수를 QnA DTO의 변수에 담는다.
-		int qnaNum = qna.getComment_num();
-		int totalGood = favoriteService.getTotalGood(qnaNum);
-		qna.setComment_totalGood(totalGood);
 		
 		model.addAttribute("qna", qna);
-		
+		model.addAttribute("isClicked_btn", !isClicked_btn);
+		model.addAttribute("color", color);
 		return "QnA_commentRoot";
 	}
 
