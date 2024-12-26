@@ -33,8 +33,10 @@
 	<br>
 	<br>
 	<p>조회수 ${qna.getComment_hit()}  |  
-	<button id="goodBtn" style="background-color: ${color}" onclick="goodUp(${isClicked_btn}, ${qna.getComment_num()})">좋아요</button>
-	<span id="good">${qna.getComment_totalGood()}</span> 
+	<button id="goodBtn" style="background-color: ${goodColor}" onclick="goodUp(${isGood_btn}, ${qna.getComment_num()})">좋아요</button>
+	<span id="good">${qna.getComment_totalGood()}</span> | 
+	<button id="badBtn" style="background-color: ${goodColor}" onclick="badUp(${isGood_btn}, ${qna.getComment_num()})">싫어요</button>
+	<span id="bad">${qna.getComment_totalGood()}</span> | 
 	<hr>
 	<h3>댓글</h3>
 	<textarea id="comment_input"rows="10" cols="60" placeholder="내용을 입력해 주세요."></textarea>
@@ -46,6 +48,8 @@
 	<script>
 		let good = document.querySelector("#good");
 		let goodBtn = document.querySelector("#goodBtn");
+		let bad = document.querySelector("#bad");
+		let badBtn = document.querySelector("#badBtn");
 		let nickName = document.querySelector("#nickName").textContent;
 		let root = document.querySelector("#root");
 		let comment_date = document.querySelector("#comment_date");
@@ -53,6 +57,7 @@
 		let comment = document.querySelector("#comment");
 		comment.addEventListener("load", comment_load());
 		
+		/*좋아요 기능*/
 		function goodUp(isClicked, qnaNum){
 			console.log(goodBtn.style.backgroundColor);
 			console.log(qnaNum);
@@ -87,10 +92,46 @@
 					console.log("실패");
 				}
 			});
-			
-			
 		}
 		
+		/*싫어요 기능*/
+		function badUp(isClicked, qnaNum){
+			console.log(badBtn.style.backgroundColor);
+			console.log(qnaNum);
+			/* 버튼의 파라미터와 색상 변경 */
+			console.log(isClicked);
+			if(isClicked){
+				badBtn.setAttribute("onclick", "badUp(false, "+qnaNum+")");
+				badBtn.style.backgroundColor='gray';
+			}else{
+				badBtn.setAttribute("onclick", "badUp(true, "+qnaNum+")");
+				badBtn.style.backgroundColor='white';
+			}	
+			
+			/* comment_bad true/false 설정 */
+			$.ajax({
+				url : "../favorite/bad",
+				type : "POST",
+				contentType : "application/json",
+				data : JSON.stringify({
+					"isClicked" : isClicked,
+					"qnaNum" : qnaNum
+				}),
+				success : function(data){
+					console.log("성공"+data.isClicked);
+					if(data.isClicked){
+						bad.textContent = parseInt(bad.textContent)+1;
+					} else{
+						bad.textContent = parseInt(bad.textContent)-1;	
+					}
+				},
+				error : function(data){
+					console.log("실패");
+				}
+			});
+		}
+		
+		/*View 로딩 시에 댓글을 가져오는 기능*/
 		function comment_load(){			
 			let comment_root = parseInt(root.textContent);
 			console.log("페이지가 로드 되었습니다.");
@@ -204,6 +245,7 @@
 			});
 		}
 		
+		/*대댓글 추가*/
 		function child_input(element, q_serial, root, parent){
 			
 			let child = element.previousElementSibling.value;
@@ -240,6 +282,7 @@
 			});
 		}
 		
+		/*댓글 삭제*/
 		function deleteParent(element, root, parent, q_serial){
 			console.log("comment_parent 제거버튼");
 			console.log(root);
@@ -271,6 +314,7 @@
 			});
 		}
 		
+		/*대댓글 삭제*/
 		function deleteChild(element, root, parent, q_serial, child){
 			console.log("comment_parent 제거버튼");
 			console.log(root);

@@ -5,4 +5,6 @@ public interface Favorite_Repository {
 	void goodDisable(String mem_id, int qnaNum);
 	int getTotalGood(int qnaNum);
 	Boolean isGoodClicked(String user_id, int qnaNum);
+	void badEnable(String mem_id, int qnaNum);
+	void badDisable(String mem_id, int qnaNum);
 }

@@ -35,4 +35,16 @@ public class Favorite_ServiceImpl implements Favorite_Service{
 		return favoriteRepository.isGoodClicked(user_id, qnaNum);
 	}
 
+	@Override
+	public void badEnable(String mem_id, int qnaNum) {
+		System.out.println("서비스 | badEnable() 도착");
+		favoriteRepository.badEnable(mem_id, qnaNum);
+	}
+
+	@Override
+	public void badDisable(String mem_id, int qnaNum) {
+		System.out.println("서비스 | badDisable() 도착");
+		favoriteRepository.badDisable(mem_id, qnaNum);
+	}
+
 }

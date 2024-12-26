@@ -140,19 +140,20 @@ public class QnAController {
 		Member user = (Member)session.getAttribute("member");
 		
 		//세션에 저장된 Member DTO의 mem_id가 해당 질문에 좋아요를 눌렀는지 확인하기 위함
-		Boolean isClicked_btn = null;
-		String color = "";
+		Boolean isGood_btn = null;
 		if(user != null) {
 			String user_id = user.getMem_id();
-			isClicked_btn = favoriteService.isGoodClicked(user_id, qnaNum);
+			isGood_btn = favoriteService.isGoodClicked(user_id, qnaNum);
 		}else {
-			isClicked_btn = false;
+			isGood_btn = false;
 		}
 		
-		if(isClicked_btn) {
-			color = "gray";
+		//isGood_btn의 값에 따라 goodColor의 값을 설정
+		String goodColor = "";
+		if(isGood_btn) {
+			goodColor = "gray";
 		}else {
-			color = "white";
+			goodColor = "white";
 		}
 		
 		//mem_id를 통해 mem_nickName을 구하고 QnA DTO의 변수에 설정한다.
@@ -163,8 +164,8 @@ public class QnAController {
 		}
 		
 		model.addAttribute("qna", qna);
-		model.addAttribute("isClicked_btn", !isClicked_btn);
-		model.addAttribute("color", color);
+		model.addAttribute("isGood_btn", !isGood_btn);	//View에서 함수의 파라미터로 사용하기 때문에 !을 사용
+		model.addAttribute("goodColor", goodColor);
 		return "QnA_commentRoot";
 	}
 
