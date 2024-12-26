@@ -95,6 +95,8 @@ public class QnAController {
 			int qnaNum = qna.getComment_num();
 			int totalGood = favoriteService.getTotalGood(qnaNum);
 			qna.setComment_totalGood(totalGood);
+			int totalBad = favoriteService.getTotalBad(qnaNum);
+			qna.setComment_totalBad(totalBad);
 		}
 		
 		//페이지 처리
@@ -134,6 +136,8 @@ public class QnAController {
 		int qnaNum = qna.getComment_num();
 		int totalGood = favoriteService.getTotalGood(qnaNum);
 		qna.setComment_totalGood(totalGood);
+		int totalBad = favoriteService.getTotalBad(qnaNum);
+		qna.setComment_totalBad(totalBad);
 
 		//세션 연결
 		HttpSession session = request.getSession(false);
@@ -156,6 +160,22 @@ public class QnAController {
 			goodColor = "white";
 		}
 		
+		//세션에 저장된 Member DTO의 mem_id가 해당 질문에 싫어요를 눌렀는지 확인하기 위함
+		Boolean isBad_btn = null;
+		if(user != null) {
+			String user_id = user.getMem_id();
+			isBad_btn = favoriteService.isBadClicked(user_id, qnaNum);
+		}else {
+			isBad_btn = false;
+		}
+		
+		//isGood_btn의 값에 따라 goodColor의 값을 설정
+		String badColor = "";
+		if(isBad_btn) {
+			badColor = "gray";
+		}else {
+			badColor = "white";
+		}
 		//mem_id를 통해 mem_nickName을 구하고 QnA DTO의 변수에 설정한다.
 		System.out.println("컨트롤러 | 작성자의 nickName을 구하기 위해 memberService로 이동");
 		if(qna!=null) {
@@ -166,6 +186,8 @@ public class QnAController {
 		model.addAttribute("qna", qna);
 		model.addAttribute("isGood_btn", !isGood_btn);	//View에서 함수의 파라미터로 사용하기 때문에 !을 사용
 		model.addAttribute("goodColor", goodColor);
+		model.addAttribute("isBad_btn", !isBad_btn);	//View에서 함수의 파라미터로 사용하기 때문에 !을 사용
+		model.addAttribute("badColor", badColor);
 		return "QnA_commentRoot";
 	}
 

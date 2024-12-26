@@ -35,8 +35,8 @@
 	<p>조회수 ${qna.getComment_hit()}  |  
 	<button id="goodBtn" style="background-color: ${goodColor}" onclick="goodUp(${isGood_btn}, ${qna.getComment_num()})">좋아요</button>
 	<span id="good">${qna.getComment_totalGood()}</span> | 
-	<button id="badBtn" style="background-color: ${goodColor}" onclick="badUp(${isGood_btn}, ${qna.getComment_num()})">싫어요</button>
-	<span id="bad">${qna.getComment_totalGood()}</span> | 
+	<button id="badBtn" style="background-color: ${badColor}" onclick="badUp(${isBad_btn}, ${qna.getComment_num()})">싫어요</button>
+	<span id="bad">${qna.getComment_totalBad()}</span> | 
 	<hr>
 	<h3>댓글</h3>
 	<textarea id="comment_input"rows="10" cols="60" placeholder="내용을 입력해 주세요."></textarea>

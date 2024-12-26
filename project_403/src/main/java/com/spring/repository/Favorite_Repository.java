@@ -7,4 +7,6 @@ public interface Favorite_Repository {
 	Boolean isGoodClicked(String user_id, int qnaNum);
 	void badEnable(String mem_id, int qnaNum);
 	void badDisable(String mem_id, int qnaNum);
+	int getTotalBad(int qnaNum);
+	Boolean isBadClicked(String user_id, int qnaNum);
 }

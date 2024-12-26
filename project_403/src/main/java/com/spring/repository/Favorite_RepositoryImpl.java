@@ -235,6 +235,84 @@ public class Favorite_RepositoryImpl implements Favorite_Repository{
 		
 	}
 
+	//활성화된 싫어요의 갯수를 가져오는 함수(Read)
+	@Override
+	public int getTotalBad(int qnaNum) {
+		System.out.println("리파지토리 | getTotalBad()도착");
+		int totalBad = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리전송
+			String SQL = 
+					"SELECT COUNT(comment_bad) FROM Favorite "
+					+ "WHERE comment_num=? AND comment_bad=1";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setInt(1, qnaNum);
+
+			//COUNT값을 totalBad에 대입한다.
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				totalBad = rs.getInt(1);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		System.out.println("리파지토리 | getTotalBad()완료 totalBad값 리턴 : "+totalBad);
+		
+		return totalBad;
+	}
+
+	//사용자가 해당 질문에 좋아요를 눌렀는지 확인하는 함수 (Read)
+	@Override
+	public Boolean isBadClicked(String user_id, int qnaNum) {
+		System.out.println("리파지토리 | isBadClicked()도착");
+		Boolean isClicked_btn = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리전송
+			String SQL = 
+					"SELECT comment_bad "
+					+ "FROM Favorite "
+					+ "WHERE mem_id=? AND comment_num=? AND comment_bad=1";
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, user_id);
+			pstmt.setInt(2, qnaNum);
+			
+			rs = pstmt.executeQuery();
+			//ResultSet에 담긴 데이터에 따른 isClicked의 값을 설정
+			if(!rs.next()) {
+				isClicked_btn = false;
+			}else {
+				isClicked_btn = true;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		System.out.println("리파지토리 | isBadClicked()완료 isClicked_btn값 리턴 : "+isClicked_btn);
+		
+		return isClicked_btn;
+	}
+
 	//DB에 파라미터로 받은 값이 포함된 row가 있는지 확인하고 Boolean값을 반환하는 함수
 	private Boolean hasFeedBack(String type, String mem_id, int qnaNum) {
 		System.out.println("리파지토리 | hasFeedBack()도착");
