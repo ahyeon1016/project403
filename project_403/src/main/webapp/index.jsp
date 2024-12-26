@@ -45,22 +45,24 @@
 			    margin-bottom: 50px;
 			    font-size: 3rem;
 			    font-weight: 900;
-			    color: white;
+			    color: black;
 			    padding: 10px;
 			    border-radius: 10px;
 			    font-family: 'Montserrat', sans-serif;
-			    -webkit-text-stroke: 1.5px black; /* 어두운 녹색 테두리 */
+			    -webkit-text-stroke: 1.5px white;
 		}
 
 
         .box {
             border: 1px solid rgba(0, 0, 0, 0.6);
             border-radius: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 1px 1px 4px 8px rgba(0, 0, 0, 0.1);
             width: 250px;
             height: 350px;
-            background: rgba(255,255,255,0.8);
+            background: white;
             padding: 20px;
+            opacity:0.95;
+            
         }
 
         .box:hover {
@@ -92,7 +94,7 @@
     <%@include file="/WEB-INF/views/member_home.jsp" %>
     <!-- 메인박스 -->
     <div class="about d-flex align-items-center justify-content-center text-center">
-        <h1 class="p-4 rounded">창의적인 학습 플랫폼<br> 학습의 새로운 기준, 랠리폴리.</h1>
+        <h1 class="p-4 rounded">창의적인 학습 플랫폼<br> 학습의 새로운 기준, 랠리폴리</h1>
     </div>
 
     <!-- 두번째 박스 -->

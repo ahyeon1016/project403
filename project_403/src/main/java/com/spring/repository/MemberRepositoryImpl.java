@@ -336,6 +336,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 		}catch(Exception e) {e.printStackTrace();}
 		
 	}
+	
 	//알림 업데이트
 	public void mem_alarm_update(Member member) {
 		
@@ -368,7 +369,6 @@ public class MemberRepositoryImpl implements MemberRepository {
 	
 	
 	//문제를 풀 시 포인트,경험치 추가
-	
 	public void member_lvup(int point,int exp,String mem_id) {
 		try {
 		conn=DBConnection.getConnection();

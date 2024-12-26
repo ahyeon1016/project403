@@ -13,37 +13,58 @@
   	<!-- 부트스트랩 적용 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-    
-    	* {
-    	 font-family: 'Open Sans', sans-serif;
-    	 }
-        .navbar-dark .navbar-nav .nav-link {
-            color: rgba(255,255,255,.75);
-        }
-        .navbar-dark .navbar-nav .nav-link:hover {
-            color: rgba(255,255,255,1);
-        }
-        
-        #left-a {
-            color: white;
-            font-weight: bold;
-            text-decoration: none;
-        }
-        #left-a:hover {
-            color: white;
-        }
-        .nav-item{
-        	margin:10px 0;
-        	align-content: center;
-        	padding-right:10px;
-        }
-        
-        .nav-item form{
-        	margin:10px 10px;
-        }
-        
+    * {
+        font-family: 'Open Sans', sans-serif;
+        list-style: none;
+        text-decoration: none;
+    }
+    .navbar {
+        height: 70px; /* 높이 고정 */
+        align-items: center;
+    }
+    .navbar-brand {
+        height: 100%; /* 부모 요소의 높이에 맞춤 */
+        display: flex;
+        align-items: center; /* 수직 정렬 */
+    }
+    .navbar-nav .nav-link {
+        height: 100%; /* 부모 요소의 높이에 맞춤 */
+        display: flex;
+        align-items: center; /* 수직 정렬 */
+        color: rgba(255, 255, 255, .75);
+    }
+    .navbar-nav .nav-link:hover {
+        color: rgba(255, 255, 255, 1);
+    }
+    #dropdown {
+        cursor: pointer;
+    }
+    .nav-item {
+        margin: 10px 0;
+        align-content: center;
+        padding-right: 10px;
+    }
+    .nav-item form {
+        margin: 10px 10px;
+    }
+    #down_menu {
+        position: absolute;
+        right: 380px;
+        top: 60px;
+        display: none;
+        background-color: #333; /* 어두운 배경색 */ 
+        color: white; /* 텍스트 색상 */ 
+        border: 1px solid gray; /* 테두리 색상 */ 
+        border-radius: 10px; /* 테두리 둥글게 */ 
+        padding: 10px; /* 내부 여백 */ 
+        z-index: 2
        
-    </style>
+    }
+    #down_menu > img {
+        border-radius: 50px;
+    }
+</style>
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -82,10 +103,11 @@
                         </li>
                     <%
                         } else {
+                        	String profile=member.getMem_profile_name();
                         	Member_Item mi=(Member_Item)session.getAttribute("member_item");
                     %>
                         <li class="nav-item">
-                            <a class="nav-link" href="/project_403/member/mypage">마이페이지</a>
+                            <span class="nav-link" id="dropdown"><%=member.getMem_nickName() %><i class="fa-solid fa-caret-down"></i></span>
                         </li>
                         <% if (member.isMem_admin()) { %>
                             <li class="nav-item">
@@ -97,17 +119,50 @@
                             	<a href="/project_403/sub" class="nav-link">Subject</a>
                             </li>
                         <% } %>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/project_403/member/logout">로그아웃</a>
-                        </li>
-                    <%
+                    
+	            </ul>
+	            <div id="down_menu">
+	            	 <% if (profile != null && profile.startsWith("http")) { %>
+                		    <img src="<%= profile %>" width="200px" height="200px" alt="Profile Image">
+                	 <% } else { %>
+                    		<img src="/project_403/resources/images/<%= profile %>" width="100" height="100" alt="Profile Image">
+               		 <% } %>
+							<ul>
+							<li>
+								<span><%=member.getMem_nickName() %>님,환영합니다!</span>
+							</li>	            
+                    		<li>
+                    			<a class="nav-link" href="/project_403/member/mypage">마이페이지</a>
+                    		</li>
+                    		<li>
+                    			<a class="nav-link" href="/project_403/member/logout">로그아웃</a>
+                    		</li>
+                    		</ul>
+               	</div>
+               	<%
                         }
                     %>
-                </ul>
             </div>
         </div>
     </nav>
+<script>
+	let dropdown=document.querySelector("#dropdown");
+	let menu=document.querySelector("#down_menu");
+	dropdown.addEventListener("click",downmenu);
+	function downmenu(){
+		if(menu.style.display!="flex")
+		{
+		menu.style.display="flex";	
+		}
+		else
+		{
+			menu.style.display="none";
+		}
+		
+	}
 
+
+</script>
     
 </body>
 </html>

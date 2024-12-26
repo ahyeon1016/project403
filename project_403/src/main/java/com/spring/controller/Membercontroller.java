@@ -165,7 +165,7 @@ public class Membercontroller {
 	
 	//member_login 폼 페이지로 이동
 	@GetMapping("login")
-	public String Login_page(@ModelAttribute("member") Member member,Model model) {
+	public String Login_page(@ModelAttribute("member") Member member) {
 		return "member_login";
 	}
 	
@@ -360,16 +360,7 @@ public class Membercontroller {
 		return "member_My_page";
 	}
 	
-//	//member_My_page에서 정보조회를 눌렀을때 세션에 있는 mem_id를 받아 member_who로 이동
-//	@PostMapping("me")
-//	public String mem_info(@RequestParam String mem_id,Model model) {
-//		System.out.println(mem_id+"받아온 멤버 아이디");
-//		Member member=memberservice.getMyInfo(mem_id);
-//		System.out.println(member.getMem_id());
-//		model.addAttribute("member",member);
-//		return "member_who";
-//	}
-	
+
 	//member_who 페이지에서 dto를 가지고 member_update 폼 페이지로 이동
 	@PostMapping("update")
 	public String update_member(@ModelAttribute("member") Member member,@RequestParam String mem_id,Model model) {
@@ -425,6 +416,8 @@ public class Membercontroller {
 		model.addAttribute("member_item",mi);
 		return "member_font";
 	}
+
+	//닉네임 색상 변경
 	@PostMapping("item/font/change")
 	public String mem_font_change(@RequestParam String mem_id,HttpServletRequest req) {
 		Member_Item mi=new Member_Item();
@@ -468,8 +461,10 @@ public class Membercontroller {
 	@PostMapping("delete_bye")
 	public String bye(HttpServletRequest req,HttpSession session) {
 		Member member=(Member)session.getAttribute("member");
-
-		fnoteservice.all_note_delete(member.getMem_id());
+		ArrayList arr=fnoteservice.note_mine(member.getMem_id());
+		if(arr!=null) {
+			fnoteservice.all_note_delete(member.getMem_id());
+		}
 		memberitemservice.item_bye(member);
 		memberservice.member_delete(member);
 
@@ -533,6 +528,7 @@ public class Membercontroller {
 		memberservice.mem_alarm_add("qwer", "asdf");
 		return "member_home";
 	}
+	
 	//알림 확인 및 삭제
 	@GetMapping("alarm/delete")
 	public String alarm_delete(@RequestParam int index,HttpServletRequest req) {
@@ -557,6 +553,7 @@ public class Membercontroller {
 		
 		return "member_My_page";
 	}
+	
 	//로그아웃
 	@GetMapping("logout")
 	public String logout(HttpSession session) {
