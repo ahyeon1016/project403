@@ -8,7 +8,7 @@ public class Question {
 	private String question_ans;		//정답
 	private MultipartFile question_img;	//문제 이미지
 	private String question_img_name;	//문제 이미지 이름
-	private int question_plus;			//문제풀이 추가 카운트
+	private int question_level;			//문제풀이 추가 카운트
 	private int question_count;			//문제풀이 횟수
 	private String sub_code_sum;		//과목코드(과목코드+챕터코드)
 	private int mem_serial;				//멤버식별변수
@@ -46,12 +46,12 @@ public class Question {
 	}
 	public void setQuestion_img_name(String question_img_name) {
 		this.question_img_name = question_img_name;
+	}	
+	public int getQuestion_level() {
+		return question_level;
 	}
-	public int getQuestion_plus() {
-		return question_plus;
-	}
-	public void setQuestion_plus(int question_plus) {
-		this.question_plus = question_plus;
+	public void setQuestion_level(int question_level) {
+		this.question_level = question_level;
 	}
 	public int getQuestion_count() {
 		return question_count;

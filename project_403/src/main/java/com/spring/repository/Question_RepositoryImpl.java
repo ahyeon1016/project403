@@ -128,7 +128,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 				question.setQuestion_content(rs.getString(2));
 				question.setQuestion_ans(rs.getString(3));
 				question.setQuestion_img_name(rs.getString(4));
-				question.setQuestion_plus(rs.getInt(5));
+				question.setQuestion_level(rs.getInt(5));
 				question.setQuestion_count(6);
 				question.setSub_code_sum(rs.getString(7));
 				question.setMem_serial(rs.getInt(8));
@@ -172,7 +172,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 				question.setQuestion_content(rs.getString(2));
 				question.setQuestion_ans(rs.getString(3));
 				question.setQuestion_img_name(rs.getString(4));
-				question.setQuestion_plus(rs.getInt(5));
+				question.setQuestion_level(rs.getInt(5));
 				question.setQuestion_count(6);
 				question.setSub_code_sum(rs.getString(7));
 				question.setMem_serial(rs.getInt(8));
@@ -214,7 +214,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 				question.setQuestion_content(rs.getString(2));
 				question.setQuestion_ans(rs.getString(3));
 				question.setQuestion_img_name(rs.getString(4));
-				question.setQuestion_plus(rs.getInt(5));
+				question.setQuestion_level(rs.getInt(5));
 				question.setQuestion_count(rs.getInt(6));
 				question.setSub_code_sum(rs.getString(7));
 				question.setMem_serial(rs.getInt(8));
