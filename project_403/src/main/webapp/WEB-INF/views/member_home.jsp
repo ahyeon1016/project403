@@ -63,6 +63,9 @@
     #down_menu > img {
         border-radius: 50px;
     }
+    .fa-caret-down{
+    	color:white;
+    }
 </style>
 
 </head>

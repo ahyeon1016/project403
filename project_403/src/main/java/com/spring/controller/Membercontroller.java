@@ -436,6 +436,10 @@ public class Membercontroller {
 		System.out.println(member.getMem_profile());
 		String path=session.getServletContext().getRealPath("/resources/images");
 		System.out.println(path);
+		
+		Member mb=(Member)session.getAttribute("member");
+		
+		if(mb.getMem_profile_name()==null) {
 		MultipartFile multi=member.getMem_profile();
 		DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
 		String dt=LocalDateTime.now().format(formatter);
@@ -445,9 +449,14 @@ public class Membercontroller {
 			multi.transferTo(file);
 		} catch(Exception e) {e.printStackTrace();}
 		member.setMem_profile_name(filename);
+		}
+		else
+		{
+			member.setMem_profile_name(mb.getMem_profile_name());
+		}
 		memberservice.member_update(member);
 		session.invalidate();
-		return "member_home";
+		return "redirect:/";
 	}
 	
 	//member_My_page에서 회원탈퇴를 누를 시 회원 탈퇴 페이지 이동
