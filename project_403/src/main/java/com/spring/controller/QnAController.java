@@ -264,7 +264,7 @@ public class QnAController {
 		String mem_id = member.getMem_id();
 		
 		map.put("mem_id", mem_id);
-		qnaService.removeCommentParent(map);
+		map = qnaService.removeCommentParent(map);
 		
 		return map;
 	}
@@ -283,7 +283,7 @@ public class QnAController {
 		String mem_id = member.getMem_id();
 		
 		map.put("mem_id", mem_id);
-		qnaService.removeCommentChild(map);
+		map = qnaService.removeCommentChild(map);
 		
 		return map;
 	}

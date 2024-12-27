@@ -11,11 +11,32 @@
 	HELLO QUESTION MAIN
 	<p>${member.getMem_serial()}
 	<hr>
-	<p><a href="Q_addMCQ">객관식 문제 만들기</a>
-	<p><a href="Q_addSAQ">주관식 문제 만들기</a>
-	<p><a href="Q_addCP">코딩 문제 만들기</a>
+	<%
+	if(member!=null){
+	%>
+		<div>
+			<img src="/project_403/resources/images/1.jpg" style="width: 10%; height: 10%">
+			<p><button onclick="addQuestion('MCQ')">객관식 문제 만들기</button><p>
+		</div>
+		<div>
+			<img src="/project_403/resources/images/2.jpg" style="width: 10%; height: 10%">
+			<p><button onclick="addQuestion('SAQ')">주관식 문제 만들기</button><p>
+		</div>
+		<div>
+			<img src="/project_403/resources/images/3.jpg" style="width: 10%; height: 10%">
+			<p><button onclick="addQuestion('CP')">코딩 문제 만들기</button><p>
+		</div>
+		<br>
+		<p><a href="Q_all">모든 문제 확인하기</a>
+	<%} else{%>
+		<div>로그인을 하시오.</div>
+	<%} %>	
 	<hr>
-	<p><a href="Q_all">모든 문제 확인하기</a>
 	
+	<script>
+		function addQuestion(type){
+			window.location.href="Q_add"+type;
+		}
+	</script>
 </body>
 </html>
