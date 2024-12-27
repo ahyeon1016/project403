@@ -33,6 +33,13 @@
 	객관식<input type="radio" name="id" value="MCQ" class="question_id">
 	주관식<input type="radio" name="id" value="SAQ" class="question_id">
 	코딩<input type="radio" name="id" value="CP" class="question_id">
+	<%
+	if(member!=null){ 
+	%>
+	|자기가 낸 문제 찾기 <input type="checkbox" name="name" value="<%=member.getMem_serial()%>" id="myQuestion">
+	<%
+	}
+	%>
 	<div id="question_container">
 		
 	</div>

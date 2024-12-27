@@ -388,8 +388,10 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 	
 				pstmt.executeUpdate();
 				System.out.println("리파지토리 | removeCommentChild() UPDATE 성공");
+				map.put("success", true);
 			}else {
 				System.out.println("리파지토리 | removeCommentChild() UPDATE 실패 일치하지 않음.");
+				map.put("success", false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

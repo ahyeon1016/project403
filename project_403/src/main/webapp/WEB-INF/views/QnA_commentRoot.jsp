@@ -6,15 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<style>
-	body{
-		width : 70%;
-		margin : 0 auto;
-		padding : 100px;
-		border : 1px solid black;
-		
-	}
-</style>
+
 </head>
 <body>
 	<%@include file="/WEB-INF/views/member_home.jsp" %>
