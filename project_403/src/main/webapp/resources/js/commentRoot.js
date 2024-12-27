@@ -137,8 +137,8 @@ function comment_load(){
 							"<textarea></textarea>"+
 							"<button onclick='child_input(this, `"+
 								list[i].question_serial+"`, "+list[i].comment_root+","+
-								list[i].comment_parent+
-							")'>댓글쓰기</button>"+
+								list[i].comment_parent+", `"+list[i].mem_id+
+							"`)'>댓글쓰기</button>"+
 							"<button onclick='deleteParent(this, "+
 								list[i].comment_root+", "+list[i].comment_parent+", `"+
 								list[i].question_serial+
@@ -180,7 +180,7 @@ function comment_load(){
 }
 
 /* 댓글 추가 */
-function comment_submit(root, q_serial){		
+function comment_submit(root, q_serial,	 mem_id){		
 	if(comment_input.value==null||comment_input.value.trim()==""){
 		alert("공백은 입력 불가능 합니다.");
 		return;
@@ -193,7 +193,8 @@ function comment_submit(root, q_serial){
 		data : JSON.stringify({
 			"question_serial":q_serial,
 			"comment_root":root,
-			"comment_content":comment_input.value
+			"comment_content":comment_input.value,
+			"root_mem_id":mem_id
 		}),
 		success : function(data){
 			console.log("성공");
@@ -210,8 +211,8 @@ function comment_submit(root, q_serial){
 						"<textarea></textarea>"+
 						"<button onclick='child_input(this, `"+
 							data.question_serial+"`,"+data.comment_root+","+
-							data.comment_parent+
-						")'>댓글쓰기</button>"+
+							data.comment_parent+", `"+mem_id+
+						"`)'>댓글쓰기</button>"+
 						"<button onclick='deleteParent(this, "+
 						data.comment_root+", "+data.comment_parent+", `"+
 						data.question_serial+
@@ -229,7 +230,7 @@ function comment_submit(root, q_serial){
 }
 
 /*대댓글 추가*/
-function child_input(element, q_serial, root, parent){
+function child_input(element, q_serial, root, parent, mem_id){
 	
 	let child = element.previousElementSibling.value;
 	console.log(element.parentElement);
@@ -241,7 +242,8 @@ function child_input(element, q_serial, root, parent){
 			"comment_content" : child,
 			"question_serial" : q_serial,
 			"comment_root" : root,
-			"comment_parent" : parent
+			"comment_parent" : parent,
+			"parent_mem_id" : mem_id
 		}),
 		success: function(data){
 			let date_format = new Date(data.time.replace(' ', 'T')).toLocaleString("ko-KR", {

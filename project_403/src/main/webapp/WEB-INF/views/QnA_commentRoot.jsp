@@ -46,7 +46,7 @@
 	<div>
 		<textarea id="comment_input"rows="10" cols="60" placeholder="내용을 입력해 주세요."></textarea>
 		<br>
-		<button id="comment_input_btn" onclick="comment_submit(${qna.getComment_root()}, '${qna.getQuestion_serial()}')">입력</button>
+		<button id="comment_input_btn" onclick="comment_submit(${qna.getComment_root()}, '${qna.getQuestion_serial()}', '${qna.getMem_id()}')">입력</button>
 	</div>
 	<hr>
 	<ul id="comment">

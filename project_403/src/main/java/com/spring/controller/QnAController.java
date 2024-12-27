@@ -205,11 +205,17 @@ public class QnAController {
 		//세션에서 Member DTO를 꺼낸 뒤에 mem_id을 map에 추가한다.
 		HttpSession session = request.getSession(false);
 		Member member = (Member) session.getAttribute("member");
-		String mem_id = member.getMem_id();
+		String parent_mem_id = member.getMem_id();
 		
-		map.put("mem_id", mem_id);
+		map.put("mem_id", parent_mem_id);
 		map = qnaService.addCommentParent(map);		
 		
+		//root_mem_id : 글쓴이 | parent_mem_id : 댓글 작성자
+		//글쓴이에게 댓글을 달았을 때 알림을 보내는 함수
+		if((Boolean)map.get("success")) {
+			String root_mem_id = (String) map.get("root_mem_id");
+			memberService.mem_alarm_add(root_mem_id, parent_mem_id);
+		}
 		return map;
 	}
 	
@@ -243,10 +249,16 @@ public class QnAController {
 		//세션에서 Member DTO를 꺼낸 뒤에 mem_id을 map에 추가한다.
 		HttpSession session = request.getSession(false);
 		Member member = (Member) session.getAttribute("member");
-		String mem_id = member.getMem_id();
+		String child_mem_id = member.getMem_id();
 		
-		map.put("mem_id", mem_id);
+		map.put("mem_id", child_mem_id);
 		map = qnaService.addCommentChild(map);
+		//parent_mem_id : 글쓴이 | child_mem_id : 대댓글 작성자
+		//글쓴이에게 댓글을 달았을 때 알림을 보내는 함수
+		if((Boolean)map.get("success")) {
+			String parent_mem_id = (String) map.get("parent_mem_id");
+			memberService.mem_alarm_add(parent_mem_id, child_mem_id);
+		}
 		return map;
 	}
 
