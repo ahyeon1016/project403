@@ -367,7 +367,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 	
 	
 	
-	//알림 생성
+	//알림 생성                   //글쓴이       //댓글작성자
 	public void mem_alarm_add(String mem_id,String comment_id) {
 		Member member=getMyInfo(mem_id);
 		try {
