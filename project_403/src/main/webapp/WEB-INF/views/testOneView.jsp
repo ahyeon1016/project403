@@ -9,6 +9,8 @@
 	<title>Insert title here</title>
 </head>
 <body>
+    <%@ include file="/WEB-INF/views/member_home.jsp" %>
+
 testOneView 페이지
 <p><a href="testAll">전체보기</a>
 <!-- <p><a href="testStart?Num=${test.test_num}">시험시작하기</a> -->

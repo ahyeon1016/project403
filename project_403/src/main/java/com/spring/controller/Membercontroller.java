@@ -401,8 +401,8 @@ public class Membercontroller {
 		memberservice.mem_nickname_change(mb);
 		//아이템에서 닉변권 제거 함수
 		memberitemservice.nick_change(mem_id);
-		
-		
+		mb.setMem_nickName(nick);
+		session.setAttribute("member", mb);
 		return "member_My_page";
 	}
 	
@@ -420,14 +420,44 @@ public class Membercontroller {
 	//닉네임 색상 변경
 	@PostMapping("item/font/change")
 	public String mem_font_change(@RequestParam String mem_id,HttpServletRequest req) {
+		HttpSession session=req.getSession(false);
 		Member_Item mi=new Member_Item();
 		String color=req.getParameter("color");
 		System.out.println(color);
 		mi=memberitemservice.mem_item_info(mem_id);
 		mi.setMem_color(color);
 		memberitemservice.color_change(mi);
+		session.setAttribute("member_item", mi);
 		return "member_My_page";
 	}
+	//닉변권 구매
+	@PostMapping("item/purchase_nick")
+	public String mem_nick_purchase(@RequestParam String mem_id,HttpServletRequest req) {
+		HttpSession session=req.getSession(false);
+		Member member=(Member)session.getAttribute("member");
+		int point=50;
+		memberservice.item_buy(point, mem_id);
+		memberitemservice.nick_change_buy(mem_id);
+		member.setMem_point(member.getMem_point()-point);
+		session.setAttribute("member", member);
+		return "redirect:/";
+	}
+	
+	//닉네임 색상변경권 구매
+	@PostMapping("item/purchase_font")
+	public String mem_font_purchase(@RequestParam String mem_id,HttpServletRequest req) {
+		HttpSession session=req.getSession(false);
+		Member member=(Member)session.getAttribute("member");
+		int point=100;
+		memberservice.item_buy(point, mem_id);
+		memberitemservice.nick_color_buy(mem_id);
+		member.setMem_point(member.getMem_point()-point);
+		session.setAttribute("member", member);
+		
+		return "redirect:/";
+	}
+	
+	
 	
 	//member_update 폼페이지에서 받은 데이터를 member 객체에 삽입 후 session을 종료해 다시 로그인 하게 만듬
 	@PostMapping("update/sequence")

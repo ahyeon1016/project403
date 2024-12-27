@@ -11,6 +11,8 @@
 </head>
 
 <body>
+    <%@ include file="/WEB-INF/views/member_home.jsp" %>
+
 testAll 페이지
 <p><a href="../">Home</a>
 <div>

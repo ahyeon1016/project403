@@ -349,6 +349,23 @@ public class MemberRepositoryImpl implements MemberRepository {
 		
 		
 	}
+	@Override
+	//아이템 구매시 포인트 소모
+	public void item_buy(int point,String mem_id) {
+		try {
+			conn=DBConnection.getConnection();
+			String sql="update member set mem_point=mem_point-? where mem_id=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1,point);
+			pstmt.setString(2, mem_id);
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+		}catch(Exception e) {e.printStackTrace();}
+		
+	}
+	
+	
 	
 	//알림 생성
 	public void mem_alarm_add(String mem_id,String comment_id) {

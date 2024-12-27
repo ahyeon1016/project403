@@ -21,5 +21,7 @@ public interface MemberService {
 	void mem_alarm_update(Member member);//알림 삭제
 	String getNickNameBySerial(int serial);
 	void member_lvup(int point,int exp,String mem_id);
+	void item_buy(int point,String mem_id);
+	
 }
 

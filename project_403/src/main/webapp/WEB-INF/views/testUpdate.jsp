@@ -48,6 +48,8 @@
 	}
 </style>
 <body>
+    <%@ include file="/WEB-INF/views/member_home.jsp" %>
+
 testUpdate 페이지
 <p><a href="testAll">Home</a>
 <div class="container">

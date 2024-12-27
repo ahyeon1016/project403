@@ -53,6 +53,7 @@ public class MemberItemRepositoryImpl implements MemberItemRepository{
 		
 		return mi;
 	}
+	
 	//닉네임 변경시 회원의 아이템 A정보 수정
 	@Override
 	public void nick_change(String mem_id) {
@@ -66,6 +67,7 @@ public class MemberItemRepositoryImpl implements MemberItemRepository{
 			conn.close();
 		}catch (Exception e) {e.printStackTrace();}
 	}
+	
 	//닉네임 색상 변경
 	@Override
 	public void color_change(Member_Item mi) {
@@ -80,6 +82,38 @@ public class MemberItemRepositoryImpl implements MemberItemRepository{
 		conn.close();
 		}catch(Exception e) {e.printStackTrace();}
 	}
+	
+	//닉네임 변경권 구매
+	public void nick_change_buy(String mem_id) {
+		try {
+		conn=DBConnection.getConnection();
+		String sql="update Member_Item set mem_itemA=true where mem_id=?";
+		pstmt=conn.prepareStatement(sql);
+		pstmt.setString(1, mem_id);
+		pstmt.executeUpdate();
+		pstmt.close();
+		conn.close();
+		}catch(Exception e) {e.printStackTrace();}
+	}
+	
+	
+	
+	//닉네임 색상 변경권 구매
+	public void nick_color_buy(String mem_id) {
+		try {
+			conn=DBConnection.getConnection();
+			String sql="update Member_Item set mem_itemB=true where mem_id=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, mem_id);
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+			}catch(Exception e) {e.printStackTrace();}
+		
+		
+	}
+	
+	
 	//회원탈퇴시 member_item테이블에서도 삭제!
 	public void item_bye(Member member) {
 		try {
@@ -92,5 +126,7 @@ public class MemberItemRepositoryImpl implements MemberItemRepository{
 			conn.close();
 		}catch(Exception e) {e.printStackTrace();}
 	}
+	
+	
 	
 }

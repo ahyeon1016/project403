@@ -47,6 +47,8 @@
 	}
 </style>
 <body>
+    <%@ include file="/WEB-INF/views/member_home.jsp" %>
+
 testAdd 페이지
 <p><a href="../">Home</a>
 <p><a href="../Q/main" onclick="window.open(this.href, '_blank', 'width=1000px, height=600px'); return false;">문제추가하기</a>

@@ -15,6 +15,15 @@ public class MemberServiceImpl implements MemberService {
 	
 	
 	@Override
+	public void item_buy(int point, String mem_id) {
+		memberRepository.item_buy(point, mem_id);
+	}
+
+
+
+
+
+	@Override
 	public void member_lvup(int point, int exp, String mem_id) {
 		memberRepository.member_lvup(point, exp, mem_id);
 	}

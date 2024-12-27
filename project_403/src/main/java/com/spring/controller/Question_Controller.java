@@ -343,7 +343,7 @@ public class Question_Controller {
 		int point = question_level*2;
 		int exp = question_level;
 		String mem_id = member.getMem_id();
-		//memberService.member_lvup(point, exp, mem_id);
+		memberService.member_lvup(point, exp, mem_id);
 		
 		//전처리한 변수를 가지고 DB로 이동
 		System.out.println("컨트롤러 | 서비스의 updateQuestionCount() 호출");

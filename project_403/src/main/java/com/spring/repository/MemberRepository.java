@@ -21,4 +21,5 @@ public interface MemberRepository {
 	void mem_alarm_update(Member member);
 	String getNickNameBySerial(int serial);
 	void member_lvup(int point,int exp,String mem_id);
+	void item_buy(int point,String mem_id);
 }
