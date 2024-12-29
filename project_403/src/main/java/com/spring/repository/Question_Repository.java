@@ -14,4 +14,5 @@ public interface Question_Repository {
 	void updateQuestionCount(String question_serial, int question_count);
 	void updateQuestion(Question question);
 	void visibleQuestion(String question_serial);
+	ArrayList<Question> getMyQuestionsBySubCode(String sub_code, int mem_serial);
 }

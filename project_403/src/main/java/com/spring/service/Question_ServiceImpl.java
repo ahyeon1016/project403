@@ -110,4 +110,10 @@ public class Question_ServiceImpl implements Question_Service{
 		}
 	}
 
+	@Override
+	public ArrayList<Question> getMyQuestionsBySubCode(String sub_code, int mem_serial) {
+		System.out.println("서비스 | getMyQuestionsBySubCode() 호출");
+		return questionRepository.getMyQuestionsBySubCode(sub_code, mem_serial);
+	}
+
 }

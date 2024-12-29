@@ -3,7 +3,6 @@
 <%@ page import="com.spring.domain.Question"%>
 <%@ page import="com.spring.domain.Subject"%>
 <%
-	ArrayList<Question> question_all = (ArrayList<Question>) request.getAttribute("question_all");
 	ArrayList<Subject> sub_all_name = (ArrayList<Subject>) request.getAttribute("sub_all_name");
 %>
 <!DOCTYPE html>

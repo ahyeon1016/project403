@@ -1,8 +1,9 @@
 let sub_name = document.querySelector("#name_selector");
 let sub_chap = document.querySelector("#chap_selector");
-let myQuestion = document.querySelector("#myQuestion");
+let question_container = document.querySelector("#question_container");
+
 sub_name.addEventListener("change", nameSearch);
-myQuestion.addEventListener("change", selectMyQuestion);
+sub_chap.addEventListener("change", chapSearch);
 function nameSearch(){
 	let sub_name_value = sub_name.value;
 	console.log(sub_name_value);
@@ -32,10 +33,9 @@ function nameSearch(){
 	});
 }
 
-
-let question_container = document.querySelector("#question_container");
-sub_chap.addEventListener("change", chapSearch);
 function chapSearch(){
+	let myQuestion = document.querySelector("#myQuestion").checked;
+	console.log(myQuestion);
 	let	name_value = sub_name.value;
 	let chap_value = sub_chap.value;
 	console.log(name_value+"|"+chap_value);
@@ -45,7 +45,8 @@ function chapSearch(){
 		contentType : "application/json",
 		data : JSON.stringify({
 			"name" : name_value,
-			"chap" : chap_value
+			"chap" : chap_value,
+			"myQuestion" : myQuestion
 		}),
 		success : function(data){
 			console.log("성공");
@@ -103,9 +104,4 @@ function change_id(){
 			question_div[i].style.display="block";
 		}
 	}
-}
-
-function selectMyQuestion(){
-	let serial = event.target.value;
-	console.log(serial);
 }

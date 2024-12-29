@@ -17,4 +17,5 @@ public interface Question_Service {
 	void updateQuestion(Question question);
 	void visibleQuestion(String question_serial);
 	void img_file_processing(Question question, HttpServletRequest request);
+	ArrayList<Question> getMyQuestionsBySubCode(String sub_code, int mem_serial);
 }
