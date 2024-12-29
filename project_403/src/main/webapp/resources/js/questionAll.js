@@ -1,9 +1,16 @@
 let sub_name = document.querySelector("#name_selector");
 let sub_chap = document.querySelector("#chap_selector");
 let question_container = document.querySelector("#question_container");
+let myQuestion = document.querySelector("#myQuestion");
+let question_id = document.querySelectorAll(".question_id");
 
+for(let i=0; i<question_id.length; i++){
+	question_id[i].addEventListener("change", change_id);
+}
 sub_name.addEventListener("change", nameSearch);
 sub_chap.addEventListener("change", chapSearch);
+myQuestion.addEventListener("change", resetSub);
+
 function nameSearch(){
 	let sub_name_value = sub_name.value;
 	console.log(sub_name_value);
@@ -34,8 +41,6 @@ function nameSearch(){
 }
 
 function chapSearch(){
-	let myQuestion = document.querySelector("#myQuestion").checked;
-	console.log(myQuestion);
 	let	name_value = sub_name.value;
 	let chap_value = sub_chap.value;
 	console.log(name_value+"|"+chap_value);
@@ -46,7 +51,7 @@ function chapSearch(){
 		data : JSON.stringify({
 			"name" : name_value,
 			"chap" : chap_value,
-			"myQuestion" : myQuestion
+			"myQuestion" : myQuestion.checked
 		}),
 		success : function(data){
 			console.log("성공");
@@ -79,10 +84,7 @@ function chapSearch(){
 	});
 }
 
-let question_id = document.querySelectorAll(".question_id");
-for(let i=0; i<question_id.length; i++){
-	question_id[i].addEventListener("click", change_id);
-}
+
 
 function change_id(){
 	let id = event.target.value;
@@ -101,7 +103,19 @@ function change_id(){
 			question_div_all[i].style.display = "none";
 		}
 		for(let i=0; i<question_div.length; i++){
-			question_div[i].style.display="block";
+			question_div[i].style.display="block";	
 		}
 	}
+}
+
+function resetSub(){
+	sub_name.value = "선택";
+	sub_chap.value = "선택";
+	
+	nameSearch();
+	chapSearch();
+	
+	question_id[0].checked = true;
+	event.target.value = "ALL";
+	change_id();
 }
