@@ -231,8 +231,12 @@ function comment_submit(root, q_serial,	 mem_id){
 
 /*대댓글 추가*/
 function child_input(element, q_serial, root, parent, mem_id){
-	
 	let child = element.previousElementSibling.value;
+	if(child==null||child.trim()==""){
+		alert("공백은 입력 불가능 합니다.");
+		return;
+	} 
+	
 	console.log(element.parentElement);
 	$.ajax({
 		url: "addCommentChild",
