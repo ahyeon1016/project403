@@ -33,8 +33,8 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
-	public void mem_alarm_add(String mem_id, String comment_id) {
-		memberRepository.mem_alarm_add(mem_id,comment_id);
+	public void mem_alarm_add(String mem_id, String comment_id, int root) {
+		memberRepository.mem_alarm_add(mem_id,comment_id, root);
 		
 	}
 

@@ -253,7 +253,7 @@ function child_input(element, q_serial, root, parent, mem_id){
 			let date_format = new Date(data.time.replace(' ', 'T')).toLocaleString("ko-KR", {
 				timeZone: "Asia/Seoul"
 		    });
-			console.log("성공~")
+			alert("대댓글 작성에 성공했습니다.");
 			console.log(data);
 			element.parentElement.lastElementChild.innerHTML+=
 				"<li>"+

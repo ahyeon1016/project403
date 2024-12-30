@@ -214,7 +214,9 @@ public class QnAController {
 		//글쓴이에게 댓글을 달았을 때 알림을 보내는 함수
 		if((Boolean)map.get("success")) {
 			String root_mem_id = (String) map.get("root_mem_id");
-			memberService.mem_alarm_add(root_mem_id, parent_mem_id);
+			int root = (int) map.get("comment_root");
+			System.out.println("컨트롤러 | addCommentParent() root_mem_id: "+root_mem_id+" | root: "+root);
+			memberService.mem_alarm_add(root_mem_id, parent_mem_id, root);
 		}
 		return map;
 	}
@@ -257,7 +259,9 @@ public class QnAController {
 		//글쓴이에게 댓글을 달았을 때 알림을 보내는 함수
 		if((Boolean)map.get("success")) {
 			String parent_mem_id = (String) map.get("parent_mem_id");
-			memberService.mem_alarm_add(parent_mem_id, child_mem_id);
+			int root = (int) map.get("comment_root");
+			System.out.println("컨트롤러 | addCommentChild() parent_mem_id: "+parent_mem_id+" | root: "+root);
+			memberService.mem_alarm_add(parent_mem_id, child_mem_id, root);
 		}
 		return map;
 	}

@@ -351,13 +351,13 @@ public class MemberRepositoryImpl implements MemberRepository {
 	}
 	
 	//알림 생성
-	public void mem_alarm_add(String mem_id,String comment_id) {
+	public void mem_alarm_add(String mem_id,String comment_id, int root) {
 		Member member=getMyInfo(mem_id);
 		try {
 			conn=DBConnection.getConnection();
 			String sql="update member set mem_alarm=? where mem_id=?";
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, member.getMem_alarm()+","+comment_id+"님이"+mem_id+"님의 글에 댓글을 달았습니다.");
+			pstmt.setString(1, member.getMem_alarm()+","+root+"글에서 "+comment_id+"님이 "+mem_id+"님의 글에 댓글을 달았습니다.");
 			pstmt.setString(2, mem_id);
 			pstmt.executeUpdate();
 		}catch(Exception e) {e.printStackTrace();}
