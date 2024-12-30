@@ -43,6 +43,22 @@ function nameSearch(){
 function chapSearch(){
 	let	name_value = sub_name.value;
 	let chap_value = sub_chap.value;
+	let page_div = document.querySelector("#question_paging");
+	let page = document.querySelector(".page_btn");
+	
+	/*처음으로 함수를 호출하면 page 변수에는 아무 값도 없기 때문에 값을 지정해줌*/
+	if(page==null){
+		page=1;
+	}else if(isNaN(event.target.textContent)){	/*페이징 버튼이 아닌 챕터를 선택 했을 때 실행*/
+		page=1;
+		page_div.replaceChildren();
+	}else {
+		/*페이징 버튼의 텍스트를 page변수에 대입*/
+		page = parseInt(event.target.textContent);
+		console.log(page);
+		page_div.replaceChildren();
+	}
+	
 	console.log(name_value+"|"+chap_value);
 	$.ajax({
 		url : "Q_search",
@@ -51,14 +67,23 @@ function chapSearch(){
 		data : JSON.stringify({
 			"name" : name_value,
 			"chap" : chap_value,
-			"myQuestion" : myQuestion.checked
+			"myQuestion" : myQuestion.checked,
+			"page" : page
 		}),
 		success : function(data){
 			console.log("성공");
-			console.log(data.question);
+			console.log("최대 페이지의 갯수: "+data.totalPage);
+			console.log("최대 인덱스의 개수: "+data.maxIndex);
+			console.log("최소 인덱스의 개수: "+data.minIndex);
+			let totalPage = data.totalPage;
+			let maxIndex = data.maxIndex;
+			let minIndex = data.minIndex;
+			/*모든 자식 요소를 제거한다.*/ 
 			question_container.replaceChildren();
 			let question = data.question;
-			for(let i=0; i<question.length; i++){
+			console.log("문제의 갯수: "+data.question.length);
+			/* 가져온 question을 view에 뿌리는 작업 */
+			for(let i=minIndex; i<maxIndex; i++){
 				let div = document.createElement("div")
 				div.classList.add(question[i].question_id, "question_div");
 				div.innerHTML = 
@@ -77,6 +102,16 @@ function chapSearch(){
 				question_container.append(div);
 				console.log(div);
 			}
+			
+			for(let i=0; i<totalPage; i++){
+				let btn = document.createElement("button");
+				btn.classList.add("page_btn");
+				btn.textContent=i+1;
+				btn.addEventListener("click", chapSearch);
+								
+				page_div.append(btn);
+			}
+			
 		},
 		error : function(){
 			console.log("실패");
@@ -118,4 +153,5 @@ function resetSub(){
 	question_id[0].checked = true;
 	event.target.value = "ALL";
 	change_id();
+	
 }

@@ -39,12 +39,14 @@
 	<%
 	}
 	%>
+	
+	<!-- 문제 목록이 출력되는 div -->
 	<div id="question_container">
 		
 	</div>
 	
-
-	<div>
+	<!-- 페이징 버튼이 출력되는 div -->
+	<div id="question_paging">
 		
 	</div>
 	<script src="/project_403/resources/js/questionAll.js"></script>

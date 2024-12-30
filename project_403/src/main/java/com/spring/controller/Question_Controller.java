@@ -257,8 +257,41 @@ public class Question_Controller {
 			q.setMem_nickName(nickName);
 		}
 		
+		//페이징 처리를 위한 값을 구한다.
+		int page = (int)map.get("page");			
+		int index = question.size();
+		int totalPage = 0;
+		int maxIndex = 0;
+		int minIndex = 0;
+		System.out.println("컨트롤러 | Q_search() page: "+page);
+		
+		if(index%5 == 0) {
+			totalPage = index/5;
+		}else {
+			totalPage = (index/5)+1;
+		}
+		System.out.println("컨트롤러 | Q_search() totalPage: "+totalPage);
+		
+		if(page == 1) {
+			minIndex = 0;
+		}else {
+			minIndex = (page*5)-5;
+		}
+		System.out.println("컨트롤러 | Q_search() minIndex: "+minIndex);
+		
+		if(totalPage==page) {
+			maxIndex = index;
+		}else {
+			maxIndex = page*5;
+		}
+		System.out.println("컨트롤러 | Q_search() maxIndex: "+maxIndex);
+		
+		
 		HashMap<String, Object> search = new HashMap<String, Object>();
 		search.put("question", question);
+		search.put("totalPage", totalPage);
+		search.put("maxIndex", maxIndex);
+		search.put("minIndex", minIndex);
 		return search;
 	}
 	
