@@ -9,7 +9,8 @@
 	<title>Insert title here</title>
 </head>
 <body>
-testOneView 페이지
+<%@include file="/WEB-INF/views/member_home.jsp" %>
+
 <p><a href="testAll">전체보기</a>
 <!-- <p><a href="testStart?Num=${test.test_num}">시험시작하기</a> -->
 <br>
@@ -36,6 +37,8 @@ testOneView 페이지
 <div>
 	조회수: ${test.test_hit}
 </div>
+
+<%@include file="/WEB-INF/views/footer.jsp" %>
 </body>
 <script type="text/javascript">
 
@@ -55,23 +58,36 @@ $(document).on("click", "#testStart", function() {
 		url: "callQuestion", 
 		data: param,
 		dataType : "json",
-		success: function(data) {			
+		success: function(data) {
 			for(let i = 0; i < data.allQuestion.length; i++) {
-				dataAllQuestion = data.allQuestion;
-				questionHtml += "<div id='" + data.allQuestion[i].question_serial + "' class='questionSerial'><br>";
-				questionHtml += data.allQuestion[i].question_serial + "<br>";
-				questionHtml += i+1 + "번 문제 <br>";
-				questionHtml += data.allQuestion[i].question_content + "<br>";
-				answers = data.allQuestion[i].question_ans.split("|★|");
-				let formattedAnswers = answers.slice(0, -1).map(function(answer, index) {
-			        return "<input type='radio' name='answer' value='" + (index + 1) + "'>" + answer;
-			    }).join(" ");
-			    questionHtml += formattedAnswers + "<br>";
-			    questionHtml += "<button class='answerCheck' value='" + answers.slice(-1) + "'>정답확인</button><br><br><br><br>";
-			    questionHtml += "</div>";
+				if(data.allQuestion[i].question_id === "MCQ") { 
+					dataAllQuestion = data.allQuestion;
+					questionHtml += "<div id='" + data.allQuestion[i].question_serial + "' class='questionSerial'><br>";
+					questionHtml += data.allQuestion[i].question_serial + "<br>";
+					questionHtml += i+1 + "번 문제 <br>";
+					questionHtml += data.allQuestion[i].question_content + "<br>";
+					answers = data.allQuestion[i].question_ans.split("|★|");
+					let formattedAnswers = answers.slice(0, -1).map(function(answer, index) {
+				        return "<input type='radio' name='answer' value='" + (index + 1) + "'>" + answer;
+				    }).join(" ");
+				    questionHtml += formattedAnswers + "<br>";
+				    questionHtml += "<button class='answerCheck' value='" + answers.slice(-1) + "'>정답확인</button><br><br><br><br>";
+				    questionHtml += "</div>";
+				} else if(data.allQuestion[i].question_id === "SAQ") {
+					dataAllQuestion = data.allQuestion;
+					questionHtml += "<div id='" + data.allQuestion[i].question_serial + "' class='questionSerial'><br>";
+					questionHtml += data.allQuestion[i].question_serial + "<br>";
+					questionHtml += i+1 + "번 문제 <br>";
+					questionHtml += data.allQuestion[i].question_content + "<br>";
+					questionHtml += "<input type='text' name='answer'>";
+					questionHtml += "<button class='answerCheck' value='" + data.allQuestion[i].question_ans + "'>정답확인</button><br><br><br><br>";
+					questionHtml += "</div>";
+				}
+				
 			}
 			questionView.append(questionHtml);
 			
+			// 정답 오답에 따라 다음문제보기 처음으로돌아가기
 			for(let i = 0; i < data.allQuestion.length; i++) {
 				if(count === i) {
 					$("#" + data.allQuestion[i].question_serial).show();
@@ -89,7 +105,12 @@ $(document).on("click", "#testStart", function() {
 // 입력된값이 정답인지 확인하는 함수
 $(document).on("click", ".answerCheck", function() {
 	let answerCheck = $(this).val();
-	let answer = $('input[name=answer]:checked').val();
+	let answer = null;
+	if($("input[name=answer]:checked").length > 0) {
+		answer = $("input[name=answer]:checked").val();
+	} else {
+		answer = $("input[name=answer]").val();
+	}
 	
 	for (let i = 0; i < dataAllQuestion.length; i++) {
 		if (dataAllQuestion[i].question_serial == $(this).parents('.questionSerial').attr('id')) {
