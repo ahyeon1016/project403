@@ -534,7 +534,7 @@ public class Membercontroller {
 	//알림 발동
 	@GetMapping("alarm")
 	public String active_alarm() {
-		memberservice.mem_alarm_add("qwer", "asdf");
+		memberservice.mem_alarm_add("qwer", "asdf", 1);
 		return "member_home";
 	}
 	

@@ -357,7 +357,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 			conn=DBConnection.getConnection();
 			String sql="update member set mem_alarm=? where mem_id=?";
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, member.getMem_alarm()+","+root+"글에서 "+comment_id+"님이 "+mem_id+"님의 글에 댓글을 달았습니다.");
+			pstmt.setString(1, member.getMem_alarm()+","+root+"번글에서 "+comment_id+"님이 "+mem_id+"님의 글에 댓글을 달았습니다.");
 			pstmt.setString(2, mem_id);
 			pstmt.executeUpdate();
 		}catch(Exception e) {e.printStackTrace();}

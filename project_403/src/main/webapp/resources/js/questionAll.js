@@ -59,9 +59,12 @@ function chapSearch(){
 	console.log(id);
 	
 	/* 비활성화 해제 */
-	for(let i=0; i<question_id.length; i++){
-		question_id[i].disabled=false;	
+	if(!(name_value=="선택"||chap_value=="선택")){
+		for(let i=0; i<question_id.length; i++){
+			question_id[i].disabled=false;	
+		}
 	}
+	
 	
 	/*처음으로 함수를 호출하면 page 변수에는 아무 값도 없기 때문에 값을 지정해줌*/
 	if(page == null) {
