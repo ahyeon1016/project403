@@ -60,6 +60,7 @@ public class Membercontroller {
 	
 	@Autowired
 	FnoteService fnoteservice;
+	
 	@Autowired
 	MemberService memberservice;
 	
@@ -430,6 +431,7 @@ public class Membercontroller {
 		session.setAttribute("member_item", mi);
 		return "member_My_page";
 	}
+	
 	//닉변권 구매
 	@PostMapping("item/purchase_nick")
 	public String mem_nick_purchase(@RequestParam String mem_id,HttpServletRequest req) {
@@ -461,15 +463,14 @@ public class Membercontroller {
 	
 	//member_update 폼페이지에서 받은 데이터를 member 객체에 삽입 후 session을 종료해 다시 로그인 하게 만듬
 	@PostMapping("update/sequence")
-	public String update_sequence(@ModelAttribute("member")Member member,HttpSession session) {
+	public String update_sequence(@ModelAttribute("member")Member member,HttpServletRequest req) {
+		HttpSession session=req.getSession(false);
 		System.out.println(member.getMem_id());
 		System.out.println(member.getMem_profile());
 		String path=session.getServletContext().getRealPath("/resources/images");
 		System.out.println(path);
 		
 		Member mb=(Member)session.getAttribute("member");
-		
-		if(mb.getMem_profile_name()==null) {
 		MultipartFile multi=member.getMem_profile();
 		DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
 		String dt=LocalDateTime.now().format(formatter);
@@ -479,13 +480,9 @@ public class Membercontroller {
 			multi.transferTo(file);
 		} catch(Exception e) {e.printStackTrace();}
 		member.setMem_profile_name(filename);
-		}
-		else
-		{
-			member.setMem_profile_name(mb.getMem_profile_name());
-		}
+		
 		memberservice.member_update(member);
-		session.invalidate();
+		session.setAttribute("member", member);
 		return "redirect:/";
 	}
 	
@@ -498,7 +495,8 @@ public class Membercontroller {
 	
 	//session에 저장된 member객체의 id와 input에 입력된 pw를 가지고 delete 실행
 	@PostMapping("delete_bye")
-	public String bye(HttpServletRequest req,HttpSession session) {
+	public String bye(HttpServletRequest req) {
+		HttpSession session=req.getSession(false);
 		Member member=(Member)session.getAttribute("member");
 		ArrayList arr=fnoteservice.note_mine(member.getMem_id());
 		if(arr!=null) {
@@ -558,14 +556,14 @@ public class Membercontroller {
 	public String check_email(@RequestParam int mem_serial) {
 		System.out.println("이메일 인증 완료를 했다"+mem_serial);
 		memberservice.mem_confirm(mem_serial);
-		return "member_home";
+		return "redirect:/";
 	}
 	
 	//알림 발동
 	@GetMapping("alarm")
 	public String active_alarm() {
 		memberservice.mem_alarm_add("qwer", "asdf");
-		return "member_home";
+		return "redirect:/";
 	}
 	
 	//알림 확인 및 삭제
@@ -595,7 +593,8 @@ public class Membercontroller {
 	
 	//로그아웃
 	@GetMapping("logout")
-	public String logout(HttpSession session) {
+	public String logout(HttpServletRequest req) {
+		HttpSession session=req.getSession(false);
 		session.invalidate();
 		return "redirect:/";
 	}

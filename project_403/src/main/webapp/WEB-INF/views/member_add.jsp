@@ -160,7 +160,7 @@ a:hover {
 	            alert(data.key);
 	            console.log(data.key);
 	            if(data.key === "회원가입 성공!"){
-	                window.location.href = "./";
+	                window.location.href = "/project_403/";
 	            }
 	        },
 	        error: function(errorThrown){

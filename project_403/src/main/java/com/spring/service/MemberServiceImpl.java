@@ -11,7 +11,7 @@ import com.spring.repository.MemberRepository;
 public class MemberServiceImpl implements MemberService {
 	
 	@Autowired
-	MemberRepository memberRepository;
+	private MemberRepository memberRepository;
 	
 	
 	@Override

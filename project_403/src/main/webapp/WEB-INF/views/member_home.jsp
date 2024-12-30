@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Font Awesome 적용 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://kit.fontawesome.com/0ae4c75b50.js" crossorigin="anonymous"></script>
+    
     <style>
     * {
         font-family: 'Open Sans', sans-serif;
@@ -20,20 +22,19 @@
         text-decoration: none;
     }
     .navbar {
-       height: 70px !important;
-   	   overflow: visible !important; /* 잘리는 문제 방지 */
-       align-items: center !important;
-       z-index: 1000; /* 적당히 높은 값 설정 */
-       margin-bottom:0;
-        
+        height: 70px !important;
+        overflow: visible !important;
+        align-items: center !important;
+        z-index: 1000;
+        margin-bottom: 0;
     }
     .navbar-brand {
-        height: 100%; /* 부모 요소의 높이에 맞춤 */
+        height: 100%;
         display: flex;
-        align-items: center; /* 수직 정렬 */
+        align-items: center;
     }
     .navbar-nav .nav-link {
-        height: 100%; /* 부모 요소의 높이에 맞춤 */
+        height: 100%;
         display: flex;
         align-items: center !important;
         color: rgba(255, 255, 255, .75);
@@ -57,13 +58,12 @@
         right: 380px;
         top: 60px;
         display: none;
-        background-color: #333; /* 어두운 배경색 */ 
-        color: white; /* 텍스트 색상 */ 
-        border: 1px solid gray; /* 테두리 색상 */ 
-        border-radius: 10px; /* 테두리 둥글게 */ 
-        padding: 10px; /* 내부 여백 */ 
+        background-color: #333;
+        color: white;
+        border: 1px solid gray;
+        border-radius: 10px;
+        padding: 10px;
         z-index: 2;
-        overflow: hidden; /* overflow 속성 추가 */
     }
     #down_menu > img {
         border-radius: 50px;
@@ -72,18 +72,86 @@
         display: inline-block;
         padding: 10px 15px;
         color: white;
-        background-color: #555; /* 버튼 배경색 */
+        background-color: #555;
         border-radius: 5px;
         text-align: center;
         text-decoration: none;
-        margin-right: 10px; /* 버튼 간 간격 */
+        margin-right: 10px;
         transition: background-color 0.3s;
     }
     #down_menu > ul > li > a:hover {
-        background-color: #777; /* 호버 시 배경색 */
+        background-color: #777;
     }
     .fa-caret-down {
         color: white;
+    }
+    .fa-solid {
+        color: white;
+        cursor: pointer;
+        font-size: medium;
+    }
+
+    /* 알림 관련 CSS */
+    #alarm_bell {
+        position: relative;
+        font-size: 1.5rem;
+        color: white;
+        transition: transform 0.3s, color 0.3s;
+    }
+
+    #alarm_bell:hover {
+        transform: scale(1.2);
+        color: #f39c12;
+    }
+
+    #alarm_list {
+        position: absolute;
+        top: 100%;
+        right: 300px;
+        display: none;
+        background-color: #444;
+        color: white;
+        border: 1px solid #555;
+        border-radius: 10px;
+        padding: 15px;
+        z-index: 2;
+        width: 300px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    #alarm_list ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+
+    #alarm_list ul li {
+        margin-bottom: 10px;
+    }
+
+    #alarm_list ul li a {
+        display: inline-block;
+        padding: 8px 12px;
+        color: white;
+        background-color: #555;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        margin-right: 10px;
+        transition: background-color 0.3s;
+    }
+
+    #alarm_list ul li a:hover {
+        background-color: #777;
+        color: #f39c12;
+    }
+
+    #alarm_list p {
+        margin: 0;
+        padding: 10px;
+        color: #bbb;
+        font-style: italic;
+        text-align: center;
     }
     </style>
 </head>
@@ -129,6 +197,30 @@
                         <li class="nav-item">
                             <span class="nav-link" id="dropdown"><%= member.getMem_nickName() %><i class="fa fa-caret-down"></i></span>
                         </li>
+                        <li class="nav-item" id="alarm_container">
+                            <i class="fa-solid fa-bell" id="alarm_bell"></i>
+                            <div id="alarm_list">
+                                <ul>
+                                    <% if (member.getMem_alarm() != null) {
+                                        String alarm = member.getMem_alarm();
+                                        String[] alarms = alarm.split(",");
+                                        if (!(alarm.equals(alarms[0]))) {
+                                            for (int i = 1; i < alarms.length; i++) { %>
+                                                <hr>
+                                                <li>
+                                                    <a href="/project_403/member/alarm/delete?index=<%= i %>"><%= alarms[i] %></a>
+                                                </li>
+                                                <hr>
+                                            <% }
+                                        } else { %>
+                                            <li>
+                                                <p>알림이 없습니다.</p>
+                                            </li>
+                                        <% }
+                                    } %>
+                                </ul>
+                            </div>
+                        </li>
                         <% if (member.isMem_admin()) { %>
                             <li class="nav-item">
                                 <form action="/project_403/member/admin?page=1" method="post" class="form-inline">
@@ -171,12 +263,25 @@
 <script>
     let dropdown = document.querySelector("#dropdown");
     let menu = document.querySelector("#down_menu");
+    let alarm_list = document.querySelector("#alarm_list");
     dropdown.addEventListener("click", downmenu);
     function downmenu() {
+        alarm_list.style.display = "none";
         if (menu.style.display != "flex") {
             menu.style.display = "flex";
         } else {
             menu.style.display = "none";
+        }
+    }
+
+    let alarm = document.querySelector("#alarm_bell");
+    alarm.addEventListener("click", alarm_menu);
+    function alarm_menu() {
+        menu.style.display = "none";
+        if (alarm_list.style.display != "block") {
+            alarm_list.style.display = "block";
+        } else {
+            alarm_list.style.display = "none";
         }
     }
 </script>

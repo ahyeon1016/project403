@@ -68,7 +68,7 @@
         <div class="card mt-4">
             <div class="navigation-buttons d-flex flex-column align-items-center">
                 <!-- 정보 수정 -->
-                <form action="update?mem_id=<%= member.getMem_id() %>" method="post">
+                <form action="/project_403/member/update?mem_id=<%= member.getMem_id() %>" method="post">
                     <button type="submit" class="btn btn-primary btn-custom">
                         <i class="fas fa-user-edit"></i> 정보 수정
                     </button>
@@ -96,7 +96,7 @@
                 </form>
             </div>
         </div>
-
+		
         <!-- Welcome Message -->
         <div class="card right-card">
             <div class="welcome-message inner-card">
@@ -120,6 +120,7 @@
                 <p>이메일 인증여부 : <% if (member.isMem_confirmed() != true) { %>X
                     <button type="button" class="btn btn-warning" id="mailbut">이메일 인증하기</button>
                 <% } else { %>인증 완료<% } %></p>
+                <a href="/project_403/member/alarm">알림생성</a>
             </div>
         </div>
     </div>
@@ -146,6 +147,7 @@
                 }
             });
         }
+        
     </script>
 </body>
 </html>
