@@ -39,4 +39,6 @@ public interface TestRepository
 	List<String[]> ansSelectValue(String subCodeSum);
 
 	List<Question> getQuestion(Test test);
+
+	List<Test> search(String searchType, String searchText);
 }

@@ -130,6 +130,14 @@ public class TestServiceImpl implements TestService {
 		
 		return question;
 	}
+
+	@Override
+	public List<Test> search(String searchType, String searchText) {
+		
+		List<Test> list = testRepository.search(searchType, searchText);
+		
+		return list;
+	}
 	
 	
 	
