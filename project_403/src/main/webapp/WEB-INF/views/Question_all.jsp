@@ -28,10 +28,10 @@
 	<select name="chap_select" id="chap_selector">
 		<option>선택</option>
 	</select> | 
-	전체 <input type="radio" name="id" value="ALL" class="question_id" checked>
-	객관식<input type="radio" name="id" value="MCQ" class="question_id">
-	주관식<input type="radio" name="id" value="SAQ" class="question_id">
-	코딩<input type="radio" name="id" value="CP" class="question_id">
+	전체 <input type="radio" name="id" value="ALL" class="question_id" checked disabled="true">
+	객관식<input type="radio" name="id" value="MCQ" class="question_id" disabled="true">
+	주관식<input type="radio" name="id" value="SAQ" class="question_id" disabled="true">
+	코딩<input type="radio" name="id" value="CP" class="question_id" disabled="true">
 	<%
 	if(member!=null){ 
 	%>
@@ -42,7 +42,7 @@
 	
 	<!-- 문제 목록이 출력되는 div -->
 	<div id="question_container">
-		
+		<div>과목과 챕터를 선택 해주세요</div>
 	</div>
 	
 	<!-- 페이징 버튼이 출력되는 div -->

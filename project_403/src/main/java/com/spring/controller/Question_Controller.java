@@ -238,16 +238,19 @@ public class Question_Controller {
 		}
 		//Map에 저장된 sub_name과 sub_chap을 꺼내 과목코드로 변환
 		String sub_code = subjectService.sub_code_sum((String)map.get("name"), (String)map.get("chap"));
-
+		
+		//question_id를 가져와 변수에 대입
+		String id = (String)map.get("id");
+		
 		//사용자가 작성한 문제인지 확인한 후에 변환된 코드를 가지고 Question_Repository로 이동
 		Boolean myQuestion = (Boolean)map.get("myQuestion");
 		ArrayList<Question> question = null;
 		if(myQuestion) {
 			System.out.println("컨트롤러 | Q_search() 사용자가 작성한 문제");
-			question = questionService.getMyQuestionsBySubCode(sub_code, mem_serial);
+			question = questionService.getMyQuestionsBySubCode(sub_code, mem_serial, id);
 		}else{	
 			System.out.println("컨트롤러 | Q_search() 모든 문제");
-			question = questionService.getQuestionsBySubCode(sub_code);
+			question = questionService.getQuestionsBySubCode(sub_code, id);
 		}
 		
 		//question에서 mem_serial을 통해 mem_nickName의 값을 설정한다.
