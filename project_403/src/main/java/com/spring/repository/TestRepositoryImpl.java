@@ -33,7 +33,7 @@ public class TestRepositoryImpl implements TestRepository {
 	    try {
 	    	conn = DBConnection.getConnection();
 	    	//SQL쿼리 전송
-	    	String sql = "SELECT * FROM Test WHERE test_openYN = 'Y' ORDER BY test_num DESC LIMIT ? OFFSET ?";		    	
+	    	String sql = "SELECT * FROM Test WHERE test_openYN = 'Y' AND visible = 1 ORDER BY test_num DESC LIMIT ? OFFSET ?";		    	
 	        pstmt = conn.prepareStatement(sql);
 	        pstmt.setInt(1, limit);
 	        pstmt.setInt(2, start);
@@ -95,7 +95,7 @@ public class TestRepositoryImpl implements TestRepository {
 		try {
 			conn = DBConnection.getConnection();
 			//SQL쿼리 전송
-			String sql = "SELECT COUNT(*) FROM Test WHERE test_openYN = 'Y'";
+			String sql = "SELECT COUNT(*) FROM Test WHERE test_openYN = 'Y' AND visible = 1";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
@@ -166,14 +166,14 @@ public class TestRepositoryImpl implements TestRepository {
 		}
 	}
 
-	// Delete
+	// Delete: 기존 데이터 보존을 위해 visible 컬럼값 변경 작업으로 진행함
 	@Override
 	public void setDeleteTest(Integer test_num) {
 		
 		try {
 			conn = DBConnection.getConnection();
 			//SQL쿼리 전송
-			String sql = "DELETE FROM Test WHERE test_num=?";
+			String sql = "UPDATE Test SET visible=0 WHERE test_num=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1,test_num);
 			pstmt.executeUpdate();
@@ -239,7 +239,7 @@ public class TestRepositoryImpl implements TestRepository {
 		return test;
 	}
 
-	// Update
+	// Update: 기존 데이터 보존을 위해 Insert 작업으로 진행함
 	@Override
 	public void setUpdateTest(Test test) {
 		
@@ -256,14 +256,14 @@ public class TestRepositoryImpl implements TestRepository {
 		try {
 			conn = DBConnection.getConnection();
 			//SQL쿼리 전송
-			String sql = "UPDATE Test SET test_name=?, test_pw=?, test_openYN=?, sub_name=?, serial=? WHERE test_num=?";
-			pstmt = conn.prepareStatement(sql);			
-			pstmt.setString(1, test.getTest_name());
-			pstmt.setString(2, test.getTest_pw());
-			pstmt.setString(3, test.getTest_openYN());
-			pstmt.setString(4, test.getSub_name());
-			pstmt.setString(5, serials);
-			pstmt.setInt(6, test.getTest_num());
+			String sql = "INSERT INTO Test(mem_id, test_name, test_pw, test_openYN, sub_name, serial) VALUES (?, ?, ?, ?, ?, ?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, test.getMem_id());
+			pstmt.setString(2, test.getTest_name());
+			pstmt.setString(3, test.getTest_pw());
+			pstmt.setString(4, test.getTest_openYN());
+			pstmt.setString(5, test.getSub_name());
+			pstmt.setString(6, serials);
 			pstmt.executeUpdate();
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -656,6 +656,72 @@ public class TestRepositoryImpl implements TestRepository {
 		        e.printStackTrace();
 		    }
 		}
+		
+		return list;
+	}
+
+	// testAll.jsp 검색 기능
+	@Override
+	public List<Test> search(String searchType, String searchText) {
+		
+		List<Test> list = new ArrayList<Test>();	  
+		String sql = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			//SQL쿼리 전송
+			if("title".equals(searchType)) {
+				sql = "SELECT * FROM Test WHERE test_name LIKE ? AND test_openYN = 'Y' AND visible = 1";
+			} else if("subject".equals(searchType)) {
+				sql = "SELECT * FROM Test WHERE sub_name LIKE ? AND test_openYN = 'Y' AND visible = 1";
+			} else if("name".equals(searchType)) {
+				sql = "SELECT * FROM Test WHERE mem_id LIKE ? AND test_openYN = 'Y' AND visible = 1";
+			}
+			pstmt = conn.prepareStatement(sql);				
+			pstmt.setString(1, "%" + searchText + "%");
+			rs = pstmt.executeQuery();
+			
+			
+			while(rs.next()) {				
+				Test test = new Test();
+				
+				String serialString = rs.getString(9);
+				String[] serial_split = null;
+				if (serialString != null) {
+					serial_split = serialString.split(",");
+				} else {
+					serial_split = null;
+				}
+				
+				test.setTest_num(rs.getInt(1));
+				test.setMem_id(rs.getString(2));
+				test.setTest_name(rs.getString(3));
+				test.setTest_pw(rs.getString(4));
+				test.setTest_openYN(rs.getString(5));
+				test.setSub_name(rs.getString(6));
+				test.setSub_chap(rs.getString(7));
+				test.setTest_hit(rs.getInt(8));
+				test.setSerial(serial_split);
+				
+				list.add(test);
+			}	
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+		    try {
+		    	if (rs != null) {
+		    		rs.close();
+		        }
+		        if (pstmt != null) {
+		            pstmt.close();
+		        }
+		        if (conn != null) {
+		            conn.close();
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}	
 		
 		return list;
 	}

@@ -269,6 +269,28 @@ public class TestController {
 		return resultMap;
 	}
 	
+	    
+    @PostMapping("/search")
+    @ResponseBody
+    public Map<String, Object> search(@RequestParam String searchType, @RequestParam String searchText) {
+        Map<String, Object> resultMap = new HashMap<>();
+        
+        try {
+            // 검색 타입에 따른 쿼리 실행
+            List<Test> searchResults = testService.search(searchType, searchText);
+            
+            resultMap.put("success", true);
+            resultMap.put("data", searchResults);
+            
+        } catch (Exception e) {
+        	resultMap.put("success", false);
+        	resultMap.put("message", "검색 중 오류가 발생했습니다.");
+        }
+        
+        return resultMap;
+    }
+	
+	
 //	여기서부터 나중에 삭제해야됨->
 	private String sub_code_sum(String sub_name, String sub_chap) {
 	      System.out.println("컨트롤러 | sub_code_sum() 도착");
