@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Repository;
 
-import com.mysql.cj.protocol.Resultset;
 import com.spring.domain.Fnote;
 
 @Repository

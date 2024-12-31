@@ -9,4 +9,6 @@ public interface MemberItemService {
 	void nick_change(String mem_id);
 	void color_change(Member_Item mi);
 	void item_bye(Member member);
+	void nick_change_buy(String mem_id);
+	void nick_color_buy(String mem_id);
 }

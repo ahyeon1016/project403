@@ -144,6 +144,7 @@
 	}
 </style>
 <body>
+
 <%@include file="/WEB-INF/views/member_home.jsp" %>
 
 <div class="container-test">

@@ -15,7 +15,7 @@
 </head>
 <body>
 	<%@include file="/WEB-INF/views/member_home.jsp" %>
-	<p>${member.getMem_nickName()}
+	<p><%=member.getMem_nickName()%>
 	HELLO COMMENT ROOT ALL
 	<hr>
 	<%

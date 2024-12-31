@@ -2,31 +2,23 @@ package com.spring.controller;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailSender;
@@ -45,7 +37,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.domain.Member;
@@ -60,6 +51,7 @@ public class Membercontroller {
 	
 	@Autowired
 	FnoteService fnoteservice;
+	
 	@Autowired
 	MemberService memberservice;
 	
@@ -273,7 +265,7 @@ public class Membercontroller {
 	    }
 	    
 	    
-	    return "member_home";
+	    return "redirect:/";
 	}
 	
 	//네이버로 로그인하기
@@ -401,8 +393,8 @@ public class Membercontroller {
 		memberservice.mem_nickname_change(mb);
 		//아이템에서 닉변권 제거 함수
 		memberitemservice.nick_change(mem_id);
-		
-		
+		mb.setMem_nickName(nick);
+		session.setAttribute("member", mb);
 		return "member_My_page";
 	}
 	
@@ -420,26 +412,56 @@ public class Membercontroller {
 	//닉네임 색상 변경
 	@PostMapping("item/font/change")
 	public String mem_font_change(@RequestParam String mem_id,HttpServletRequest req) {
+		HttpSession session=req.getSession(false);
 		Member_Item mi=new Member_Item();
 		String color=req.getParameter("color");
 		System.out.println(color);
 		mi=memberitemservice.mem_item_info(mem_id);
 		mi.setMem_color(color);
 		memberitemservice.color_change(mi);
+		session.setAttribute("member_item", mi);
 		return "member_My_page";
 	}
 	
+	//닉변권 구매
+	@PostMapping("item/purchase_nick")
+	public String mem_nick_purchase(@RequestParam String mem_id,HttpServletRequest req) {
+		HttpSession session=req.getSession(false);
+		Member member=(Member)session.getAttribute("member");
+		int point=50;
+		memberservice.item_buy(point, mem_id);
+		memberitemservice.nick_change_buy(mem_id);
+		member.setMem_point(member.getMem_point()-point);
+		session.setAttribute("member", member);
+		return "redirect:/";
+	}
+	
+	//닉네임 색상변경권 구매
+	@PostMapping("item/purchase_font")
+	public String mem_font_purchase(@RequestParam String mem_id,HttpServletRequest req) {
+		HttpSession session=req.getSession(false);
+		Member member=(Member)session.getAttribute("member");
+		int point=100;
+		memberservice.item_buy(point, mem_id);
+		memberitemservice.nick_color_buy(mem_id);
+		member.setMem_point(member.getMem_point()-point);
+		session.setAttribute("member", member);
+		
+		return "redirect:/";
+	}
+	
+	
+	
 	//member_update 폼페이지에서 받은 데이터를 member 객체에 삽입 후 session을 종료해 다시 로그인 하게 만듬
 	@PostMapping("update/sequence")
-	public String update_sequence(@ModelAttribute("member")Member member,HttpSession session) {
+	public String update_sequence(@ModelAttribute("member")Member member,HttpServletRequest req) {
+		HttpSession session=req.getSession(false);
 		System.out.println(member.getMem_id());
 		System.out.println(member.getMem_profile());
 		String path=session.getServletContext().getRealPath("/resources/images");
 		System.out.println(path);
 		
 		Member mb=(Member)session.getAttribute("member");
-		
-		if(mb.getMem_profile_name()==null) {
 		MultipartFile multi=member.getMem_profile();
 		DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
 		String dt=LocalDateTime.now().format(formatter);
@@ -449,13 +471,10 @@ public class Membercontroller {
 			multi.transferTo(file);
 		} catch(Exception e) {e.printStackTrace();}
 		member.setMem_profile_name(filename);
-		}
-		else
-		{
-			member.setMem_profile_name(mb.getMem_profile_name());
-		}
+		
 		memberservice.member_update(member);
-		session.invalidate();
+		mb.setMem_profile_name(filename);
+		session.setAttribute("member", mb);
 		return "redirect:/";
 	}
 	
@@ -468,7 +487,8 @@ public class Membercontroller {
 	
 	//session에 저장된 member객체의 id와 input에 입력된 pw를 가지고 delete 실행
 	@PostMapping("delete_bye")
-	public String bye(HttpServletRequest req,HttpSession session) {
+	public String bye(HttpServletRequest req) {
+		HttpSession session=req.getSession(false);
 		Member member=(Member)session.getAttribute("member");
 		ArrayList arr=fnoteservice.note_mine(member.getMem_id());
 		if(arr!=null) {
@@ -528,14 +548,14 @@ public class Membercontroller {
 	public String check_email(@RequestParam int mem_serial) {
 		System.out.println("이메일 인증 완료를 했다"+mem_serial);
 		memberservice.mem_confirm(mem_serial);
-		return "member_home";
+		return "redirect:/";
 	}
 	
 	//알림 발동
 	@GetMapping("alarm")
 	public String active_alarm() {
 		memberservice.mem_alarm_add("qwer", "asdf", 1);
-		return "member_home";
+		return "redirect:/";
 	}
 	
 	//알림 확인 및 삭제
@@ -559,13 +579,13 @@ public class Membercontroller {
 		member.setAlarm_list(arr);
 		memberservice.mem_alarm_update(member);
 		session.setAttribute("member", member);
-		
 		return "member_My_page";
 	}
 	
 	//로그아웃
 	@GetMapping("logout")
-	public String logout(HttpSession session) {
+	public String logout(HttpServletRequest req) {
+		HttpSession session=req.getSession(false);
 		session.invalidate();
 		return "redirect:/";
 	}

@@ -10,8 +10,18 @@ import com.spring.repository.MemberItemRepository;
 public class MemberItemServiceImpl implements MemberItemService {
 	
 	@Autowired
-	MemberItemRepository memberItemRepository;
+	private MemberItemRepository memberItemRepository;
 	
+	@Override
+	public void nick_color_buy(String mem_id) {
+		memberItemRepository.nick_color_buy(mem_id);
+	}
+
+	@Override
+	public void nick_change_buy(String mem_id) {
+		memberItemRepository.nick_change_buy(mem_id);
+	}
+
 	@Override
 	public void item_bye(Member member) {
 		memberItemRepository.item_bye(member);

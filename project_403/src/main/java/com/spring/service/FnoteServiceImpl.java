@@ -12,7 +12,7 @@ import com.spring.repository.FnoteRepository;
 public class FnoteServiceImpl implements FnoteService {
 
 	@Autowired
-	FnoteRepository fnoteRepository;
+	private FnoteRepository fnoteRepository;
 	
 	
 	@Override

@@ -2,8 +2,8 @@ package com.spring.domain;
 
 public class Member_Item {
 	
-	private boolean mem_itemA;//멤버 아이템1
-	private boolean mem_itemB;//멤버 아이템2
+	private boolean mem_itemA;//닉네임 변경권
+	private boolean mem_itemB;//닉네임 색상 변경권
 	private String mem_color;//멤버 닉네임컬러
 	private String mem_id;//멤버 아이디
 	
