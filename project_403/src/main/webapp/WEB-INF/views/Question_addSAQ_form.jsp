@@ -17,6 +17,7 @@
 <body>
 	<%@include file="/WEB-INF/views/member_home.jsp" %>
 	HELLO QUESTION addSAQ FORM PAGE
+	
 	<p>${member.getMem_serial()}
 	<form:form modelAttribute="question" action="Q_addSAQ" method="post" enctype="multipart/form-data" onsubmit="return validateSAQForm(event)">
 		<p> 과목명 
