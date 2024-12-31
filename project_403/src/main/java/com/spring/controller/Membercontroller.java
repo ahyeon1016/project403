@@ -274,7 +274,7 @@ public class Membercontroller {
 	    }
 	    
 	    
-	    return "member_home";
+	    return "redirect:/";
 	}
 	
 	//네이버로 로그인하기
@@ -482,7 +482,8 @@ public class Membercontroller {
 		member.setMem_profile_name(filename);
 		
 		memberservice.member_update(member);
-		session.setAttribute("member", member);
+		mb.setMem_profile_name(filename);
+		session.setAttribute("member", mb);
 		return "redirect:/";
 	}
 	
@@ -587,7 +588,6 @@ public class Membercontroller {
 		member.setAlarm_list(arr);
 		memberservice.mem_alarm_update(member);
 		session.setAttribute("member", member);
-		
 		return "member_My_page";
 	}
 	

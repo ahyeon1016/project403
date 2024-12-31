@@ -94,7 +94,7 @@
     /* 알림 관련 CSS */
     #alarm_bell {
         position: relative;
-        font-size: 1.5rem;
+        font-size: large;
         color: white;
         transition: transform 0.3s, color 0.3s;
     }
