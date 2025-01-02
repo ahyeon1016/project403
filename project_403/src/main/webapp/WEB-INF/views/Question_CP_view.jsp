@@ -20,7 +20,7 @@
 	<p> 문제 : ${ans[0]}</p>
 	<p><textarea rows="15" cols="70" id="ans_input">${ans[1]}</textarea>
 	<p><textarea rows="10" cols="70" id="ans_error" readonly></textarea>
-	<p><button onclick="grading('${question.question_ans}', '${question.question_serial}', ${question.question_count})">정답 확인</button></p>
+	<p><button onclick="grading('${question.question_ans}', '${question.question_serial}', ${question.question_count}, ${question.question_level})">정답 확인</button></p>
 	<!-- 질문기능 -->
 	<p><a href="/project_403/QnA/addCommentRoot?question_serial=${question.question_serial}">질문하기</a>
 	<script>

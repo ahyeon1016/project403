@@ -13,53 +13,148 @@
 	<title>Insert title here</title>
 </head>
 <style>
-	.container {
-		display: flex;
-		justify-content: space-around;
+	* {
+	    margin: 0;
+	    padding: 0;
+	    box-sizing: border-box;
+	    list-style: none;
+	    text-decoration: none;
+	}
+	
+	.container-test {
+	    width: 90%;
+	    max-width: 1400px;
+	    margin: 2rem auto;
+	    display: flex;
+	    gap: 2rem;
+	    padding: 1.5rem;
+	    background-color: rgb(52, 58, 64);
+	    border-radius: 8px;
+	    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	    position: relative;
 	}
 	
 	.test {
-		width: 30%;
-		border: 1px solid black;
+	    padding: 1.5rem;
+	    background: white;
+	    border-radius: 6px;
+	    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+	}
+	
+	/* 왼쪽 폼 영역 */
+	.test:first-child {
+	    width: 45%;
+	}
+	
+	/* 오른쪽 문제 불러오기 영역 */
+	.test:last-child {
+	    width: 35%;
+	    position: fixed;
+	    right: 15%;
+	    top: 125px;
+	    max-height: calc(100vh - 200px);
+	    overflow-y: auto;
 	}
 	
 	.input_wrap {
-		width:100%;
-		height: 500px;
-		border: 1px solid black;
+	    width: 100%;
+	    height: 1000px;
+	    padding: 1rem;
+	    background: #ffffff;
+	    border: 1px solid #e0e0e0;
+	    border-radius: 6px;
+	    overflow-y: auto;
+	    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 	}
 	
 	.input_list {
-		width:100%;
-		height: 100px;
-		background-color: yellow;
-		border: 1px solid black;
+	    width: 100%;
+	    margin: 0.8rem 0;
+	    padding: 1rem;
+	    background-color: #f8f9fa;
+	    border: 1px solid #e9ecef;
+	    border-radius: 4px;
+	    transition: all 0.2s ease;
+	    cursor: move;
+	}
+	
+	.input_list:hover {
+	    background-color: #e9ecef;
+	    transform: translateY(-2px);
+	    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+	
+	/* 드래그 중인 항목 스타일 */
+	.input_list.sortable-chosen {
+	    background-color: #e7f5ff;
+	    opacity: 0.8;
+	}
+	
+	/* 드래그 목적지 표시 */
+	.input_list.sortable-ghost {
+	    background-color: #e7f5ff;
+	    border: 2px dashed #4dabf7;
 	}
 	
 	/* 문제 자동 카운터 */
 	.list {
-		counter-reset: numbering;
+	    counter-reset: numbering;
 	}
-
-	.list .item:before{
-	    counter-increment: numbering; 
+	
+	.list .item:before {
+	    counter-increment: numbering;
 	    content: counter(numbering) "번";
 	    margin-right: 10px;
 	}
+	
+	/* 폼 입력 필드 스타일링 */
+	.test input[type="text"],
+	.test input[type="password"],
+	.test select {
+	    width: 100%;
+	    padding: 0.5rem;
+	    margin: 0.5rem 0;
+	    border: 1px solid #dee2e6;
+	    border-radius: 4px;
+	}
+	
+	/* 라디오 버튼 그룹 스타일링 */
+	.test div:has(input[type="radio"]) {
+	    margin: 1rem 0;
+	    display: flex;
+	    gap: 1rem;
+	    align-items: center;
+	}
+	
+	/* 제출 버튼 스타일링 */
+	.test input[type="submit"],
+	.test input[type="button"] {
+	    padding: 0.5rem 1rem;
+	    background-color: #339af0;
+	    color: white;
+	    border: none;
+	    border-radius: 4px;
+	    cursor: pointer;
+	    transition: background-color 0.2s;
+	}
+	
+	.test input[type="submit"]:hover,
+	.test input[type="button"]:hover {
+	    background-color: #228be6;
+	}
 </style>
 <body>
-    <%@ include file="/WEB-INF/views/member_home.jsp" %>
 
-testUpdate 페이지
-<p><a href="testAll">Home</a>
-<div class="container">
+<%@include file="/WEB-INF/views/member_home.jsp" %>
+
+<div class="container-test">
 	<form:form modelAttribute="UpdateTest" action="./testUpdate" class="test">
 		<fieldset>
 			<div>
-				시험 번호: <input name="test_num" value="${test.test_num}" readonly="readonly" />
+				시험 번호: <form:input path="test_num" value="${test.test_num}" readonly="true" />
 			</div>		
 			<div>			
-				작성자ID: <input name="mem_id" value="${test.mem_id}" readonly="readonly" />
+				작성자: <form:input path="mem_id" value="${test.mem_id}" readonly="true" />
 			</div>
 			<div>
 				시험 제목: <form:input path="test_name" value="${test.test_name}" />
@@ -68,7 +163,7 @@ testUpdate 페이지
 				시험 비밀번호: <form:input path="test_pw" value="${test.test_pw}" />
 			</div>
 			<div>
-				공개 / 비공개: 
+				공개 / 비공개:
 					<form:radiobutton path="test_openYN" value="Y" checked="checked" />Y
 					<form:radiobutton path="test_openYN" value="N" />N
 			</div>
@@ -86,8 +181,8 @@ testUpdate 페이지
 			</div>
 			<input type="button" id="questionSelect" value="등록문제보기">
 			<p>총 문제 갯수: ${fn:length(test.serial)}개 <br>
-			시험지 작성 공간
 			<div id="input_wrap" class="input_wrap list">
+				<!-- 시험지 작성 공간 -->
 				<c:forEach items="${allQuestion}" var="allQuestion">
 					<div class='input_list item' draggable='true'>
 						<input type="text" name="serial[]" value="${allQuestion.question_serial}"><br>
@@ -109,12 +204,15 @@ testUpdate 페이지
 	</form:form>
 	
 	<div class="test">
-		기존 문제 불러오기
+		<p><a href="../Q/main" onclick="window.open(this.href, '_blank', 'width=1000px, height=600px'); return false;">문제추가하기</a>
+		<p>기존 문제 불러오기
 		<div id="qnaSelect" class="input_wrap">
-		
+			<!-- 문제 불러오기 공간 -->
 		</div>
 	</div>
 </div>
+
+
 </body>
 <script type="text/javascript">
 // 과목 선택시 챕터 체크박스 생성

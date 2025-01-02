@@ -52,15 +52,15 @@ public class QnA_ServiceImpl implements QnA_Service{
 	}
 
 	@Override
-	public void removeCommentParent(HashMap<String, Object> map) {
+	public HashMap<String, Object> removeCommentParent(HashMap<String, Object> map) {
 		System.out.println("서비스 | removeCommentParent() 호출");
-		qnaRepository.removeCommentParent(map);
+		return qnaRepository.removeCommentParent(map);
 	}
 
 	@Override
-	public void removeCommentChild(HashMap<String, Object> map) {
+	public HashMap<String, Object> removeCommentChild(HashMap<String, Object> map) {
 		System.out.println("서비스 | removeCommentParent() 호출");
-		qnaRepository.removeCommentChild(map);
+		return qnaRepository.removeCommentChild(map);
 	}
 	
 	

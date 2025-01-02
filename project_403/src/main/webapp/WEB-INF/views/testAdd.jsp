@@ -7,32 +7,94 @@
 	<!-- 드래그 앤 드랍 라이브러리 -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 	<meta charset="UTF-8">
 	<title>시험 제출 공간</title>
 </head>
 <style>
-	.container {
-		display: flex;
-		justify-content: space-around;
+	* {
+	  margin: 0;
+	  padding: 0;
+	  box-sizing: border-box;
+	  list-style: none;
+	  text-decoration: none;
+	}
+
+	.container-test {
+	    width: 90%;
+	    max-width: 1400px;
+	    margin: 2rem auto;
+	    display: flex;
+	    gap: 2rem;
+	    padding: 1.5rem;
+	    /* background-color: #f8f9fa; */
+	    background-color: rgb(52, 58, 64);
+	    border-radius: 8px;
+	    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	    /* justify-content: space-between; */
+	    position: relative;
 	}
 	
 	.test {
-		width: 30%;
-		border: 1px solid black;
+		/* width: 45%; */
+	    padding: 1.5rem;
+	    background: white;
+	    border-radius: 6px;
+	    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+	}
+	
+	/* 왼쪽 폼 영역 */
+	.test:first-child {
+	    width: 45%;
+	}
+	
+	/* 오른쪽 문제 불러오기 영역 */
+	.test:last-child {
+	    width: 35%;
+	    position: fixed;
+	    right: 15%;
+	    top: 125px; /* 상단 여백 조정 */
+	    max-height: calc(100vh - 200px); /* 화면 높이에서 상하 여백을 뺀 값 */
+	    overflow-y: auto;
 	}
 	
 	.input_wrap {
-		width:100%;
-		height: 500px;
-		border: 1px solid black;
+		width: 100%;
+	    height: 1000px;
+	    padding: 1rem;
+	    background: #ffffff;
+	    border: 1px solid #e0e0e0;
+	    border-radius: 6px;
+	    overflow-y: auto;
+	    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 	}
 	
 	.input_list {
-		width:100%;
-		height: 100px;
-		background-color: yellow;
-		border: 1px solid black;
+		width: 100%;
+	    margin: 0.8rem 0;
+	    padding: 1rem;
+	    background-color: #f8f9fa;
+	    border: 1px solid #e9ecef;
+	    border-radius: 4px;
+	    transition: all 0.2s ease;
+	    cursor: move;
+	}
+	
+	.input_list:hover {
+	    background-color: #e9ecef;
+	    transform: translateY(-2px);
+	    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+	
+	/* 드래그 중인 항목 스타일 */
+	.input_list.sortable-chosen {
+	    background-color: #e7f5ff;
+	    opacity: 0.8;
+	}
+	
+	/* 드래그 목적지 표시 */
+	.input_list.sortable-ghost {
+	    background-color: #e7f5ff;
+	    border: 2px dashed #4dabf7;
 	}
 	
 	/* 문제 자동 카운터 */
@@ -45,31 +107,69 @@
 	    content: counter(numbering) "번";
 	    margin-right: 10px;
 	}
+	
+	/* 폼 입력 필드 스타일링 */
+	.test input[type="text"],
+	.test input[type="password"],
+	.test select {
+	    width: 100%;
+	    padding: 0.5rem;
+	    margin: 0.5rem 0;
+	    border: 1px solid #dee2e6;
+	    border-radius: 4px;
+	}
+	
+	/* 라디오 버튼 그룹 스타일링 */
+	.test div:has(input[type="radio"]) {
+	    margin: 1rem 0;
+	    display: flex;
+	    gap: 1rem;
+	    align-items: center;
+	}
+	
+	/* 제출 버튼 스타일링 */
+	.test input[type="submit"],
+	.test input[type="button"] {
+	    padding: 0.5rem 1rem;
+	    background-color: #339af0;
+	    color: white;
+	    border: none;
+	    border-radius: 4px;
+	    cursor: pointer;
+	    transition: background-color 0.2s;
+	}
+	
+	.test input[type="submit"]:hover,
+	.test input[type="button"]:hover {
+	    background-color: #228be6;
+	}
 </style>
 <body>
-    <%@ include file="/WEB-INF/views/member_home.jsp" %>
 
-testAdd 페이지
-<p><a href="../">Home</a>
-<p><a href="../Q/main" onclick="window.open(this.href, '_blank', 'width=1000px, height=600px'); return false;">문제추가하기</a>
-<div class="container">
+    <%@ include file="/WEB-INF/views/member_home.jsp" %>
+	
+	testAdd 페이지
+	<p><a href="../">Home</a>
+	<p><a href="../Q/main" onclick="window.open(this.href, '_blank', 'width=1000px, height=600px'); return false;">문제추가하기</a>
+	<div class="container">
+
 	<form:form modelAttribute="NewTest" action="./testAdd" class="test">
 		<div>
-			작성자ID: <form:input path="mem_id" />
+			작성자ID <form:input path="mem_id" />
 		</div>		
 		<div>
-			시험 제목: <form:input path="test_name" />
+			시험 제목 <form:input path="test_name" />
 		</div>
 		<div>
-			시험 비밀번호: <form:input path="test_pw" />
+			시험 비밀번호 생성 <form:input path="test_pw" />
 		</div>
 		<div>
-			공개 / 비공개: 
+			공개 / 비공개 
 				<form:radiobutton path="test_openYN" value="Y" checked="checked" />Y
 				<form:radiobutton path="test_openYN" value="N" />N
 		</div>
 		<div>
-			과목명: 
+			과목명 
 				<form:select path="sub_name" id="subjectSelect" >
 					<form:option value="" selected="true" disabled="true" hidden="true">카테고리를 선택해주세요.</form:option>
 					<c:forEach items="${subList}" var="sub">
@@ -78,7 +178,7 @@ testAdd 페이지
 				</form:select>
 		</div>
 		<div id="chapSelect">			 
-			챕터명: <input type="checkbox" class="chapSelect" value="All" />All
+			챕터명 <input type="checkbox" class="chapSelect" value="All" />All
 			
 			
 				<!--<form:select path="sub_chap" id="chapSelect">
@@ -87,23 +187,23 @@ testAdd 페이지
 		</div>
 		<input type="button" id="questionSelect" value="문제보기">
 		<div class="input_wrap list">
-			시험지 작성 공간
-			<div class="input_list item" draggable="true">
-				test sample
-			</div>
-		</div>		
+			<!-- 시험지 작성 공간 -->
+		</div>
 		<div>
 			<input type="submit" value="작성하기">
 		</div>
 	</form:form>
 	
 	<div class="test">
-		기존 문제 불러오기
+		<p><a href="../Q/main" onclick="window.open(this.href, '_blank', 'width=1000px, height=600px'); return false;">문제추가하기</a>
+		<p>기존 문제 불러오기
 		<div id="qnaSelect" class="input_wrap">
-		
+			<!-- 문제 불러오기 공간 -->
 		</div>
 	</div>
 </div>
+
+<%@include file="/WEB-INF/views/footer.jsp" %>
 </body>
 <script type="text/javascript">
 //과목 선택시 챕터 체크박스 생성
@@ -122,7 +222,7 @@ $("#subjectSelect").on("change", function() {
 			data: param,
 			dataType : "json",
 			success: function(data) {
-				chapterHtml += "챕터명: <input type='checkbox' class='chapSelect' value='All' />All";
+				chapterHtml += "챕터명 <input type='checkbox' class='chapSelect' value='All' />All";
 				for(let i = 0; i < data.chapList.length; i++) {
 					chapterHtml += "<input type='checkbox' class='chapSelect' value='" + data.chapList[i].sub_chap + "' />" + data.chapList[i].sub_chap;
 				}

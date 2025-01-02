@@ -10,8 +10,8 @@
     <!-- 폰트 -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap">
     <!-- 부트스트랩 적용 -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Font Awesome 적용 -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+	<!-- Font Awesome 적용 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://kit.fontawesome.com/0ae4c75b50.js" crossorigin="anonymous"></script>
     
@@ -20,11 +20,13 @@
         font-family: 'Open Sans', sans-serif;
         list-style: none;
         text-decoration: none;
+        box-sizing:border-box;
     }
     .navbar {
         height: 70px !important;
         overflow: visible !important;
         align-items: center !important;
+        background-color: #213555;
         z-index: 1000;
         margin-bottom: 0;
     }
@@ -32,15 +34,21 @@
         height: 100%;
         display: flex;
         align-items: center;
+        color: #F5EFE7; 
+        font-weight: bold;
+    }
+    .navbar-brand:hover {
+        color: #005f99; /* 호버 시 더 깊은 블루 */
     }
     .navbar-nav .nav-link {
         height: 100%;
         display: flex;
         align-items: center !important;
-        color: rgba(255, 255, 255, .75);
+        color: #F5EFE7; 
+        transition: color 0.3s ease;
     }
     .navbar-nav .nav-link:hover {
-        color: rgba(255, 255, 255, 1);
+        color: lightblue; /* 호버 효과 */
     }
     #dropdown {
         cursor: pointer;
@@ -58,9 +66,9 @@
         right: 380px;
         top: 60px;
         display: none;
-        background-color: #333;
-        color: white;
-        border: 1px solid gray;
+        background-color: #3E5879; /* 밝은 블루 */
+        color: #F5EFE7;
+        border: 1px solid #87cefa;
         border-radius: 10px;
         padding: 10px;
         z-index: 2;
@@ -71,8 +79,8 @@
     #down_menu > ul > li > a {
         display: inline-block;
         padding: 10px 15px;
-        color: white;
-        background-color: #555;
+        color: #003f66;
+        background-color: #d1ecf1; /* 부드러운 블루 */
         border-radius: 5px;
         text-align: center;
         text-decoration: none;
@@ -80,13 +88,13 @@
         transition: background-color 0.3s;
     }
     #down_menu > ul > li > a:hover {
-        background-color: #777;
+        background-color: #c4e3ed; /* 더 밝은 블루 */
     }
     .fa-caret-down {
-        color: white;
+        color: lightblue;
     }
     .fa-solid {
-        color: white;
+        color: #005f99;
         cursor: pointer;
         font-size: medium;
     }
@@ -95,13 +103,13 @@
     #alarm_bell {
         position: relative;
         font-size: large;
-        color: white;
+        color: #005f99;
         transition: transform 0.3s, color 0.3s;
     }
 
     #alarm_bell:hover {
         transform: scale(1.2);
-        color: #f39c12;
+        color: lightblue;
     }
 
     #alarm_list {
@@ -109,14 +117,14 @@
         top: 100%;
         right: 300px;
         display: none;
-        background-color: #444;
-        color: white;
-        border: 1px solid #555;
+        background-color: #3E5879;
+        color: #D8C4B6;
+        border: 1px solid #87cefa;
         border-radius: 10px;
         padding: 15px;
         z-index: 2;
         width: 300px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     #alarm_list ul {
@@ -132,8 +140,8 @@
     #alarm_list ul li a {
         display: inline-block;
         padding: 8px 12px;
-        color: white;
-        background-color: #555;
+        color: #003f66;
+        background-color: #d1ecf1;
         border-radius: 5px;
         text-align: center;
         text-decoration: none;
@@ -142,21 +150,22 @@
     }
 
     #alarm_list ul li a:hover {
-        background-color: #777;
-        color: #f39c12;
+        background-color: #c4e3ed;
+        color: #005f99;
     }
 
     #alarm_list p {
         margin: 0;
         padding: 10px;
-        color: #bbb;
+        color: #666;
         font-style: italic;
         text-align: center;
     }
-    </style>
+</style>
+
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg bg-blue">
         <div class="container">
             <a href="/project_403/" class="navbar-brand" id="left-a">RALLYPOLLY</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

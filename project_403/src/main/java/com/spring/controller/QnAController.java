@@ -1,21 +1,16 @@
 package com.spring.controller;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -205,11 +200,19 @@ public class QnAController {
 		//세션에서 Member DTO를 꺼낸 뒤에 mem_id을 map에 추가한다.
 		HttpSession session = request.getSession(false);
 		Member member = (Member) session.getAttribute("member");
-		String mem_id = member.getMem_id();
+		String parent_mem_id = member.getMem_id();
 		
-		map.put("mem_id", mem_id);
+		map.put("mem_id", parent_mem_id);
 		map = qnaService.addCommentParent(map);		
 		
+		//root_mem_id : 글쓴이 | parent_mem_id : 댓글 작성자
+		//글쓴이에게 댓글을 달았을 때 알림을 보내는 함수
+		if((Boolean)map.get("success")) {
+			String root_mem_id = (String) map.get("root_mem_id");
+			int root = (int) map.get("comment_root");
+			System.out.println("컨트롤러 | addCommentParent() root_mem_id: "+root_mem_id+" | root: "+root);
+			memberService.mem_alarm_add(root_mem_id, parent_mem_id, root);
+		}
 		return map;
 	}
 	
@@ -243,10 +246,18 @@ public class QnAController {
 		//세션에서 Member DTO를 꺼낸 뒤에 mem_id을 map에 추가한다.
 		HttpSession session = request.getSession(false);
 		Member member = (Member) session.getAttribute("member");
-		String mem_id = member.getMem_id();
+		String child_mem_id = member.getMem_id();
 		
-		map.put("mem_id", mem_id);
+		map.put("mem_id", child_mem_id);
 		map = qnaService.addCommentChild(map);
+		//parent_mem_id : 글쓴이 | child_mem_id : 대댓글 작성자
+		//글쓴이에게 댓글을 달았을 때 알림을 보내는 함수
+		if((Boolean)map.get("success")) {
+			String parent_mem_id = (String) map.get("parent_mem_id");
+			int root = (int) map.get("comment_root");
+			System.out.println("컨트롤러 | addCommentChild() parent_mem_id: "+parent_mem_id+" | root: "+root);
+			memberService.mem_alarm_add(parent_mem_id, child_mem_id, root);
+		}
 		return map;
 	}
 
@@ -264,7 +275,7 @@ public class QnAController {
 		String mem_id = member.getMem_id();
 		
 		map.put("mem_id", mem_id);
-		qnaService.removeCommentParent(map);
+		map = qnaService.removeCommentParent(map);
 		
 		return map;
 	}
@@ -283,7 +294,7 @@ public class QnAController {
 		String mem_id = member.getMem_id();
 		
 		map.put("mem_id", mem_id);
-		qnaService.removeCommentChild(map);
+		map = qnaService.removeCommentChild(map);
 		
 		return map;
 	}
