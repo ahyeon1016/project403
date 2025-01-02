@@ -100,20 +100,20 @@ public class TestServiceImpl implements TestService {
 	}
 
 	@Override
-	public List<Question> qnaSelectValue(String subCodeSum, String serials) {
+	public List<Question> qnaSelectValue(String subCodeSum, String serial) {
 		
-		List<Question> list = testRepository.qnaSelectValue(subCodeSum, serials);
+		List<Question> list = testRepository.qnaSelectValue(subCodeSum, serial);
 		
 		return list;
 	}
 
-	@Override
-	public List<Question> qnaSelectValue(String subCodeSum) {
-
-		List<Question> list = testRepository.qnaSelectValue(subCodeSum);
-		
-		return list;
-	}
+	/*
+	 * @Override public List<Question> qnaSelectValue(String subCodeSum) {
+	 * 
+	 * List<Question> list = testRepository.qnaSelectValue(subCodeSum);
+	 * 
+	 * return list; }
+	 */
 
 	@Override
 	public List<String[]> ansSelectValue(String subCodeSum) {

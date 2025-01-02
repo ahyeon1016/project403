@@ -17,9 +17,11 @@ public interface MemberService {
 	int mem_serial(String user_mail,String user_id);//이메일로 멤버 시리얼 조회
 	void mem_confirm(int mem_serial);//시리얼로 멤버 인증
 	void mem_nickname_change(Member member);//닉네임 바꾸기
-	void mem_alarm_add(String mem_id,String comment_id);//알림기능
+	void mem_alarm_add(String mem_id,String comment_id, int root);//알림기능
 	void mem_alarm_update(Member member);//알림 삭제
-	String getNickNameBySerial(int serial);
-	void member_lvup(int point,int exp,String mem_id);
+	String getNickNameBySerial(int serial);//시리얼로 닉네임을 조회
+	void member_lvup(int point,int exp,String mem_id);//멤버의 경험치 및 포인트 증가
+	void item_buy(int point,String mem_id);//아이템 구매
+	
 }
 

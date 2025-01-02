@@ -12,6 +12,6 @@ public interface QnA_Service {
 	HashMap<String, Object> addCommentParent(HashMap<String, Object> map);
 	HashMap<String, ArrayList<QnA>> getCommentParent(int comment_root);
 	HashMap<String, Object> addCommentChild(HashMap<String, Object> map);
-	void removeCommentParent(HashMap<String, Object> map);
-	void removeCommentChild(HashMap<String, Object> map);
+	HashMap<String, Object> removeCommentParent(HashMap<String, Object> map);
+	HashMap<String, Object> removeCommentChild(HashMap<String, Object> map);
 }

@@ -150,7 +150,7 @@
 <div class="container-test">
 	<form:form modelAttribute="NewTest" action="./testAdd" class="test">
 		<div>
-			작성자ID <form:input path="mem_id" />
+			작성자ID <form:input path="mem_id" value="<%=member.getMem_nickName() %>" readonly="true" />
 		</div>		
 		<div>
 			시험 제목 <form:input path="test_name" />
@@ -181,7 +181,7 @@
 				</form:select>-->
 		</div>
 		<input type="button" id="questionSelect" value="문제보기">
-		<div class="input_wrap list">
+		<div class="input_wrap list serialBox">
 			<!-- 시험지 작성 공간 -->
 		</div>
 		<div>
@@ -238,19 +238,30 @@ $(document).on('click', '#questionSelect', function() {
 	
 	// ajax로 List에 Map담아서 넘기기
 	let chapSelectList = [];
-	for (let i = 0; i < $(".chapSelect:checked").length; i++) {
-		if ($($(".chapSelect:checked")[i]).val() != "All") {			
+	for(let i = 0; i < $(".chapSelect:checked").length; i++) {
+		if($($(".chapSelect:checked")[i]).val() != "All") {			
 			let chapSelectMap = {name : $($(".chapSelect:checked")[i]).val()};
 			
 			chapSelectList.push(chapSelectMap);
 		}
 	}
 	
+	let existingSerials = [];
+	let serials = $(".serialBox .serial");
+	if(serials != null) {
+	    for(let i = 0; i < serials.length; i++) {
+	    	let serialMap = {serial : $(serials[i]).val()};
+	    	
+	        existingSerials.push(serialMap);
+	    };
+	}
+	
 	let selectedSubject = $("#subjectSelect").val();
 	
 	let param = {
 			"paramList" : JSON.stringify(chapSelectList), 
-			"selectedSubject" : selectedSubject
+			"selectedSubject" : selectedSubject,
+			"existingSerials": JSON.stringify(existingSerials)
 	};
 	
 	let qnaSelect = $("#qnaSelect");
@@ -268,7 +279,7 @@ $(document).on('click', '#questionSelect', function() {
 					for(let j = 0; j < data.qnaList[i].length; j++) {
 						qnaHtml += "<div class='input_list item' draggable='true'>";
 						//qnaHtml += "<input type='hidden' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>";
-						qnaHtml += "<input type='text' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>";
+						qnaHtml += "<input type='text' class='serial' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>";
 						qnaHtml += "<br>문제: " + data.qnaList[i][j].question_content + "<br>";
 					    let answers = data.qnaList[i+1][j];
 					    let formattedAnswers = answers.slice(0, -1).map(function(answer, index) {

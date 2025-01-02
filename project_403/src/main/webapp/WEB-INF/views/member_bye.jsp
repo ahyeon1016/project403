@@ -6,7 +6,7 @@
     <title>탈퇴 페이지</title>
     <!-- Bootstrap CSS CDN -->
     <style>
-        .container {
+        .container_bye {
             margin-top: 50px;
         }
         .button-group {
@@ -20,7 +20,7 @@
 <body>
     <%@ include file="/WEB-INF/views/member_home.jsp" %>
 
-    <div class="container text-center">
+    <div class="container_bye text-center">
         <form action="delete_bye" method="post" id="form">
             <div class="alert alert-warning" role="alert">
                 <p><strong>${mem_id}님</strong>, 정말로 탈퇴하시겠습니까?</p>

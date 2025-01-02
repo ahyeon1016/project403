@@ -29,5 +29,7 @@
             alert("변경되었습니다!");
         });
     </script>
+    <%@include file="/WEB-INF/views/footer.jsp" %>
+    
 </body>
 </html>

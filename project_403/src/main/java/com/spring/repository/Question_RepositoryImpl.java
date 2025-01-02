@@ -154,8 +154,8 @@ public class Question_RepositoryImpl implements Question_Repository{
 
 	//Question 테이블에서 sub_code와 일치하는 DTO를 찾아 ArrayList에 담고 반환(Read)
 	@Override
-	public ArrayList<Question> getQuestionsBySubCode(String sub_code) {
-		System.out.println("리파지토리 | getQuestion() 도착");
+	public ArrayList<Question> getQuestionsBySubCode(String sub_code, String id) {
+		System.out.println("리파지토리 | getQuestionsBySubCode() 도착");
 		ArrayList<Question> question_list = new ArrayList<Question>();
 		
 		Connection conn = null;
@@ -164,10 +164,31 @@ public class Question_RepositoryImpl implements Question_Repository{
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리 전송
-			String SQL = "SELECT * FROM Question WHERE BINARY sub_code_sum=? AND question_visible=1 ORDER BY sub_code_sum ASC";
-			pstmt = conn.prepareStatement(SQL);
-			pstmt.setString(1, sub_code);
+			//쿼리 전송 | id의 값에 따라 다른 쿼리문을 전송
+			String SQL = "";
+			if(id.equals("ALL")) {
+				System.out.println("리파지토리 | getQuestionsBySubCode() ALL");
+				SQL = 
+					"SELECT * FROM Question "
+					+ "WHERE BINARY sub_code_sum=? AND question_visible=1 "
+					+ "ORDER BY sub_code_sum ASC";
+				
+				pstmt = conn.prepareStatement(SQL);
+				pstmt.setString(1, sub_code);
+
+			}else {
+				System.out.println("리파지토리 | getQuestionsBySubCode() "+id);
+				SQL = 
+					"SELECT * FROM Question "
+					+ "WHERE BINARY sub_code_sum=? AND question_visible=1 "
+					+ "AND question_id=? "
+					+ "ORDER BY sub_code_sum ASC";
+				
+				pstmt = conn.prepareStatement(SQL);
+				pstmt.setString(1, sub_code);
+				pstmt.setString(2, id);
+			}
+			
 			rs = pstmt.executeQuery();
 			//ResultSet를 통해 DTO를 ArrayList에 담는 작업
 			while(rs.next()) {
@@ -176,7 +197,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 				question.setQuestion_ans(rs.getString(3));
 				question.setQuestion_img_name(rs.getString(4));
 				question.setQuestion_level(rs.getInt(5));
-				question.setQuestion_count(6);
+				question.setQuestion_count(rs.getInt(6));
 				question.setSub_code_sum(rs.getString(7));
 				question.setMem_serial(rs.getInt(8));
 				question.setQuestion_serial(rs.getString(9));
@@ -317,6 +338,72 @@ public class Question_RepositoryImpl implements Question_Repository{
 		}
 	}
 	
+	//Question 테이블에서 사용자의 serial과 sub_code가 일치하는 DTO를 찾아 ArrayList에 담고 반환(Read)
+	@Override
+	public ArrayList<Question> getMyQuestionsBySubCode(String sub_code, int mem_serial, String id) {
+		System.out.println("리파지토리 | getMyQuestionsBySubCode() 도착");
+		ArrayList<Question> question_list = new ArrayList<Question>();
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			//DB연결
+			conn = DBConnection.getConnection();
+			//쿼리 전송 | id의 값에 따라 다른 쿼리문을 전송
+			String SQL = "";
+			if(id.equals("ALL")) {
+				System.out.println("리파지토리 | getMyQuestionsBySubCode() ALL");
+				SQL = 
+					"SELECT * FROM Question "
+					+ "WHERE BINARY sub_code_sum=? AND mem_serial=? AND question_visible=1 "
+					+ "ORDER BY sub_code_sum ASC";
+				
+				pstmt = conn.prepareStatement(SQL);
+				pstmt.setString(1, sub_code);
+				pstmt.setInt(2, mem_serial);
+				
+			} else {
+				System.out.println("리파지토리 | getMyQuestionsBySubCode() "+id);
+				SQL = 
+					"SELECT * FROM Question "
+					+ "WHERE BINARY sub_code_sum=? AND mem_serial=? AND question_visible=1 "
+					+ "AND question_id=? "
+					+ "ORDER BY sub_code_sum ASC";
+				
+				pstmt = conn.prepareStatement(SQL);
+				pstmt.setString(1, sub_code);
+				pstmt.setInt(2, mem_serial);
+				pstmt.setString(3, id);
+			}
+			
+			rs = pstmt.executeQuery();
+			//ResultSet를 통해 DTO를 ArrayList에 담는 작업
+			while(rs.next()) {
+				Question question = new Question();
+				question.setQuestion_content(rs.getString(2));
+				question.setQuestion_ans(rs.getString(3));
+				question.setQuestion_img_name(rs.getString(4));
+				question.setQuestion_level(rs.getInt(5));
+				question.setQuestion_count(rs.getInt(6));
+				question.setSub_code_sum(rs.getString(7));
+				question.setMem_serial(rs.getInt(8));
+				question.setQuestion_serial(rs.getString(9));
+				question.setQuestion_id(rs.getString(10));
+				
+				question_list.add(question);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		System.out.println("리파지토리 | question_list 사이즈 : "+question_list.size());
+		return question_list;
+	}
+
 	//DB의 question_num 컬럼의 최대값을 리턴하는 함수 | 사용한 함수 : addMCQ()
 	private String addQuestionNum() {
 		System.out.println("리파지토리 | addQuestionNum()도착");

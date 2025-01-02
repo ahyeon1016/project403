@@ -11,9 +11,18 @@ import com.spring.repository.MemberRepository;
 public class MemberServiceImpl implements MemberService {
 	
 	@Autowired
-	MemberRepository memberRepository;
+	private MemberRepository memberRepository;
 	
 	
+	@Override
+	public void item_buy(int point, String mem_id) {
+		memberRepository.item_buy(point, mem_id);
+	}
+
+
+
+
+
 	@Override
 	public void member_lvup(int point, int exp, String mem_id) {
 		memberRepository.member_lvup(point, exp, mem_id);
@@ -33,8 +42,8 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
-	public void mem_alarm_add(String mem_id, String comment_id) {
-		memberRepository.mem_alarm_add(mem_id,comment_id);
+	public void mem_alarm_add(String mem_id, String comment_id, int root) {
+		memberRepository.mem_alarm_add(mem_id,comment_id, root);
 		
 	}
 

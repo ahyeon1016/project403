@@ -33,8 +33,8 @@ public interface TestRepository
 
 	List<Subject> subValue(String sub_name);
 
-	List<Question> qnaSelectValue(String subCodeSum, String serials);
-	List<Question> qnaSelectValue(String subCodeSum);
+	List<Question> qnaSelectValue(String subCodeSum, String serial);
+	//List<Question> qnaSelectValue(String subCodeSum);
 
 	List<String[]> ansSelectValue(String subCodeSum);
 

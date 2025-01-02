@@ -295,67 +295,113 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 
 	//DB에서 comment_parent의 content 값을 변경하므로써 지우는 함수(Update)
 	@Override
-	public void removeCommentParent(HashMap<String, Object> map) {
+	public HashMap<String, Object> removeCommentParent(HashMap<String, Object> map) {
 		System.out.println("리파지토리 | removeCommentParent() 도착");
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		try {
 			System.out.println(map.get("mem_id"));
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송(Create)
-			String SQL = "UPDATE QnA "
-					+ "SET comment_content='pDel' "
+			//쿼리전송(Read)
+			String SQL_SELECT = 
+					"SELECT * "
+					+ "FROM QnA "
 					+ "WHERE mem_id=? AND question_serial=? AND comment_root=? "
 					+ "AND comment_parent=? AND comment_child=0";
-			pstmt = conn.prepareStatement(SQL);
+			pstmt = conn.prepareStatement(SQL_SELECT);
 			pstmt.setString(1, (String)map.get("mem_id"));
 			pstmt.setString(2, (String)map.get("question_serial"));
 			pstmt.setInt(3, (Integer)map.get("comment_root"));
 			pstmt.setInt(4, (Integer)map.get("comment_parent"));
 			
-			pstmt.executeUpdate();
-			System.out.println("리파지토리 | removeCommentParent() UPDATE 성공");
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				//쿼리전송(Update)
+				String SQL_UPDATE =
+						"UPDATE QnA "
+						+ "SET comment_content='pDel' "
+						+ "WHERE mem_id=? AND question_serial=? AND comment_root=? "
+						+ "AND comment_parent=? AND comment_child=0";
+				pstmt = conn.prepareStatement(SQL_UPDATE);
+				pstmt.setString(1, (String)map.get("mem_id"));
+				pstmt.setString(2, (String)map.get("question_serial"));
+				pstmt.setInt(3, (Integer)map.get("comment_root"));
+				pstmt.setInt(4, (Integer)map.get("comment_parent"));
+				
+				pstmt.executeUpdate();
+				System.out.println("리파지토리 | removeCommentParent() UPDATE 성공");
+				map.put("success", true);
+			}else {
+				System.out.println("리파지토리 | removeCommentParent() UPDATE 실패 일치하지 않음.");
+				map.put("success", false);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
 			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
 			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 		}
-		
+		return map;
 	}
 	
 	//DB에서 comment_child의 content 값을 변경하므로써 지우는 함수(Update)
 	@Override
-	public void removeCommentChild(HashMap<String, Object> map) {
+	public HashMap<String, Object> removeCommentChild(HashMap<String, Object> map) {
 		System.out.println("리파지토리 | removeCommentChild() 도착");
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송(Create)
-			String SQL = "UPDATE QnA "
-					+ "SET comment_content='cDel' "
+			//쿼리전송(Read)
+			String SQL_SELECT = 
+					"SELECT * "
+					+ "FROM QnA "
 					+ "WHERE mem_id=? AND question_serial=? AND comment_root=? "
 					+ "AND comment_parent=? AND comment_child=?";
-			pstmt = conn.prepareStatement(SQL);
+			pstmt = conn.prepareStatement(SQL_SELECT);
 			pstmt.setString(1, (String)map.get("mem_id"));
 			pstmt.setString(2, (String)map.get("question_serial"));
 			pstmt.setInt(3, (Integer)map.get("comment_root"));
 			pstmt.setInt(4, (Integer)map.get("comment_parent"));
 			pstmt.setInt(5, (Integer)map.get("comment_child"));
-
-			pstmt.executeUpdate();
-			System.out.println("리파지토리 | removeCommentChild() UPDATE 성공");
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				//쿼리전송(Update)
+				String SQL_UPDATE = "UPDATE QnA "
+						+ "SET comment_content='cDel' "
+						+ "WHERE mem_id=? AND question_serial=? AND comment_root=? "
+						+ "AND comment_parent=? AND comment_child=?";
+				pstmt = conn.prepareStatement(SQL_UPDATE);
+				pstmt.setString(1, (String)map.get("mem_id"));
+				pstmt.setString(2, (String)map.get("question_serial"));
+				pstmt.setInt(3, (Integer)map.get("comment_root"));
+				pstmt.setInt(4, (Integer)map.get("comment_parent"));
+				pstmt.setInt(5, (Integer)map.get("comment_child"));
+	
+				pstmt.executeUpdate();
+				System.out.println("리파지토리 | removeCommentChild() UPDATE 성공");
+				map.put("success", true);
+			}else {
+				System.out.println("리파지토리 | removeCommentChild() UPDATE 실패 일치하지 않음.");
+				map.put("success", false);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			try {rs.close();} catch (SQLException e) {e.printStackTrace();}
 			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
 			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 		}
+		
+		return map;
 		
 	}
 	

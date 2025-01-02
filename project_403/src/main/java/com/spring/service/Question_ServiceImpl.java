@@ -47,9 +47,9 @@ public class Question_ServiceImpl implements Question_Service{
 	}
 
 	@Override
-	public ArrayList<Question> getQuestionsBySubCode(String sub_code) {
+	public ArrayList<Question> getQuestionsBySubCode(String sub_code, String id) {
 		System.out.println("서비스 | getQuestionsBySubCode() 호출");
-		return questionRepository.getQuestionsBySubCode(sub_code);
+		return questionRepository.getQuestionsBySubCode(sub_code, id);
 	}
 
 	@Override
@@ -108,6 +108,12 @@ public class Question_ServiceImpl implements Question_Service{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public ArrayList<Question> getMyQuestionsBySubCode(String sub_code, int mem_serial, String id) {
+		System.out.println("서비스 | getMyQuestionsBySubCode() 호출");
+		return questionRepository.getMyQuestionsBySubCode(sub_code, mem_serial, id);
 	}
 
 }

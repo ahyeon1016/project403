@@ -33,7 +33,7 @@ public class TestRepositoryImpl implements TestRepository {
 	    try {
 	    	conn = DBConnection.getConnection();
 	    	//SQL쿼리 전송
-	    	String sql = "SELECT * FROM Test WHERE test_openYN = 'Y' AND visible = 1 ORDER BY test_num DESC LIMIT ? OFFSET ?";		    	
+	    	String sql = "SELECT * FROM Test WHERE visible = 1 ORDER BY test_num DESC LIMIT ? OFFSET ?";		    	
 	        pstmt = conn.prepareStatement(sql);
 	        pstmt.setInt(1, limit);
 	        pstmt.setInt(2, start);
@@ -95,7 +95,7 @@ public class TestRepositoryImpl implements TestRepository {
 		try {
 			conn = DBConnection.getConnection();
 			//SQL쿼리 전송
-			String sql = "SELECT COUNT(*) FROM Test WHERE test_openYN = 'Y' AND visible = 1";
+			String sql = "SELECT COUNT(*) FROM Test WHERE visible = 1";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
@@ -460,16 +460,14 @@ public class TestRepositoryImpl implements TestRepository {
 
 	// Question 테이블 sub_code_sum(과목챕터코드)=subCodeSum 일치하는 모든 값 가져오기
 	@Override
-	public List<Question> qnaSelectValue(String subCodeSum, String serials) {
+	public List<Question> qnaSelectValue(String subCodeSum, String serial) {
 		
 		List<Question> list = new ArrayList<Question>();
-		
-		String serialsChange = serials.replace(",", "','");
 		
 		try {
 	    	conn = DBConnection.getConnection();
 	    	//SQL쿼리 전송
-	    	String sql = "SELECT * FROM Question WHERE sub_code_sum=? AND question_serial NOT IN ('" + serialsChange + "')";
+	    	String sql = "SELECT * FROM Question WHERE sub_code_sum=? AND question_serial NOT IN ('" + serial + "')";
 	        pstmt = conn.prepareStatement(sql);
 	        pstmt.setString(1, subCodeSum);
 	        rs = pstmt.executeQuery();
@@ -509,54 +507,35 @@ public class TestRepositoryImpl implements TestRepository {
 		return list;
 	}
 
-	@Override
-	public List<Question> qnaSelectValue(String subCodeSum) {
-
-		List<Question> list = new ArrayList<Question>();
-		
-		try {
-	    	conn = DBConnection.getConnection();
-	    	//SQL쿼리 전송
-	    	String sql = "SELECT * FROM Question WHERE sub_code_sum=?";
-	        pstmt = conn.prepareStatement(sql);
-	        pstmt.setString(1, subCodeSum);
-	        rs = pstmt.executeQuery();
-	        
-            while(rs.next()) {
-            	Question question = new Question();
-            	question.setQuestion_num(rs.getInt(1));
-            	question.setQuestion_content(rs.getString(2));
-            	question.setQuestion_ans(rs.getString(3));
-            	question.setQuestion_img_name(rs.getString(4));
-            	question.setQuestion_level(rs.getInt(5));
-            	question.setQuestion_count(rs.getInt(6));
-            	question.setSub_code_sum(rs.getString(7));
-            	question.setMem_serial(rs.getInt(8));
-            	question.setQuestion_serial(rs.getString(9));
-            	question.setQuestion_id(rs.getString(10));
-            	
-                list.add(question);
-	        }
-	    } catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-		    try {
-		    	if (rs != null) {
-		    		rs.close();
-		        }
-		        if (pstmt != null) {
-		            pstmt.close();
-		        }
-		        if (conn != null) {
-		            conn.close();
-		        }
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		    }
-		}
-		
-		return list;
-	}
+	/*
+	 * @Override public List<Question> qnaSelectValue(String subCodeSum) {
+	 * 
+	 * List<Question> list = new ArrayList<Question>();
+	 * 
+	 * try { conn = DBConnection.getConnection(); //SQL쿼리 전송 String sql =
+	 * "SELECT * FROM Question WHERE sub_code_sum=?"; pstmt =
+	 * conn.prepareStatement(sql); pstmt.setString(1, subCodeSum); rs =
+	 * pstmt.executeQuery();
+	 * 
+	 * while(rs.next()) { Question question = new Question();
+	 * question.setQuestion_num(rs.getInt(1));
+	 * question.setQuestion_content(rs.getString(2));
+	 * question.setQuestion_ans(rs.getString(3));
+	 * question.setQuestion_img_name(rs.getString(4));
+	 * question.setQuestion_level(rs.getInt(5));
+	 * question.setQuestion_count(rs.getInt(6));
+	 * question.setSub_code_sum(rs.getString(7));
+	 * question.setMem_serial(rs.getInt(8));
+	 * question.setQuestion_serial(rs.getString(9));
+	 * question.setQuestion_id(rs.getString(10));
+	 * 
+	 * list.add(question); } } catch(Exception e) { e.printStackTrace(); } finally {
+	 * try { if (rs != null) { rs.close(); } if (pstmt != null) { pstmt.close(); }
+	 * if (conn != null) { conn.close(); } } catch (Exception e) {
+	 * e.printStackTrace(); } }
+	 * 
+	 * return list; }
+	 */
 
 	// sub_code_sum(과목탭터코드) 값에 해당하는 question_ans(정답) 값을 Question 테이블에서 가져오기
 	@Override
@@ -671,16 +650,15 @@ public class TestRepositoryImpl implements TestRepository {
 			conn = DBConnection.getConnection();
 			//SQL쿼리 전송
 			if("title".equals(searchType)) {
-				sql = "SELECT * FROM Test WHERE test_name LIKE ? AND test_openYN = 'Y' AND visible = 1";
+				sql = "SELECT * FROM Test WHERE test_name LIKE ? AND visible = 1 ORDER BY test_num DESC";
 			} else if("subject".equals(searchType)) {
-				sql = "SELECT * FROM Test WHERE sub_name LIKE ? AND test_openYN = 'Y' AND visible = 1";
+				sql = "SELECT * FROM Test WHERE sub_name LIKE ? AND visible = 1 ORDER BY test_num DESC";
 			} else if("name".equals(searchType)) {
-				sql = "SELECT * FROM Test WHERE mem_id LIKE ? AND test_openYN = 'Y' AND visible = 1";
+				sql = "SELECT * FROM Test WHERE mem_id LIKE ? AND visible = 1 ORDER BY test_num DESC";
 			}
 			pstmt = conn.prepareStatement(sql);				
 			pstmt.setString(1, "%" + searchText + "%");
-			rs = pstmt.executeQuery();
-			
+			rs = pstmt.executeQuery();			
 			
 			while(rs.next()) {				
 				Test test = new Test();

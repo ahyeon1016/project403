@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +74,13 @@ public class TestController {
 	
 	// 시험지 추가하기 양식 제공
 	@GetMapping("/testAdd")
-	public String testAddForm(@ModelAttribute("NewTest") Test test, Model model)	{
+	public String testAddForm(@ModelAttribute("NewTest") Test test, Model model, HttpSession session)	{
+		
+		// 로그인 상태가 아니라면 로그인 페이지로 리다이렉트
+		Object loginCheck = session.getAttribute("member"); 
+	    if (loginCheck == null) {
+	        return "redirect:/member/login";
+	    }
 		
 		List<Subject> subList = testService.getSubList();
 		
@@ -164,7 +172,7 @@ public class TestController {
 		return rusultMap;
 	}
 	
-	// 시험지 상세보기 비밀번호 입력 ajax
+	// 시험지 상세보기 비밀번호 입력 AJAX
 	@RequestMapping(value="/testValue", method=RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> testValue(@RequestParam("password") String password, @RequestParam("test_num") Integer test_num) {
@@ -183,7 +191,7 @@ public class TestController {
 		return rusultMap;
 	}
 	
-	// 시험지 과목+챕터 select 작동 ajax
+	// 시험지 과목+챕터 select 작동 AJAX
 	@RequestMapping(value="/subValue", method=RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> subValue(@RequestParam Map<String, Object> params) {
@@ -202,74 +210,56 @@ public class TestController {
 		return rusultMap;
 	}
 	
-	// 과목+챕터 선택시 해당 문제 출력 ajax
+	// 과목+챕터 선택시 해당 문제 출력 AJAX
 	@RequestMapping(value="/qnaSelectRead", method=RequestMethod.POST)
 	@ResponseBody
-//	@SuppressWarnings("unchecked")
 	public Map<String, Object> qnaSelectRead(@RequestParam Map<String, Object> params) {
         
 		Map<String, Object> resultMap = new HashMap<>();
 		List<Object> qnaList = new ArrayList<Object>();
-		
-		String serials = null;
-		
-		if(params.get("test") != null) {
-			String testNum = (String) params.get("test");
-			
-			int test_num = Integer.parseInt(testNum);
-			Test testByNum = testService.getTestByNum(test_num);
-			
-			String[] serial = testByNum.getSerial();
-			for(int i = 0; i < serial.length; i++) {
-				if(i == 0) {
-					serials = serial[i];
-				} else {
-					serials = serials + "," + serial[i];
-				}
-			}			
-		}
 		 
-		// ajax에서 List 형태로 넘어올때 받는 코드
+		// AJAX에서 List 형태로 넘어올때 받는 코드
 		String json = params.get("paramList").toString();
+		String serials = params.get("existingSerials").toString();
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Object>> paramList = null;
+		List<Map<String, Object>> serialList = null;
+		String serial = "";
 
 	    try {
 	    	String selectedSubject = (String)params.get("selectedSubject");
 	    	
 			paramList = mapper.readValue(json, new TypeReference<ArrayList<Map<String, Object>>>(){});
+			serialList = mapper.readValue(serials, new TypeReference<ArrayList<Map<String, Object>>>(){});
+			for(int j = 0; j < serialList.size(); j++) {
+				if (j == 0) {
+					serial += (String) serialList.get(j).get("serial");
+				} else {
+					serial += "\',\'" + (String) serialList.get(j).get("serial");
+				}
+			}
+			
 			for(int i = 0; i < paramList.size(); i++) {
 
 				String sub_chap = (String)paramList.get(i).get("name");
 				String subCodeSum = sub_code_sum(selectedSubject, sub_chap);
 				
-//				Map<String, Object> questionValue = (Map<String, Object>) testService.qnaSelectValue(subCodeSum);
-//				Map<String, Object> answerValue = (Map<String, Object>) testService.ansSelectValue(subCodeSum);
-			
-				if(serials != null) {
-					List<Question> questionValue = testService.qnaSelectValue(subCodeSum, serials);
-					qnaList.add(questionValue);
-				} else {
-					List<Question> questionValue = testService.qnaSelectValue(subCodeSum);
-					qnaList.add(questionValue);
-				}
-				List<String[]> answerValue = testService.ansSelectValue(subCodeSum);
+				List<Question> questionValue = testService.qnaSelectValue(subCodeSum, serial);
+				qnaList.add(questionValue);
 				
+				List<String[]> answerValue = testService.ansSelectValue(subCodeSum);				
 				qnaList.add(answerValue);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-//		rusultMap.put("chapList", subjectService.getSubByName(sub_name));
-//		rusultMap.put("chapList", testService.subValue(sub_name));
-				
 	    resultMap.put("qnaList", qnaList);	
 	    
 		return resultMap;
 	}
 	
-	    
+	// 검색 버튼 클릭 AJAX
     @PostMapping("/search")
     @ResponseBody
     public Map<String, Object> search(@RequestParam String searchType, @RequestParam String searchText) {
@@ -280,7 +270,7 @@ public class TestController {
             List<Test> searchResults = testService.search(searchType, searchText);
             
             resultMap.put("success", true);
-            resultMap.put("data", searchResults);
+            resultMap.put("searchResults", searchResults);
             
         } catch (Exception e) {
         	resultMap.put("success", false);

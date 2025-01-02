@@ -18,7 +18,7 @@
 	<%@include file="/WEB-INF/views/member_home.jsp" %>
 	HELLO QUESTION addCP FORM PAGE
 	<p>${member.getMem_serial()}
-	<form:form modelAttribute="question" action="Q_addCP" method="post" enctype="multipart/form-data">
+	<form:form modelAttribute="question" action="Q_addCP" method="post" enctype="multipart/form-data" onsubmit="return validateCPForm(event)">
 		<p> 과목명 
 		<select name="name_select" id="name_selector">
 			<option selected>선택</option>
@@ -51,39 +51,9 @@
 						<label for="4">4</label>
 					<form:radiobutton path="question_level" value="5"/>
 						<label for="5">5</label>
-		<p> 문제풀이 횟수 <form:input path="question_count"/>
 
 		<p> <input type="submit" value="전송">
 	</form:form>
-	<script>
-		let sub_name = document.querySelector("#name_selector");
-		let sub_chap = document.querySelector("#chap_selector");
-		sub_name.addEventListener("change", check);
-		function check(){
-			let sub_name_value = sub_name.value;
-			console.log(sub_name_value);
-			$.ajax({
-				url : "Q_subNameByChap",
-				type : "POST",
-				contentType : "application/json",
-				data : JSON.stringify({
-					"sub_name" : sub_name_value
-				}),
-				success : function(data){
-					let list = data.list;
-					sub_chap.replaceChildren();
-					for(let i=0; i<list.length; i++){
-						let option = document.createElement('option');
-						console.log(list[i]);
-						option.text = list[i];
-				        sub_chap.appendChild(option);
-					}
-				},
-				error : function(){
-					arlet("데이터를 받아오지 못했습니다.");
-				}
-			});
-		}
-	</script>
+	<script src="/project_403/resources/js/questionAdd.js"></script>
 </body>
 </html>

@@ -1,13 +1,11 @@
 package com.spring.controller;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.domain.Member;
 import com.spring.domain.Question;
@@ -214,18 +211,9 @@ public class Question_Controller {
  	public String Q_all(Model model){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_all() 도착");
-		//모든 문제와 과목이름을 ArrayList에 담고, 
 		//question에서 mem_serial을 통해 mem_nickName의 값을 설정한 후에 model에 담는다.
-		ArrayList<Question>	question_all = questionService.getQuestionAll();
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
 		
-		for(Question question : question_all) {
-			int serial = question.getMem_serial();
-			String nickName = memberService.getNickNameBySerial(serial);
-			question.setMem_nickName(nickName);
-		}
-		
-		model.addAttribute("question_all", question_all);
 		model.addAttribute("sub_all_name", sub_all_name);
 		return "Question_all";
 	}
@@ -233,14 +221,34 @@ public class Question_Controller {
 	//sub_code_sum과 일치하는 Question을 찾아 ArrayList에 담고 맵으로 리턴하는 함수
 	@ResponseBody
 	@PostMapping("/Q_search")
-	public HashMap<String, Object> Q_search(@RequestBody HashMap<String, Object> map){
+	public HashMap<String, Object> Q_search(
+			@RequestBody HashMap<String, Object> map, 
+			HttpServletRequest request){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_search() 도착");
+		//Session에 저장되어 있는 사용자의 정보를 꺼낸다.
+		HttpSession session = request.getSession(false);
+		int mem_serial = 0;
+		if(session!=null) {
+			Member member = (Member) session.getAttribute("member");
+			mem_serial = member.getMem_serial();
+		}
 		//Map에 저장된 sub_name과 sub_chap을 꺼내 과목코드로 변환
 		String sub_code = subjectService.sub_code_sum((String)map.get("name"), (String)map.get("chap"));
-
-		//변환된 코드를 가지고 Question_Repository로 이동
-		ArrayList<Question> question = questionService.getQuestionsBySubCode(sub_code);
+		
+		//question_id를 가져와 변수에 대입
+		String id = (String)map.get("id");
+		
+		//사용자가 작성한 문제인지 확인한 후에 변환된 코드를 가지고 Question_Repository로 이동
+		Boolean myQuestion = (Boolean)map.get("myQuestion");
+		ArrayList<Question> question = null;
+		if(myQuestion) {
+			System.out.println("컨트롤러 | Q_search() 사용자가 작성한 문제");
+			question = questionService.getMyQuestionsBySubCode(sub_code, mem_serial, id);
+		}else{	
+			System.out.println("컨트롤러 | Q_search() 모든 문제");
+			question = questionService.getQuestionsBySubCode(sub_code, id);
+		}
 		
 		//question에서 mem_serial을 통해 mem_nickName의 값을 설정한다.
 		for(Question q : question) {
@@ -249,8 +257,41 @@ public class Question_Controller {
 			q.setMem_nickName(nickName);
 		}
 		
+		//페이징 처리를 위한 값을 구한다.
+		int page = (int)map.get("page");			
+		int index = question.size();
+		int totalPage = 0;
+		int maxIndex = 0;
+		int minIndex = 0;
+		System.out.println("컨트롤러 | Q_search() page: "+page);
+		
+		if(index%5 == 0) {
+			totalPage = index/5;
+		}else {
+			totalPage = (index/5)+1;
+		}
+		System.out.println("컨트롤러 | Q_search() totalPage: "+totalPage);
+		
+		if(page == 1) {
+			minIndex = 0;
+		}else {
+			minIndex = (page*5)-5;
+		}
+		System.out.println("컨트롤러 | Q_search() minIndex: "+minIndex);
+		
+		if(totalPage==page) {
+			maxIndex = index;
+		}else {
+			maxIndex = page*5;
+		}
+		System.out.println("컨트롤러 | Q_search() maxIndex: "+maxIndex);
+		
+		
 		HashMap<String, Object> search = new HashMap<String, Object>();
 		search.put("question", question);
+		search.put("totalPage", totalPage);
+		search.put("maxIndex", maxIndex);
+		search.put("minIndex", minIndex);
 		return search;
 	}
 	
@@ -343,7 +384,7 @@ public class Question_Controller {
 		int point = question_level*2;
 		int exp = question_level;
 		String mem_id = member.getMem_id();
-		//memberService.member_lvup(point, exp, mem_id);
+		memberService.member_lvup(point, exp, mem_id);
 		
 		//전처리한 변수를 가지고 DB로 이동
 		System.out.println("컨트롤러 | 서비스의 updateQuestionCount() 호출");
@@ -547,10 +588,10 @@ public class Question_Controller {
 	//question_serial을 가지고 DB로 이동하는 함수
 	@GetMapping("/Q_delete/{question_serial}")
 	public String Q_delete(@PathVariable String question_serial){
+		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_delete 도착");
 		questionService.visibleQuestion(question_serial);
 		return "redirect:/Q/Q_all";
 	}
 	
-
 }

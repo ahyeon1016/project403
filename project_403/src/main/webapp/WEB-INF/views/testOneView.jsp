@@ -169,6 +169,22 @@ $(document).on("click", "#testStart", function() {
 					questionHtml += "<input type='text' name='" + data.allQuestion[i].question_serial + "'>";
 					questionHtml += "<button class='answerCheck' value='" + data.allQuestion[i].question_ans + "'>정답확인</button><br><br><br><br>";
 					questionHtml += "</div>";
+				} else if(data.allQuestion[i].question_id === "CP") {
+					dataAllQuestion = data.allQuestion;
+					questionHtml += "<div id='" + data.allQuestion[i].question_serial + "' class='questionSerial'><br>";
+					questionHtml += data.allQuestion[i].question_serial + "<br>";
+					questionHtml += i+1 + "번 문제 <br>";
+					content = data.allQuestion[i].question_content.split("|★|");
+					let formattedContent = content.map(function(content, index) {
+						if(index == 0) {
+					        return content;
+						} else {
+							return "<p><textarea rows='15' cols='70' id='answerCP'>" + content + "</textarea>";
+						}
+				    });
+					questionHtml += formattedContent + "<br>";
+					questionHtml += "<button class='answerCheckCP' value='" + data.allQuestion[i].question_ans + "'>정답확인</button><br><br><br><br>";
+					questionHtml += "</div>";
 				}
 				
 			}
@@ -236,7 +252,7 @@ function showQuestion(index) {
 	}
 }); */
 
-//입력된값이 정답인지 확인하는 함수
+//입력된값이 정답인지 확인하는 함수: MCQ, SAQ
 $(document).on("click", ".answerCheck", function() {
     let currentSerial = $(this).parents('.questionSerial').attr('id');
     let answerCheck = $(this).val();
@@ -256,6 +272,7 @@ $(document).on("click", ".answerCheck", function() {
         }
     }
     
+    // 정답 or 오답 체크
     if(answerCheck === answer) {
         alert("정답");
         count += 1;
@@ -274,6 +291,49 @@ $(document).on("click", ".answerCheck", function() {
     }
 });
 
+//입력된값이 정답인지 확인하는 함수: CP
+$(document).on("click", ".answerCheckCP", function() {
+	let currentSerial = $(this).parents('.questionSerial').attr('id');
+	let answerCP = $("#answerCP").val();
+	let answerCheckCP = $(this).val();
+	
+	// 시도 횟수 증가
+    for (let i = 0; i < dataAllQuestion.length; i++) {
+        if (dataAllQuestion[i].question_serial == currentSerial) {
+            dataAllQuestion[i].question_count += 1;
+        }
+    }
+	
+	$.ajax({
+		url : "../Q/Compile",
+		type : "POST",
+		contentType : "application/json;charset=UTF-8",
+		data : JSON.stringify({"ans_input" : answerCP}),
+		success : function(data){
+			if(data.output === answerCheckCP) {
+		        alert("정답");
+		        count += 1;
+		        if(count < dataAllQuestion.length) {
+		            showQuestion(count);
+		        } else {
+		            alert("종료");
+		            window.location.reload();
+		        }
+		    } else {
+		        alert("오답");
+		        count = 0;
+		        $('input[type="radio"]').prop('checked', false);
+				$('input[type="text"]').val('');
+		        showQuestion(0);
+		    }
+		},
+		error : function(data){
+			console.log("오류");
+		}
+	});
+});
+
+// 시험 종료 버튼 이벤트
 $(document).on("click", "#testEnd", function() {
 	alert("시험이 종료됩니다");
 	window.location.href = "http://localhost:8080/project_403/test/testAll";
