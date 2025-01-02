@@ -90,29 +90,9 @@
                 padding: 10px;
             }
         }
-        .about button{
-        	width:50px;
-        	height:50px;
-        	position:absolute;
-          	background-color:transparent;
-        	border:none;
-        }
-        .about button i{
-        	color:white;
-        	font-size:50px;	
-        }
-        .about #left-btn{
-        	left:20px;
-        }
-        .about #right-btn{
-        	right:20px;
-        	
-        }
         
-        @keyframes left_ani{
-        0%{transform:translateX(0);}
-        100%{transform:translateX(-100%)}
-        }
+        
+       
     </style>
 </head>
 <body>
@@ -120,8 +100,6 @@
     <%@include file="/WEB-INF/views/member_home.jsp" %>
     <!-- 메인박스 -->
     <div class="about d-flex align-items-center justify-content-center text-center">
-        <button id="left-btn"><i class="fa-solid fa-chevron-left"></i></button>
-        <button id="right-btn"><i class="fa-solid fa-chevron-right"></i></button>
         <h1 class="p-4 rounded">창의적인 학습 플랫폼<br> 학습의 새로운 기준, 랠리폴리</h1>
     </div>
     <!-- 두번째 박스 -->
@@ -148,16 +126,6 @@
     </div>
     
    <%@include file="/WEB-INF/views/footer.jsp" %>
-   <script>
-   	document.querySelector("#left-btn").addEventListener("click",left_slide);
-   	function left_slide(){
-   		document.querySelector(".about").style.backgroundImage="linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/project_403/resources/images/high-angle-girl-learning-math-school.jpg')";	
-   		document.querySelector(".about").style.animation="left_ani 0.2s linear"
-   	}
-   	
-   	
-   	
-   
-   </script>
+  
 </body>
 </html>

@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +22,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.spring.domain.Member;
 import com.spring.domain.Question;
 import com.spring.domain.Subject;
 import com.spring.domain.Test;
+import com.spring.service.FnoteService;
 import com.spring.service.Subject_Service;
 import com.spring.service.TestService;
 
@@ -35,6 +40,8 @@ public class TestController {
 	@Autowired
 	private Subject_Service subjectService;
 	
+	@Autowired
+	private FnoteService fnoteservice;
 	// 시험지 전체보기
 	@GetMapping("/testAll")
 	public String testAll(@RequestParam(value = "pageNum", required = false) Integer pageNum, Model model) {	
@@ -151,16 +158,18 @@ public class TestController {
 	//시험시작하기 버튼을 눌렀을때 기능
 	@RequestMapping(value="/callQuestion", method=RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> callQuestion(@RequestParam("test_num") Integer test_num) {
-        
+	public Map<String, Object> callQuestion(@RequestParam("test_num") Integer test_num,HttpServletRequest req) {
+        HttpSession session=req.getSession(false);
+        Member member=(Member)session.getAttribute("member");
+        String mem_id=member.getMem_id();
 		Map<String, Object> rusultMap = new HashMap<>();
 		
 		Test test = testService.getOneTestList(test_num);
 		List<Question> allQuestion = testService.getQuestion(test);
 //		List<String[]> answerValue = testService.ansSelectValue(subCodeSum);
-		
+		fnoteservice.note_create(mem_id, test_num);
 		rusultMap.put("allQuestion", allQuestion);
-	
+		
 		return rusultMap;
 	}
 	

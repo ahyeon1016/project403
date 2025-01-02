@@ -204,7 +204,7 @@
                             Member_Item mi = (Member_Item) session.getAttribute("member_item");
                     %>
                         <li class="nav-item">
-                            <span class="nav-link" id="dropdown"><%= member.getMem_nickName() %><i class="fa fa-caret-down"></i></span>
+                            <span class="nav-link <%=mi.getMem_color() %>" id="dropdown"><b><%= member.getMem_nickName() %></b><i class="fa fa-caret-down"></i></span>
                         </li>
                         <li class="nav-item" id="alarm_container">
                             <i class="fa-solid fa-bell" id="alarm_bell"></i>

@@ -56,10 +56,10 @@ public class Fnote_controller {
 		model.addAttribute("testlist",test_list);
 		return "fnote_list";
 	}
-	
+
+	//자신이 응시한 시험 조회해서 문제들 다 보여주기.
 	@PostMapping("mynote")
 	public String my_note(@RequestParam int testnum,Model model,HttpServletRequest req) {
-		//테스트 조회해서 문제들 다 보여주기.
 		HttpSession session=req.getSession(false);
 		Member member=(Member) session.getAttribute("member");
 		System.out.println("내 노트를 내놩라ㅏ라라라라라라라라라라ㅏ라"+testnum);
@@ -91,6 +91,8 @@ public class Fnote_controller {
 		session.setAttribute("fnote",fnote);
 		return "fnote_my_note";
 	}
+	
+	//노트 작성 또는 수정시 데이터를 읽어와 update
 	@PostMapping("update")
 	@ResponseBody
 	public void note_update(@RequestBody HashMap<String,Object> map,HttpServletRequest req){
@@ -105,6 +107,7 @@ public class Fnote_controller {
 		System.out.println(member.getMem_id());
 		fnoteservice.note_update(member.getMem_id(),fnote.getTest_num(), notes);
 	}
+	//노트 삭제
 	@PostMapping("delete")
 	public String note_delete(HttpServletRequest req) {
 		HttpSession session=req.getSession(false);
