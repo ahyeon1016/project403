@@ -156,21 +156,22 @@ public class TestController {
 		return "testStart";
 	}
 	//시험시작하기 버튼을 눌렀을때 기능
-	@RequestMapping(value="/callQuestion", method=RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> callQuestion(@RequestParam("test_num") Integer test_num,HttpServletRequest req) {
-        HttpSession session=req.getSession(false);
-        Member member=(Member)session.getAttribute("member");
-        String mem_id=member.getMem_id();
-		Map<String, Object> rusultMap = new HashMap<>();
-		
-		Test test = testService.getOneTestList(test_num);
-		List<Question> allQuestion = testService.getQuestion(test);
-//		List<String[]> answerValue = testService.ansSelectValue(subCodeSum);
-		fnoteservice.note_create(mem_id, test_num);
-		rusultMap.put("allQuestion", allQuestion);
-		
-		return rusultMap;
+	   @RequestMapping(value="/callQuestion", method=RequestMethod.POST)
+	   @ResponseBody
+	   public Map<String, Object> callQuestion(@RequestParam("test_num") Integer test_num,HttpServletRequest req) {
+	        HttpSession session=req.getSession(false);
+	        Member member=(Member)session.getAttribute("member");
+	        String mem_id=member.getMem_id();
+	      Map<String, Object> rusultMap = new HashMap<>();
+	      
+	      Test test = testService.getOneTestList(test_num);
+	      List<Question> allQuestion = testService.getQuestion(test);
+//	      List<String[]> answerValue = testService.ansSelectValue(subCodeSum);
+	      fnoteservice.note_create(mem_id, test_num);
+	      rusultMap.put("allQuestion", allQuestion);
+	      
+	      return rusultMap;
+	   }
 	}
 	
 	// 시험지 상세보기 비밀번호 입력 ajax
