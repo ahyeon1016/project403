@@ -148,6 +148,7 @@
 <%@include file="/WEB-INF/views/member_home.jsp" %>
 
 <div class="container-test">
+
 	<form:form modelAttribute="NewTest" action="./testAdd" class="test">
 		<div>
 			작성자ID <form:input path="mem_id" value="<%=member.getMem_nickName() %>" readonly="true" />

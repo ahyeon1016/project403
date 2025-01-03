@@ -9,9 +9,7 @@
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        .container {
-            margin-top: 50px;
-        }
+       
         .table th, .table td {
             text-align: center;
             vertical-align: middle;
@@ -41,7 +39,7 @@
     <div class="container">
         <h1 class="text-center">회원 조회</h1>
         <table class="table table-striped">
-            <thead class="thead-dark">
+            <thead class="thead">
                 <tr>
                     <th>회원 아이디</th>
                     <th>회원 닉네임</th>

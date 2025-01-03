@@ -6,15 +6,17 @@
     <title>랠리폴리</title>
     <!-- fontawesome -->
     <script src="https://kit.fontawesome.com/0ae4c75b50.js" crossorigin="anonymous"></script>
-    <!-- Bootstrap CSS CDN -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
+        
+	
+	<style>
         body {
             line-height: 1.6;
             font-family: Arial, sans-serif;
         }
 
         .about {
+        	width:100%;
+        	position:relative;
             height: 1000px;
             background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/project_403/resources/images/high-angle-girl-learning-math-school.jpg");
             background-size: cover;
@@ -88,6 +90,9 @@
                 padding: 10px;
             }
         }
+        
+        
+       
     </style>
 </head>
 <body>
@@ -97,7 +102,6 @@
     <div class="about d-flex align-items-center justify-content-center text-center">
         <h1 class="p-4 rounded">창의적인 학습 플랫폼<br> 학습의 새로운 기준, 랠리폴리</h1>
     </div>
-
     <!-- 두번째 박스 -->
     <div class="how d-flex flex-column justify-content-center">
         <h1 class="text-center mb-4">사이트 이용 순서</h1>
@@ -122,6 +126,6 @@
     </div>
     
    <%@include file="/WEB-INF/views/footer.jsp" %>
-   
+  
 </body>
 </html>

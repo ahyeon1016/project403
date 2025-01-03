@@ -17,6 +17,9 @@
         .note-table {
             margin-top: 20px;
         }
+        .thead{
+        	background-color:#F5EFE7;
+        }
     </style>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script> <%--아작스 사용을 위한 코드 --%>
 </head>
@@ -36,7 +39,7 @@
             <form action="delete" method="post" id="fom">
                 <% if (question_list.size() != 0) { %>
                     <table class="table table-striped note-table">
-                        <thead class="thead-dark">
+                        <thead class="thead">
                             <tr>
                                 <th>문제</th>
                                 <th>정답</th>
@@ -59,7 +62,7 @@
                             <% } %>
                         </tbody>
                     </table>
-                    <button id="note_pre" class="btn btn-success">저장하기</button>
+                    <button id="note_pre" class="btn btn-primary">저장하기</button>
                     <button id="note_delete" type="submit" class="btn btn-danger">노트 삭제</button>
                     <a href="../" class="btn btn-secondary">홈</a>
                 <% } else { %>
