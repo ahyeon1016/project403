@@ -172,7 +172,7 @@ public class TestController {
 	      
 	      return rusultMap;
 	   }
-	}
+	
 	
 	// 시험지 상세보기 비밀번호 입력 ajax
 	@RequestMapping(value="/testValue", method=RequestMethod.POST)

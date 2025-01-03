@@ -36,6 +36,7 @@
         align-items: center;
         color: #F5EFE7; 
         font-weight: bold;
+        transition:1s;
     }
     .navbar-brand:hover {
         color: #005f99; /* 호버 시 더 깊은 블루 */
