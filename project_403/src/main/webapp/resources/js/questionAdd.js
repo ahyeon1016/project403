@@ -1,6 +1,11 @@
 let sub_name = document.querySelector("#name_selector");
 let sub_chap = document.querySelector("#chap_selector");
 sub_name.addEventListener("change", check);
+
+function addQuestion(type){
+	window.location.href="Q_add"+type;
+}
+
 function check(){
 	let sub_name_value = sub_name.value;
 	console.log(sub_name_value);

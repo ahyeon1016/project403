@@ -234,9 +234,9 @@ $("#subjectSelect").on("change", function() {
 });
 
 //등록문제보기 클릭시 저장되어있는 문제 불러오기
-$(document).on('click', '#questionSelect', function() {
+$(document).on("click", "#questionSelect", function() {
 	
-	// ajax로 List에 Map담아서 넘기기
+	// List에 Map담아서 ajax로 넘기기
 	let chapSelectList = [];
 	for(let i = 0; i < $(".chapSelect:checked").length; i++) {
 		if($($(".chapSelect:checked")[i]).val() != "All") {			

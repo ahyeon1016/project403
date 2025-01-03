@@ -5,7 +5,6 @@
 <html>
 <head>
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
 </head>
@@ -167,20 +166,28 @@
 			<div style="border: 1px solid black;">
 				<h3>번호: ${test.test_num}</h3>
 				<input type="hidden" value="${test.test_openYN}" id="testOpenValue">
+				<input type="hidden" value="${test.mem_id}" id="testMemId">
 				<p>제목: <button onclick="testPopup('${test.test_num}', '${test.test_openYN}')">${test.test_name}</button> 
-				<p>작성자: ${test.mem_id}
+				<p>작성자: ${test.mem_nickName}
 				<p>비밀번호 입력: ${test.test_pw}
 				<p>조회수: ${test.test_hit}
-				<p>교과명: ${test.sub_name}
+				<p>과목명: ${test.sub_name}
 				<p>총 문제 갯수: ${fn:length(test.serial)}개
-				<p><a href="testUpdate?Num=${test.test_num}">수정</a>
-				<p><a href="testDelete?Num=${test.test_num}">삭제</a>
+                
+                <!-- session 저장 -->
+                <c:set var="memberSession" value="${sessionScope.member}" />
+
+				<!-- 수정/삭제 버튼을 조건부로 표시 -->
+				<c:if test="${memberSession.mem_id eq test.mem_id}">
+				    <p><a href="testUpdate?Num=${test.test_num}">수정</a></p>
+				    <p><a href="testDelete?Num=${test.test_num}">삭제</a></p>
+				</c:if>
 			</div>
 		</c:forEach>
 	</div>
 
 	<!-- 페이지 이동 -->
-	<div align="center">
+	<div align="center" id="pageNumberBox">
 		<c:set var="pageNum" value="${pageNum}" />
 		<c:forEach var="i" begin="1" end="${total_page}">
 			<a href="testAll?pageNum=${i}">
@@ -198,16 +205,36 @@
 </div>
 </body>
 <script type="text/javascript">
-// 비공개 시험 접근 비밀번호 검사 이벤트: 공개 or 비공개 시험 구분
+// 비밀번호 검사 이벤트
 function testPopup(test_num, testOpenValue) {
-	if(testOpenValue === "Y") {
-		window.location.href = "testOneView?Num=" + test_num;
-	} else {
-		let inputValue = prompt("비밀번호를 입력하세요.");
-		if(inputValue !== null) {
-			ajaxTest(inputValue, test_num);
-		}
-	}
+	// 시험지 상세보기 페이지 이동시 로그인 여부 확인 이벤트
+	$.ajax({
+		type: "POST", 
+		url: "loginCheck", 
+		/* data: param,  */
+		dataType : 'json',
+		async: false,
+		success: function (data) {
+			if(!data.success) {
+				alert("로그인 후 이용해주세요.");
+				return;
+			}
+			
+			// 공개 or 비공개 여부에 따라 시험지 상세보기 페이지 이동 이벤트
+			if(testOpenValue === "Y") {
+				window.location.href = "testOneView?Num=" + test_num;
+			} else {
+				let inputValue = prompt("비밀번호를 입력하세요.");
+				if(inputValue !== null) {
+					ajaxTest(inputValue, test_num);
+				}
+			}
+		},
+		error: function (data) {
+			alert("비밀번호 검사 이벤트 에러 발생");
+			return;
+		},
+	});	
 }
 
 // 비공개 시험 접근 비밀번호 검사 이벤트: 비공개 시험 비밀번호 일치 여부 확인
@@ -235,7 +262,7 @@ function ajaxTest(inputValue, test_num) {
 	});
 }
 
-// HTML의 검색 부분에 form 태그 추가 및 id 부여
+// 검색 버튼 이벤트
 $(document).ready(function() {
     // 검색 버튼 클릭 이벤트
     $("#btnAdd").click(function(e) {
@@ -251,15 +278,16 @@ $(document).ready(function() {
         }
     });
 
-    // 검색 필터 + 검색 값 저장
-    function performSearch() {
+ 	// 검색 필터 + 검색 값 저장
+    function performSearch(pageNumber) {
         let searchType = $(".txt").val();
         let searchText = $("input[name='text']").val();
         let param = {
-        		searchType: searchType,
-                searchText: searchText
+        		"searchType" : searchType,
+                "searchText" : searchText,
+                "pageNumber" : pageNumber
         };
-
+        
         // 검색어가 비어있는 경우 처리
         if (searchText.trim() === "") {
             alert("검색어를 입력해주세요.");
@@ -270,6 +298,9 @@ $(document).ready(function() {
         let listBox = $("#listBox");
         listBox.empty();
         let listHtml = "";
+        let pageNumberBox = $("#pageNumberBox");
+        pageNumberBox.empty();
+        let pageNumberHtml ="";
 
         // AJAX를 통한 검색 요청
         $.ajax({
@@ -284,30 +315,50 @@ $(document).ready(function() {
 		            window.location.reload();
 		        }
             	
+            	// 검색 결과 있을 경우
             	for(let i = 0; i < data.searchResults.length; i++) {
                     listHtml += "<div style='border: 1px solid black;'>";
                     listHtml += "<h3>번호: " + data.searchResults[i].test_num + "</h3>";
                     listHtml += "<p>제목: <button onclick='testPopup(" + data.searchResults[i].test_num + ")'>" + data.searchResults[i].test_name + "</button></p>";
-                    listHtml += "<p>작성자: " + data.searchResults[i].mem_id + "</p>";
+                    listHtml += "<p>작성자: " + data.nickName[i].mem_nickName + "</p>";
                     listHtml += "<p>비밀번호 입력: " + data.searchResults[i].test_pw + "</p>";
                     listHtml += "<p>조회수: " + data.searchResults[i].test_hit + "</p>";
-                    listHtml += "<p>교과명: " + data.searchResults[i].sub_name + "</p>";
+                    listHtml += "<p>과목명: " + data.searchResults[i].sub_name + "</p>";
                     if(data.searchResults[i].serial != null) {
 	                    listHtml += "<p>총 문제 갯수: " + data.searchResults[i].serial.length + "개</p>"
                     }
-                    listHtml += "<p><a href='testUpdate?Num=" + data.searchResults[i].test_num + "'>수정</a></p>";
-                    listHtml += "<p><a href='testDelete?Num=" + data.searchResults[i].test_num + "'>삭제</a></p>";
-                    listHtml += "</div>";
-                 }
-                 listBox.append(listHtml);
+                    // 로그인 시 본인 글 수정 + 삭제 버튼 보이기
+                    if (data.searchResults[i].updateBtn == "Y") {
+                    	listHtml += "<p><a href='testUpdate?Num=" + data.searchResults[i].test_num + "'>수정</a></p>";
+                        listHtml += "<p><a href='testDelete?Num=" + data.searchResults[i].test_num + "'>삭제</a></p>";
+                    }
+                	listHtml += "</div>";
+                }
+            	// 검색된 글 페이징 번호
+            	for(let j = 0; j < data.total_page; j++) {
+            		if(data.pageNumber == (j+1)) {
+		            	pageNumberHtml += "<a href='#' class='pageNum' value='" + [j+1] + "'><font color='4C5317'><b>[" + [j+1] + "]</b></font>";
+            		} else {
+            			pageNumberHtml += "<a href='#' class='pageNum' value='" + [j+1] + "'><font color='4C5317'>[" + [j+1] + "]</font>";
+            		}
+            	}
+            	pageNumberBox.append(pageNumberHtml);
+                listBox.append(listHtml);
                  
-                 $("#listCount").text("전체글 총 " + data.searchResults.length + "건");
+                // 검색된 글 총 갯수
+                $("#listCount").text("전체글 총 " + data.total_record + "건");
             },
             error: function() {
                 alert("서버 통신 중 오류가 발생했습니다.");
             }
         });
     }
+ 	
+ 	// 검색된 글 페이징 번호 누를시 이벤트
+    $(document).on("click", ".pageNum", function() {
+    	let pageNumber = $(this).attr('value');
+    	performSearch(pageNumber);
+    });
 });
 </script>
 </html>

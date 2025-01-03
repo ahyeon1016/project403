@@ -40,5 +40,7 @@ public interface TestService
 
 	List<Question> getQuestion(Test test);
 
-	List<Test> search(String searchType, String searchText);
+	List<Test> search(String searchType, String searchText, String sessionId, Integer pageNumber, int limit);
+
+	int searchListCount(String searchType, String searchText);
 }

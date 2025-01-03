@@ -16,13 +16,6 @@ public class TestServiceImpl implements TestService {
 	@Autowired
 	private TestRepository testRepository;
 
-//	페이징 없이 All
-//	@Override
-//	public List<Test> getAllTestList() {
-//		
-//		return testRepository.getAllTestList();
-//	}
-
 	// 페이징 처리 Read All
 	@Override
 	public List<Test> getBoardList(Integer pageNum, int limit) {
@@ -132,11 +125,19 @@ public class TestServiceImpl implements TestService {
 	}
 
 	@Override
-	public List<Test> search(String searchType, String searchText) {
+	public List<Test> search(String searchType, String searchText, String sessionId, Integer pageNumber, int limit) {
 		
-		List<Test> list = testRepository.search(searchType, searchText);
+		List<Test> list = testRepository.search(searchType, searchText, sessionId, pageNumber, limit);
 		
 		return list;
+	}
+
+	@Override
+	public int searchListCount(String searchType, String searchText) {
+		
+		int count = testRepository.searchListCount(searchType, searchText);
+		
+		return count;
 	}
 	
 	

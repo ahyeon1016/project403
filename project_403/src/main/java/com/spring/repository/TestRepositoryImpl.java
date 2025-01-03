@@ -20,7 +20,7 @@ public class TestRepositoryImpl implements TestRepository {
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 
-	// 페이징 처리 Read All
+	// 페이징 처리 n 번째부터 limit 갯수만큼 가져오기
 	@Override
 	public List<Test> getBoardList(Integer pageNum, int limit) {
 		
@@ -33,7 +33,7 @@ public class TestRepositoryImpl implements TestRepository {
 	    try {
 	    	conn = DBConnection.getConnection();
 	    	//SQL쿼리 전송
-	    	String sql = "SELECT * FROM Test WHERE visible = 1 ORDER BY test_num DESC LIMIT ? OFFSET ?";		    	
+	    	String sql = "SELECT *, (select mem_nickName from Member M WHERE M.mem_id = T.mem_id) AS mem_nickName FROM Test T WHERE visible = 1 ORDER BY test_num DESC LIMIT ? OFFSET ?";		    	
 	        pstmt = conn.prepareStatement(sql);
 	        pstmt.setInt(1, limit);
 	        pstmt.setInt(2, start);
@@ -58,6 +58,7 @@ public class TestRepositoryImpl implements TestRepository {
                 test.setTest_hit(rs.getInt(8));
                 test.setSerial(serial_split);
 				test.setVisible(rs.getBoolean(10));
+				test.setMem_nickName(rs.getString(11));
                 list.add(test);
                 
 //                if (index < (start + limit) && index <= total_record) {
@@ -124,7 +125,7 @@ public class TestRepositoryImpl implements TestRepository {
 		return count;
 	}
 	
-	// Create
+	// Create: 시험지 생성하기
 	@Override
 	public void setNewTest(Test test) {
 		
@@ -239,7 +240,7 @@ public class TestRepositoryImpl implements TestRepository {
 		return test;
 	}
 
-	// Update: 기존 데이터 보존을 위해 Insert 작업으로 진행함
+	// Update: 기존 데이터 보존을 위해 Insert 작업 진행
 	@Override
 	public void setUpdateTest(Test test) {
 		
@@ -295,7 +296,7 @@ public class TestRepositoryImpl implements TestRepository {
 			pstmt.setInt(1, test_num);
 			pstmt.executeUpdate();
 			//SQL쿼리 전송: test_num에 해당하는 상세 내용 가져오기
-			String sql = "SELECT * FROM Test WHERE test_num=?";
+			String sql = "SELECT *, (select mem_nickName from Member M WHERE M.mem_id = T.mem_id) AS mem_nickName FROM Test T WHERE test_num=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, test_num);
 			rs = pstmt.executeQuery();			
@@ -312,6 +313,7 @@ public class TestRepositoryImpl implements TestRepository {
 				test.setTest_hit(rs.getInt(8));
 				test.setSerial(serial_split);
 				test.setVisible(rs.getBoolean(10));
+				test.setMem_nickName(rs.getString(11));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -537,7 +539,7 @@ public class TestRepositoryImpl implements TestRepository {
 	 * return list; }
 	 */
 
-	// sub_code_sum(과목탭터코드) 값에 해당하는 question_ans(정답) 값을 Question 테이블에서 가져오기
+	// sub_code_sum(과목챕터코드) 값에 해당하는 question_ans(정답) 값을 Question 테이블에서 가져오기
 	@Override
 	public List<String[]> ansSelectValue(String subCodeSum) {
 		
@@ -641,23 +643,37 @@ public class TestRepositoryImpl implements TestRepository {
 
 	// testAll.jsp 검색 기능
 	@Override
-	public List<Test> search(String searchType, String searchText) {
+	public List<Test> search(String searchType, String searchText, String sessionId, Integer pageNumber, int limit) {
 		
 		List<Test> list = new ArrayList<Test>();	  
 		String sql = null;
+		int start = (pageNumber - 1) * limit;
 		
 		try {
 			conn = DBConnection.getConnection();
 			//SQL쿼리 전송
 			if("title".equals(searchType)) {
-				sql = "SELECT * FROM Test WHERE test_name LIKE ? AND visible = 1 ORDER BY test_num DESC";
+				sql = "SELECT *, if(mem_id = ?, 'Y', 'N') as updateBtn FROM Test WHERE test_name LIKE ? AND visible = 1 ORDER BY test_num DESC LIMIT ? OFFSET ?";
 			} else if("subject".equals(searchType)) {
-				sql = "SELECT * FROM Test WHERE sub_name LIKE ? AND visible = 1 ORDER BY test_num DESC";
+				sql = "SELECT *, if(mem_id = ?, 'Y', 'N') as updateBtn FROM Test WHERE sub_name LIKE ? AND visible = 1 ORDER BY test_num DESC LIMIT ? OFFSET ?";
 			} else if("name".equals(searchType)) {
-				sql = "SELECT * FROM Test WHERE mem_id LIKE ? AND visible = 1 ORDER BY test_num DESC";
+				sql = "SELECT T.*, \r\n"
+						+ "       (SELECT M.mem_nickName \r\n"
+						+ "        FROM Member M \r\n"
+						+ "        WHERE M.mem_id = T.mem_id) AS mem_nickName, \r\n"
+						+ "       IF(T.mem_id = ?, 'Y', 'N') AS updateBtn \r\n"
+						+ "FROM Test T \r\n"
+						+ "WHERE (SELECT M.mem_nickName \r\n"
+						+ "       FROM Member M \r\n"
+						+ "       WHERE M.mem_id = T.mem_id) LIKE ? \r\n"
+						+ "  AND T.visible = 1 \r\n"
+						+ "ORDER BY T.test_num DESC LIMIT ? OFFSET ?";
 			}
 			pstmt = conn.prepareStatement(sql);				
-			pstmt.setString(1, "%" + searchText + "%");
+			pstmt.setString(1, sessionId);
+			pstmt.setString(2, "%" + searchText + "%");
+			pstmt.setInt(3, limit);
+			pstmt.setInt(4, start);
 			rs = pstmt.executeQuery();			
 			
 			while(rs.next()) {				
@@ -680,7 +696,8 @@ public class TestRepositoryImpl implements TestRepository {
 				test.setSub_chap(rs.getString(7));
 				test.setTest_hit(rs.getInt(8));
 				test.setSerial(serial_split);
-				
+				test.setVisible(rs.getBoolean(10));
+				test.setUpdateBtn(rs.getString(11));
 				list.add(test);
 			}	
 		} catch(Exception e) {
@@ -702,6 +719,52 @@ public class TestRepositoryImpl implements TestRepository {
 		}	
 		
 		return list;
+	}
+
+	@Override
+	public int searchListCount(String searchType, String searchText) {
+		
+		int count = 0;
+		String sql = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			
+			if("title".equals(searchType)) {
+				sql = "SELECT COUNT(*) FROM Test WHERE test_name LIKE ? AND visible = 1";
+	        } else if("subject".equals(searchType)) {
+	        	sql = "SELECT COUNT(*) FROM Test WHERE sub_name LIKE ? AND visible = 1";
+	        } else if("name".equals(searchType)) {
+	        	sql = "SELECT COUNT(*) FROM Test T WHERE (SELECT M.mem_nickName FROM Member M WHERE M.mem_id = T.mem_id) LIKE ? AND T.visible = 1";
+	        }
+	        
+	        // COUNT 쿼리 실행
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, "%" + searchText + "%");
+	        rs = pstmt.executeQuery();
+	        
+	        if(rs.next()) {
+	        	count = rs.getInt(1);
+	        }    	
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+		    try {
+		    	if (rs != null) {
+		    		rs.close();
+		        }
+		        if (pstmt != null) {
+		            pstmt.close();
+		        }
+		        if (conn != null) {
+		            conn.close();
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}
+		
+		return count;
 	}
 
 	

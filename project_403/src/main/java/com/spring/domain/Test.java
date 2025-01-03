@@ -10,22 +10,17 @@ public class Test
 	private String sub_name; // 과목명
 	private String sub_chap; // 챕터명
 	private int test_hit; // 조회수
-	private String[] serial;
+	private String[] serial; // 해당 시험지 문제
 	private boolean visible; // 삭제시 감춤
+	private String updateBtn; // 전체글 조회시 본인이 작성한 글인지 여부확인
+	private String mem_nickName; // 시험 작성자 닉네임
 	
 	// 기본 생성자
 	public Test() 
 	{
 		
 	}
-
-	// 일반 생성자
-//	public Test(String mem_id, String test_name) 
-//	{
-//		this.mem_id = mem_id;
-//		this.test_name = test_name;
-//	}
-
+	
 	// getter + setter
 	public int getTest_num() {
 		return test_num;
@@ -105,5 +100,22 @@ public class Test
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
+
+	public String getUpdateBtn() {
+		return updateBtn;
+	}
+
+	public void setUpdateBtn(String updateBtn) {
+		this.updateBtn = updateBtn;
+	}
+
+	public String getMem_nickName() {
+		return mem_nickName;
+	}
+
+	public void setMem_nickName(String mem_nickName) {
+		this.mem_nickName = mem_nickName;
+	}
+	
 	
 }

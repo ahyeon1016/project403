@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -21,9 +22,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.spring.domain.Member;
 import com.spring.domain.Question;
 import com.spring.domain.Subject;
 import com.spring.domain.Test;
+import com.spring.service.FnoteService;
+import com.spring.service.MemberService;
 import com.spring.service.Subject_Service;
 import com.spring.service.TestService;
 
@@ -37,23 +41,30 @@ public class TestController {
 	@Autowired
 	private Subject_Service subjectService;
 	
+	@Autowired
+	private FnoteService fnoteservice;
+	
+	@Autowired
+	MemberService memberservice;
+	
 	// 시험지 전체보기
 	@GetMapping("/testAll")
 	public String testAll(@RequestParam(value = "pageNum", required = false) Integer pageNum, Model model) {	
 		
-		// 페이징 처리 Read All
+		// 페이징 처리
 		int limit = 5;
 		
 		if(pageNum == null)
 		{
 			pageNum = 1;
 		}
-				
+		
+		// Test 테이블 전체 글 갯수 계산
 		int total_record = testService.getListCount();
+		// 페이징 처리 n 번째부터 limit 갯수만큼 가져오기
 		List<Test> boardList = testService.getBoardList(pageNum, limit);
-		
-		int total_page;
-		
+		// 총 페이지 숫자 구하기
+		int total_page;		
 		if (total_record % limit == 0){     
 	     	total_page = total_record/limit;
 	     	Math.floor(total_page);  
@@ -68,6 +79,7 @@ public class TestController {
 		model.addAttribute("total_page", total_page);
 		model.addAttribute("total_record",total_record);
 		model.addAttribute("boardList", boardList);
+		//model.addAttribute("nickName", nickName);
 		
 		return "testAll";
 	}	
@@ -76,12 +88,13 @@ public class TestController {
 	@GetMapping("/testAdd")
 	public String testAddForm(@ModelAttribute("NewTest") Test test, Model model, HttpSession session)	{
 		
-		// 로그인 상태가 아니라면 로그인 페이지로 리다이렉트
-		Object loginCheck = session.getAttribute("member"); 
+		// 로그인 상태가 아니라면 로그인 페이지로 redirect
+		Member loginCheck = (Member) session.getAttribute("member"); 
 	    if (loginCheck == null) {
 	        return "redirect:/member/login";
 	    }
 		
+	    // Subject 테이블 sub_name(과목) 칼럼값 가져오기(중복제외)
 		List<Subject> subList = testService.getSubList();
 		
 		model.addAttribute("subList", subList);
@@ -91,8 +104,12 @@ public class TestController {
 	
 	// 시험지 추가하기 DB 연결
 	@PostMapping("/testAdd")
-	public String testAddNew(@ModelAttribute("NewTest") Test test) {
+	public String testAddNew(@ModelAttribute("NewTest") Test test, HttpSession session) {
 		
+		// testAdd 페이지에서 넘어온 mem_id 값 변경(mem_nickName -> mem_id)
+		Member member = (Member) session.getAttribute("member");
+		test.setMem_id(member.getMem_id());
+		// Create: 시험지 생성하기
 		testService.setNewTest(test);
 		
 		return "redirect:/test/testAll";
@@ -102,8 +119,11 @@ public class TestController {
 	@GetMapping("/testUpdate")
 	public String testUpdateForm(@ModelAttribute("UpdateTest") Test test, @RequestParam("Num") Integer test_num, Model model) {
 		
+		// DB에서 test_num에 해당하는 행 가져오기
 		Test testByNum = testService.getTestByNum(test_num);
+		// Subject 테이블 sub_name(과목) 칼럼값 가져오기(중복제외)
 		List<Subject> subList = testService.getSubList();
+		// serial(과목챕터코드) 해당하는 문제를 Question 테이블에서 가져오기
 		List<Question> allQuestion = testService.getQuestion(testByNum);
 		
 		model.addAttribute("test", testByNum);
@@ -117,6 +137,7 @@ public class TestController {
 	@PostMapping("/testUpdate")
 	public String testUpdateSubmit(@ModelAttribute("UpdateTest") Test test) {
 		
+		// Update: 기존 데이터 보존을 위해 Insert 작업 진행
 		testService.setUpdateTest(test);
 		
 		return "redirect:/test/testAll";
@@ -126,6 +147,7 @@ public class TestController {
 	@GetMapping("/testDelete")
 	public String testDelete(@RequestParam("Num") Integer test_num) {
 		
+		// Delete: 기존 데이터 보존을 위해 visible 컬럼값 변경 작업으로 진행함
 		testService.setDeleteTest(test_num);
 		
 		return "redirect:/test/testAll";
@@ -135,42 +157,52 @@ public class TestController {
 	@GetMapping("/testOneView")
 	public String testOneView(@RequestParam("Num") Integer test_num, Model model) {
 		
+		// Test 1개 상세보기
 		Test test = testService.getOneTestList(test_num);
-		List<Question> allQuestion = testService.getQuestion(test);
 		
 		model.addAttribute("test", test);
-		model.addAttribute("allQuestion", allQuestion);
 		
 		return "testOneView";
 	}
 	
-	// 시험 시작하기
-	@GetMapping("/testStart")
-	public String testStart(@RequestParam("Num") Integer test_num, Model model) {
-		
-		Test test = testService.getOneTestList(test_num);
-		List<Question> allQuestion = testService.getQuestion(test);
-		
-		model.addAttribute("test", test);
-		model.addAttribute("allQuestion", allQuestion);
-		
-		return "testStart";
-	}
-	//시험시작하기 버튼을 눌렀을때 기능
+	//시험시작하기 버튼을 클릭 AJAX
 	@RequestMapping(value="/callQuestion", method=RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> callQuestion(@RequestParam("test_num") Integer test_num) {
-        
+	public Map<String, Object> callQuestion(@RequestParam("test_num") Integer test_num, HttpServletRequest req) {
+		
 		Map<String, Object> rusultMap = new HashMap<>();
 		
-		Test test = testService.getOneTestList(test_num);
-		List<Question> allQuestion = testService.getQuestion(test);
-//		List<String[]> answerValue = testService.ansSelectValue(subCodeSum);
-		
-		rusultMap.put("allQuestion", allQuestion);
-	
-		return rusultMap;
+	    HttpSession session=req.getSession(false);	   
+	    Member member=(Member)session.getAttribute("member");
+	    String mem_id=member.getMem_id();
+	    // 정리노트 생성
+	    fnoteservice.note_create(mem_id, test_num);
+	      
+ 	    // Test 1개 상세보기
+ 	    Test test = testService.getOneTestList(test_num);
+	    // serial(과목챕터코드) 해당하는 문제를 Question 테이블에서 가져오기
+	    List<Question> allQuestion = testService.getQuestion(test);
+	    
+	    rusultMap.put("allQuestion", allQuestion);
+	   
+	    return rusultMap;
 	}
+	   
+//	//시험시작하기 버튼을 눌렀을때 기능
+//	@RequestMapping(value="/callQuestion", method=RequestMethod.POST)
+//	@ResponseBody
+//	public Map<String, Object> callQuestion(@RequestParam("test_num") Integer test_num) {
+//        
+//		Map<String, Object> rusultMap = new HashMap<>();
+//		
+//		Test test = testService.getOneTestList(test_num);
+//		List<Question> allQuestion = testService.getQuestion(test);
+////		List<String[]> answerValue = testService.ansSelectValue(subCodeSum);
+//		
+//		rusultMap.put("allQuestion", allQuestion);
+//	
+//		return rusultMap;
+//	}
 	
 	// 시험지 상세보기 비밀번호 입력 AJAX
 	@RequestMapping(value="/testValue", method=RequestMethod.POST)
@@ -179,8 +211,10 @@ public class TestController {
         
 		Map<String, Object> rusultMap = new HashMap<>();
 		
+		// test_num에 해당하는 행 값을 가져오기
 		Test test = testService.getTestValue(test_num);
 		
+		// 입력 비밀번호 검사
 		if (test != null && test.getTest_pw().equals(password)) {
 			rusultMap.put("success", true);
 	        rusultMap.put("test_num", test_num);
@@ -200,12 +234,10 @@ public class TestController {
 		
 		String sub_name = (String)params.get("sub_name");
 		
-		rusultMap.put("chapList", subjectService.getSubByName(sub_name));
-//		rusultMap.put("chapList", testService.subValue(sub_name));
+		// 과목명으로 모든 정보 가져오기
+		List<Subject> allSubject = subjectService.getSubByName(sub_name);
 		
-//		List<Subject> chapList = new ArrayList<Subject>();		
-//		chapList = testService.subValue(sub_name);
-//		rusultMap.put("chapList", chapList);
+		rusultMap.put("chapList", allSubject);
 	    
 		return rusultMap;
 	}
@@ -229,8 +261,10 @@ public class TestController {
 	    try {
 	    	String selectedSubject = (String)params.get("selectedSubject");
 	    	
+	    	serialList = mapper.readValue(serials, new TypeReference<ArrayList<Map<String, Object>>>(){});
 			paramList = mapper.readValue(json, new TypeReference<ArrayList<Map<String, Object>>>(){});
-			serialList = mapper.readValue(serials, new TypeReference<ArrayList<Map<String, Object>>>(){});
+			
+			// serial 문자로 가공해서 보내기
 			for(int j = 0; j < serialList.size(); j++) {
 				if (j == 0) {
 					serial += (String) serialList.get(j).get("serial");
@@ -242,11 +276,13 @@ public class TestController {
 			for(int i = 0; i < paramList.size(); i++) {
 
 				String sub_chap = (String)paramList.get(i).get("name");
-				String subCodeSum = sub_code_sum(selectedSubject, sub_chap);
+				String subCodeSum = subjectService.sub_code_sum(selectedSubject, sub_chap);
 				
+				// Question 테이블 sub_code_sum(과목챕터코드)=subCodeSum 일치하는 모든 값 가져오기
 				List<Question> questionValue = testService.qnaSelectValue(subCodeSum, serial);
 				qnaList.add(questionValue);
 				
+				// sub_code_sum(과목챕터코드) 값에 해당하는 question_ans(정답) 값을 Question 테이블에서 가져오기
 				List<String[]> answerValue = testService.ansSelectValue(subCodeSum);				
 				qnaList.add(answerValue);
 			}
@@ -260,18 +296,58 @@ public class TestController {
 	}
 	
 	// 검색 버튼 클릭 AJAX
-    @PostMapping("/search")
+    @RequestMapping(value="/search", method=RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> search(@RequestParam String searchType, @RequestParam String searchText) {
+    public Map<String, Object> search(@RequestParam String searchType, @RequestParam String searchText, @RequestParam(required = false) Integer pageNumber ,HttpSession session) {
+    	
         Map<String, Object> resultMap = new HashMap<>();
+        List<Member> nickName = new ArrayList<Member>();
+        Member loginCheck = (Member) session.getAttribute("member");
+        
+        // 로그인 여부 확인
+        String sessionId = loginCheck != null ? loginCheck.getMem_id() : null;
         
         try {
-            // 검색 타입에 따른 쿼리 실행
-            List<Test> searchResults = testService.search(searchType, searchText);
+        	// 페이징 처리
+        	int limit = 5;
+        	int total_page = 0;
+        	
+        	if(pageNumber == null)
+    		{
+        		pageNumber = 1;
+    		}
+        	
+        	// 검색 결과 갯수
+        	int total_record = testService.searchListCount(searchType, searchText);
+            // 검색 결과 데이터
+            List<Test> searchResults = testService.search(searchType, searchText, sessionId, pageNumber, limit);
+            
+            // 시험지 작성자 닉네임 확인
+            for(int i = 0; i < searchResults.size(); i++) {
+    			String mem_id = searchResults.get(i).getMem_id();
+    			Member member = memberservice.getMyInfo(mem_id);
+    			nickName.add(member);
+    		}
+            
+        	
+        	if (total_record % limit == 0){     
+    	     	total_page = total_record/limit;
+    	     	Math.floor(total_page);  
+    		}
+    		else{
+    		   total_page = total_record/limit;
+    		   Math.floor(total_page); 
+    		   total_page =  total_page + 1; 
+    		}	
+        	
             
             resultMap.put("success", true);
             resultMap.put("searchResults", searchResults);
-            
+            resultMap.put("nickName", nickName);
+            resultMap.put("total_page", total_page);
+            resultMap.put("pageNumber", pageNumber);
+            resultMap.put("total_record", total_record);
+                        
         } catch (Exception e) {
         	resultMap.put("success", false);
         	resultMap.put("message", "검색 중 오류가 발생했습니다.");
@@ -279,24 +355,21 @@ public class TestController {
         
         return resultMap;
     }
-	
-	
-//	여기서부터 나중에 삭제해야됨->
-	private String sub_code_sum(String sub_name, String sub_chap) {
-	      System.out.println("컨트롤러 | sub_code_sum() 도착");
-	      Subject sub = new Subject();
-	      sub.setSub_name(sub_name); 
-	      sub.setSub_chap(sub_chap);
-	      Subject return_sub = subjectService.getSubByChap(sub);
-	      //가져온 DTO에서 코드를 가져와 문자열로 캐스팅하여 과목의 고유 넘버를 만든다.
-	      String sub_name_code = String.valueOf(return_sub.getSub_name_code()); 
-	      String sub_chap_code = String.valueOf(return_sub.getSub_chap_code());
-	      String sub_code_sum = sub_name_code+"_"+sub_chap_code;
-	      //DTO에 SET
-	      return sub_code_sum;
-	   }
-//	<-여기까지 나중에 삭제해야됨
-	
-	
-	
+    
+    // 로그인 여부 확인 AJAX
+    @RequestMapping(value="/loginCheck", method=RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> loginCheck(HttpSession session) {
+    	
+        Map<String, Object> resultMap = new HashMap<>();
+        
+        Member loginCheck = (Member)session.getAttribute("member"); 
+	    if (loginCheck == null) {
+	    	resultMap.put("success", false);
+	    } else {
+	    	resultMap.put("success", true);
+	    }
+        
+        return resultMap;
+    }	
 }
