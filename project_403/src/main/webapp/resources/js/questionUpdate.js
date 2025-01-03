@@ -1,51 +1,10 @@
-let sub_name = document.querySelector("#name_selector");
-let sub_chap = document.querySelector("#chap_selector");
-sub_name.addEventListener("change", check);
-
-function addQuestion(type){
-	window.location.href="Q_add"+type;
-}
-
-function check(){
-	let sub_name_value = sub_name.value;
-	console.log(sub_name_value);
-	$.ajax({
-		url : "Q_subNameByChap",
-		type : "POST",
-		contentType : "application/json",
-		data : JSON.stringify({
-			"sub_name" : sub_name_value
-		}),
-		success : function(data){
-			let list = data.list;
-			sub_chap.replaceChildren();
-			for(let i=0; i<list.length; i++){
-				let option = document.createElement('option');
-				console.log(list[i]);
-				option.text = list[i];
-		        sub_chap.appendChild(option);
-			}
-		},
-		error : function(){
-			arlet("데이터를 받아오지 못했습니다.");
-		}
-	});
-}
-
 function validateMCQForm(event) {
-    const nameSelect = document.getElementById("name_selector");
     const questionContent = document.querySelector('textarea[name="question_content"]');
     const answerInputs = document.querySelectorAll('input[name="question_ans"]');
     const selectedAnswers = document.querySelectorAll('input[name="question_ans"]:checked');
 	const questionLevel = document.querySelectorAll('input[name="question_level"]:checked');
 	const imageInput = document.getElementById("imageInput");
     const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-	
-    if (nameSelect.value === "선택") {
-        alert("과목명을 선택해야 합니다.");
-        event.preventDefault();
-        return false;
-    }
 
     if (questionContent.value.trim() === "") {
         alert("문제 내용을 입력해야 합니다.");
@@ -97,19 +56,11 @@ function validateMCQForm(event) {
 }
 
 function validateSAQForm(event) {
-    const nameSelect = document.getElementById("name_selector");
     const questionContent = document.querySelector('textarea[name="question_content"]');
     const answerInput = document.querySelector('input[name="question_ans"]'); // 주관식 답안
     const questionLevel = document.querySelectorAll('input[name="question_level"]:checked');
     const imageInput = document.getElementById("imageInput"); // 이미지 입력
     const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-	
-    // 과목명 검사
-    if (nameSelect.value === "선택") {
-        alert("과목명을 선택해야 합니다.");
-        event.preventDefault();
-        return false;
-    }
 
     // 문제 내용 검사
     if (questionContent.value.trim() === "") {
@@ -147,20 +98,12 @@ function validateSAQForm(event) {
 }
 
 function validateCPForm(event) {
-    const nameSelect = document.getElementById("name_selector");
     const questionContent = document.querySelector('textarea[name="question_content_text"]');
     const codeContent = document.querySelector('textarea[name="question_content"]');
     const answerInput = document.querySelector('input[name="question_ans"]'); // 정답 입력
     const questionLevel = document.querySelectorAll('input[name="question_level"]:checked');
     const imageInput = document.getElementById("imageInput"); // 이미지 입력
     const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-
-    // 과목명 검사
-    if (nameSelect.value === "선택") {
-        alert("과목명을 선택해야 합니다.");
-        event.preventDefault();
-        return false;
-    }
 
     // 문제 내용 검사
     if (questionContent.value.trim() === "") {

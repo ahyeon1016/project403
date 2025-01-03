@@ -111,10 +111,8 @@ function chapSearch(){
 					div.classList.add(question[i].question_id, "question_div");
 					div.innerHTML = 
 						"<p>작성자명 : "+question[i].mem_nickName+"</p>"+
-						"<p>문제 난이도 : "+question[i].question_level+"</p>"+
+						"<p>문제 난이도 : "+question[i].question_level+"단계</p>"+
 						"<p>"+question[i].question_id+"</p>"+
-						"<p>"+question[i].sub_code_sum+"</p>"+
-						"<p>"+question[i].question_serial+"</p>"+
 						"<a href='Q_read"+question[i].question_id+
 						"/"+question[i].question_serial+"'>문제 보기</a> | "+
 						"<a href='Q_update"+question[i].question_id+
