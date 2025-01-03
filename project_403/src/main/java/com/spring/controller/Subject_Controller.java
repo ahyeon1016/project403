@@ -56,8 +56,7 @@ public class Subject_Controller {
 		
 		subjectService.addSubName(name);
 		
-		request.setAttribute("name", name);
-		return "Subject_view";
+		return "redirect:/sub";
 	}
 	
 	//Subject name 중복 확인
@@ -86,9 +85,7 @@ public class Subject_Controller {
 		
 		subjectService.addSubChap(subject);
 		
-		model.addAttribute("name", subject.getSub_name());
-		model.addAttribute("chap", subject.getSub_chap());
-		return "Subject_view";
+		return "redirect:/sub";
 	}
 	
 	//Subject_chap 중복 확인

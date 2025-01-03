@@ -3,21 +3,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>챕터 등록</title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; }
+        .form-container { max-width: 500px; margin: 0 auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .form-group { margin: 15px 0; }
+        .form-group input[type="text"] { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .error-message { color: #dc3545; display: none; margin-top: 5px; }
+        input[type="submit"] { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+        input[type="submit"]:disabled { background: #ccc; }
+    </style>
 </head>
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <body>
-	HELLO SUBJECT CHAP FORM
-	<form:form modelAttribute="subject" method="POST" action="sub_chap_form">
-		<!-- 추후에 ajax로 검색 가능하게 처리할 것임. -->
-		<p>과목 이름 : <form:input path="sub_name" id="c_sub_name" required="true"/>
-		<span style="display: none;" id="c1_duplication">존재하지 않는 과목입니다.</span>
-		<p>과목 챕터 : <form:input path="sub_chap" id="c_sub_chap" required="true"/> 
-		<span style="display: none;" id="c2_duplication">중복된 챕터입니다.</span>
-		<p><input type="submit" value="전송" id="c_sub_submit">
-	</form:form>
-		
+	<%@include file="/WEB-INF/views/member_home.jsp" %>
+    <div class="form-container">
+        <h2>챕터 등록</h2>
+        <form:form modelAttribute="subject" method="POST" action="sub_chap_form">
+            <div class="form-group">
+                <label>과목명</label>
+                <form:input path="sub_name" id="c_sub_name" required="true"/>
+                <span class="error-message" id="c1_duplication">존재하지 않는 과목입니다.</span>
+            </div>
+            <div class="form-group">
+                <label>챕터명</label>
+                <form:input path="sub_chap" id="c_sub_chap" required="true"/>
+                <span class="error-message" id="c2_duplication">중복된 챕터입니다.</span>
+            </div>
+            <input type="submit" value="등록" id="c_sub_submit">
+        </form:form>
+    </div>
+    <%@include file="/WEB-INF/views/footer.jsp" %>
 	<script>
 		var	c_sub_chap = document.querySelector("#c_sub_chap");
 		var c_sub_name = document.querySelector("#c_sub_name");
