@@ -181,11 +181,11 @@
 			</div>
 			<input type="button" id="questionSelect" value="등록문제보기">
 			<p>총 문제 갯수: ${fn:length(test.serial)}개 <br>
-			<div id="input_wrap" class="input_wrap list">
+			<div id="input_wrap" class="input_wrap list serialBox">
 				<!-- 시험지 작성 공간 -->
 				<c:forEach items="${allQuestion}" var="allQuestion">
 					<div class='input_list item' draggable='true'>
-						<input type="text" name="serial[]" value="${allQuestion.question_serial}"><br>
+						<input type="text" class="serial" name="serial[]" value="${allQuestion.question_serial}"><br>
 						${allQuestion.question_content}<br>
 						<c:set var="splitData" value="${fn:split(allQuestion.question_ans, '|★|')}" />        
 				            1번: ${splitData[0]},
@@ -258,13 +258,24 @@ $(document).on('click', '#questionSelect', function() {
 		}
 	}
 	
+	let existingSerials = [];
+	let serials = $(".serialBox .serial");
+	if(serials != null) {
+	    for(let i = 0; i < serials.length; i++) {
+	    	let serialMap = {serial : $(serials[i]).val()};
+	    	
+	        existingSerials.push(serialMap);
+	    };
+	}
+	
 	let selectedSubject = $("#subjectSelect").val();
 	let testNum = $('input[name=test_num]').val();
 	
 	let param = {
 			"paramList" : JSON.stringify(chapSelectList), 
 			"selectedSubject" : selectedSubject,
-			"test" : testNum
+			"test" : testNum,
+			"existingSerials": JSON.stringify(existingSerials)
 	};
 	
 	let qnaSelect = $("#qnaSelect");
@@ -282,7 +293,7 @@ $(document).on('click', '#questionSelect', function() {
 					for(let j = 0; j < data.qnaList[i].length; j++) {
 						qnaHtml += "<div class='input_list item' draggable='true'>";
 						//qnaHtml += "<input type='hidden' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>";
-						qnaHtml += "<input type='text' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>";
+						qnaHtml += "<input type='text' class='serial' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>";
 						qnaHtml += "<br>문제: " + data.qnaList[i][j].question_content + "<br>";
 					    let answers = data.qnaList[i+1][j];
 					    let formattedAnswers = answers.slice(0, -1).map(function(answer, index) {
