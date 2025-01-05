@@ -36,11 +36,6 @@ public class QnAController {
 	@Autowired
 	Favorite_Service favoriteService;
 	
-	@RequestMapping("/main")
-	public String main() {
-		return "QnA_main";
-	}
-	
 	//comment_root작성 페이지로 이동
 	@GetMapping("/addCommentRoot")
 	public String addCommentRoot_form(

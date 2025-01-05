@@ -178,7 +178,7 @@
                         <a class="nav-link" href="/project_403/"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/project_403/Q/main">문제 작성하기</a>
+                        <a class="nav-link" href="/project_403/Q/Q_all">문제 작성하기</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/project_403/test/testAdd">시험지 추가하기</a>
@@ -187,7 +187,7 @@
                         <a class="nav-link" href="/project_403/test/testAll">시험지 보기</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/project_403/QnA/main">질문 게시판</a>
+                        <a class="nav-link" href="/project_403/QnA/commentRootAll?page=1">질문 게시판</a>
                     </li>
                     <%
                         Member member = (Member) session.getAttribute("member");

@@ -41,12 +41,6 @@ public class Question_Controller {
 	@Autowired
 	private MemberService memberService;
 	
-	//question 메인 페이지 임시로 지정함. 추후 수정 예정
-	@RequestMapping("/main")
-	public String temporary() {
-		return "Question_main";
-	}
-	
 	//객관식 문제 작성 폼 페이지로 이동
 	@GetMapping("/Q_addMCQ")
 	public String Q_addMCQ_form(@ModelAttribute Question question, Model model) {
