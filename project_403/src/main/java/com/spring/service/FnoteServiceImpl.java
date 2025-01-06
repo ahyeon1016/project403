@@ -40,6 +40,12 @@ public class FnoteServiceImpl implements FnoteService {
 
 
 	@Override
+	public boolean is_my_note(int test_num, String mem_id) {
+		return fnoteRepository.is_my_note(test_num, mem_id);
+	}
+
+
+	@Override
 	public void note_create(String mem_id, int test_num) {
 		fnoteRepository.note_create(mem_id,test_num);
 	}

@@ -179,9 +179,10 @@ public class TestController {
 	    HttpSession session=req.getSession(false);	   
 	    Member member=(Member)session.getAttribute("member");
 	    String mem_id=member.getMem_id();
+	    if(!(fnoteservice.is_my_note(test_num, mem_id))){
 	    // 정리노트 생성
 	    fnoteservice.note_create(mem_id, test_num);
-	      
+	    }
  	    // Test 1개 상세보기
  	    Test test = testService.getOneTestList(test_num);
 	    // serial(과목챕터코드) 해당하는 문제를 Question 테이블에서 가져오기

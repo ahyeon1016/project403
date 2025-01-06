@@ -432,6 +432,7 @@ public class Membercontroller {
 		memberservice.item_buy(point, mem_id);
 		memberitemservice.nick_change_buy(mem_id);
 		member.setMem_point(member.getMem_point()-point);
+		
 		session.setAttribute("member", member);
 		return "redirect:/";
 	}
