@@ -18,27 +18,37 @@
 	}
 	
 	.container-testAll {
-		width: 90%;
+		width: 80%;
 		margin: 0 auto;
+	}
+	
+	#listCount {
+		border-radius: 4px;
+		margin-bottom: 20px;
 	}
 	
 	.txt {
 	    padding: 8px;
-	    border: 1px solid #ddd;
+	    /* border: 1px solid #ddd; */
 	    border-radius: 4px;
-	    margin-right: 10px;
+	    margin-bottom: 20px;
+	    width: 100px;
+	}
+	
+	#listBox div {
+		background-color: #F6F7C4;
 	}
 	
 	input[type="text"] {
 	    padding: 8px;
-	    border: 1px solid #ddd;
+	    /* border: 1px solid #ddd; */
 	    border-radius: 4px;
-	    width: 200px;
+	    width: 300px;
 	}
 	
 	#btnAdd {
 	    padding: 8px 16px;
-	    background-color: #4C5317;
+	    background-color: rgb(33, 53, 85);
 	    color: white;
 	    border: none;
 	    border-radius: 4px;
@@ -67,7 +77,7 @@
 	}
 	
 	div[style*="border: 1px solid black"]:hover {
-	    transform: translateY(-2px);
+	    /* transform: translateY(-2px); */
 	}
 	
 	/* Test item details */
@@ -83,22 +93,43 @@
 	    cursor: pointer;
 	    font-size: 1em;
 	    padding: 0;
-	    text-decoration: underline;
+	    /* text-decoration: underline; */
 	}
 	
 	button:hover {
 	    color: #1a3c7d;
 	}
 	
+	button .titleButton {
+	    background-color: #A1EEBD !important;
+    	/* border: 1px solid #e2e8f0 !important; */
+	    /* color: rgb(33, 53, 85) !important; */
+	    cursor: pointer !important;
+	    font-size: 1em !important;
+	    color: black;
+	    padding: 10px 30px !important;
+	    border-radius: 6px !important;
+	    transition: all 0.2s !important;
+	    display: inline-block !important;
+	    margin: 4px 0 !important;
+	    font-weight: 500 !important;
+	    /* text-align: left !important; */
+	    /* box-shadow: 0px 5px 0px 0px #1E8185; */
+	}
+	
+	button .titleButton:hover {
+	    /* box-shadow: 0px 0px 0px 0px #1E8185 !important; */
+	}
+	
 	/* Links */
 	a {
-	    color: #4C5317;
-	    text-decoration: none;
+	    color: rgb(33, 53, 85);
+	    text-decoration: none !important;
 	    margin-right: 15px;
 	}
 	
 	a:hover {
-	    text-decoration: underline;
+	    /* text-decoration: underline; */
 	}
 	
 	/* Pagination */
@@ -120,13 +151,15 @@
 	a[href*="testUpdate"], a[href*="testDelete"] {
 	    display: inline-block;
 	    padding: 5px 10px;
-	    background-color: #f0f0f0;
+	    background-color: #A1EEBD;
 	    border-radius: 4px;
 	    margin-top: 10px;
+	    text-decoration: none;
 	}
 	
 	a[href*="testDelete"] {
 	    color: #dc3545;
+	    text-decoration: none;
 	}
 	
 	a[href*="testUpdate"]:hover, a[href*="testDelete"]:hover {
@@ -136,7 +169,7 @@
 	
 	/* Total records display */
 	h3:first-of-type {
-	    background-color: #4C5317;
+	    background-color: rgb(33, 53, 85);
 	    color: white;
 	    padding: 10px 15px;
 	    border-radius: 4px;
@@ -167,10 +200,10 @@
 				<h3>번호: ${test.test_num}</h3>
 				<input type="hidden" value="${test.test_openYN}" id="testOpenValue">
 				<input type="hidden" value="${test.mem_id}" id="testMemId">
-				<p>제목: <button onclick="testPopup('${test.test_num}', '${test.test_openYN}')">${test.test_name}</button> 
+				<p>제목: <button onclick="testPopup('${test.test_num}', '${test.test_openYN}')"><span class="titleButton">${test.test_name}</span></button> 
 				<p>작성자: ${test.mem_nickName}
-				<p>비밀번호 입력: ${test.test_pw}
-				<p>조회수: ${test.test_hit}
+				<p>공개 여부: ${test.test_openYN}
+				<p>조회수: ${test.test_hit} 회
 				<p>과목명: ${test.sub_name}
 				<p>총 문제 갯수: ${fn:length(test.serial)}개
                 
@@ -321,8 +354,9 @@ $(document).ready(function() {
                     listHtml += "<h3>번호: " + data.searchResults[i].test_num + "</h3>";
                     listHtml += "<p>제목: <button onclick='testPopup(" + data.searchResults[i].test_num + ")'>" + data.searchResults[i].test_name + "</button></p>";
                     listHtml += "<p>작성자: " + data.nickName[i].mem_nickName + "</p>";
-                    listHtml += "<p>비밀번호 입력: " + data.searchResults[i].test_pw + "</p>";
-                    listHtml += "<p>조회수: " + data.searchResults[i].test_hit + "</p>";
+                    listHtml += "<p>공개 여부: " + data.searchResults[i].test_openYN + "</p>";
+                    /* listHtml += "<p>비밀번호 입력: " + data.searchResults[i].test_pw + "</p>"; */
+                    listHtml += "<p>조회수: " + data.searchResults[i].test_hit + " 회</p>";
                     listHtml += "<p>과목명: " + data.searchResults[i].sub_name + "</p>";
                     if(data.searchResults[i].serial != null) {
 	                    listHtml += "<p>총 문제 갯수: " + data.searchResults[i].serial.length + "개</p>"

@@ -69,19 +69,16 @@
 	
 	.input_list {
 	    width: 100%;
-	    margin: 0.8rem 0;
+	    margin: 2rem 0;
 	    padding: 1rem;
 	    background-color: #f8f9fa;
 	    border: 1px solid #e9ecef;
 	    border-radius: 4px;
-	    transition: all 0.2s ease;
 	    cursor: move;
 	}
 	
 	.input_list:hover {
 	    background-color: #e9ecef;
-	    transform: translateY(-2px);
-	    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 	
 	/* 드래그 중인 항목 스타일 */
@@ -103,7 +100,7 @@
 	
 	.list .item:before {
 	    counter-increment: numbering;
-	    content: counter(numbering) "번";
+	    content: counter(numbering) "번 문제";
 	    margin-right: 10px;
 	}
 	
@@ -142,6 +139,11 @@
 	.test input[type="button"]:hover {
 	    background-color: #228be6;
 	}
+	
+	/* 과목 선택시 생성되는 챕터 체크박스 */
+	.chapSelect {
+		margin: 0 5px;
+	}
 </style>
 <body>
 
@@ -154,7 +156,7 @@
 				시험 번호: <form:input path="test_num" value="${test.test_num}" readonly="true" />
 			</div>		
 			<div>			
-				작성자: <form:input path="mem_id" value="${test.mem_id}" readonly="true" />
+				작성자: <form:input path="mem_id" value="${test.mem_nickName}" readonly="true" />
 			</div>
 			<div>
 				시험 제목: <form:input path="test_name" value="${test.test_name}" />
@@ -184,17 +186,41 @@
 			<div id="input_wrap" class="input_wrap list serialBox">
 				<!-- 시험지 작성 공간 -->
 				<c:forEach items="${allQuestion}" var="allQuestion">
-					<div class='input_list item' draggable='true'>
-						<input type="text" class="serial" name="serial[]" value="${allQuestion.question_serial}"><br>
-						${allQuestion.question_content}<br>
-						<c:set var="splitData" value="${fn:split(allQuestion.question_ans, '|★|')}" />        
-				            1번: ${splitData[0]},
-				            2번: ${splitData[1]}, 
-				            3번: ${splitData[2]}, 
-				            4번: ${splitData[3]}
-				            <br>
-				            정답: ${splitData[4]}번
-					</div>
+					<c:choose>
+						<c:when test="${allQuestion.question_id eq 'MCQ'}">
+							<div class='input_list item' draggable='true'>
+								<input type="hidden" class="serial" name="serial[]" value="${allQuestion.question_serial}">
+								<div>문제: ${allQuestion.question_content}</div>
+								<c:set var="splitData" value="${fn:split(allQuestion.question_ans, '|★|')}" />        
+						            보기: 
+						            1번: ${splitData[0]},
+						            2번: ${splitData[1]}, 
+						            3번: ${splitData[2]}, 
+						            4번: ${splitData[3]}
+						            <br>
+						            정답: ${splitData[4]}번
+							</div>
+						</c:when>
+						<c:when test="${allQuestion.question_id eq 'SAQ'}">
+							<div class='input_list item' draggable='true'>
+								<input type="hidden" class="serial" name="serial[]" value="${allQuestion.question_serial}">
+								<div>문제: ${allQuestion.question_content}</div>
+								<div>정답: ${allQuestion.question_ans}</div>
+							</div>
+						</c:when>
+						<c:when test="${allQuestion.question_id eq 'CP'}">
+							<div class='input_list item' draggable='true'>
+								<input type="hidden" class="serial" name="serial[]" value="${allQuestion.question_serial}">
+								<c:set var="splitData" value="${fn:split(allQuestion.question_content, '|★|')}" />
+								<div>문제: ${splitData[0]}</div>
+								<div><textarea class='answerCheckText' rows='10' cols='50' readonly> 보기: ${splitData[1]}</textarea></div>
+								<div>정답: ${allQuestion.question_ans}</div>
+							</div>
+						</c:when>
+						<c:otherwise>
+							<div>문제 출력 오류 발생. 관리자에게 문의바랍니다.</div>
+						</c:otherwise>
+					</c:choose>
 				</c:forEach>
 			</div>		
 			<div>
@@ -206,7 +232,7 @@
 	<div class="test">
 		<p><a href="../Q/main" onclick="window.open(this.href, '_blank', 'width=1000px, height=600px'); return false;">문제추가하기</a>
 		<p>기존 문제 불러오기
-		<div id="qnaSelect" class="input_wrap">
+		<div id="qnaSelect" class="input_wrap list">
 			<!-- 문제 불러오기 공간 -->
 		</div>
 	</div>
@@ -291,18 +317,42 @@ $(document).on('click', '#questionSelect', function() {
 			for(let i = 0; i < data.qnaList.length; i++) {
 				if(i % 2 == 0) {
 					for(let j = 0; j < data.qnaList[i].length; j++) {
-						qnaHtml += "<div class='input_list item' draggable='true'>";
-						//qnaHtml += "<input type='hidden' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>";
-						qnaHtml += "<input type='text' class='serial' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>";
-						qnaHtml += "<br>문제: " + data.qnaList[i][j].question_content + "<br>";
-					    let answers = data.qnaList[i+1][j];
-					    let formattedAnswers = answers.slice(0, -1).map(function(answer, index) {
-					        return (index + 1) + "번: " + answer;
-					    }).join(", ");
-					    
-					    qnaHtml += "보기: " + formattedAnswers;
-					    qnaHtml += "<br> 정답: " + answers[answers.length - 1] + "번";
-					    qnaHtml += "</div>";
+						if(data.qnaList[i][j].question_id === "MCQ") { 
+							qnaHtml += "<div class='input_list item' draggable='true'>";
+							qnaHtml += "<input type='hidden' class='serial' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>";
+							/* qnaHtml += "<input type='text' class='serial' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>"; */
+							qnaHtml += "<div>문제: " + data.qnaList[i][j].question_content + "</div>";
+						    let answers = data.qnaList[i+1][j];
+						    let formattedAnswers = answers.slice(0, -1).map(function(answer, index) {
+						        return (index + 1) + "번: " + answer;
+						    }).join(", ");
+						    qnaHtml += "보기: " + formattedAnswers;
+						    qnaHtml += "<div>정답: " + answers[answers.length - 1] + "번</div>";
+						    qnaHtml += "</div>";
+						} else if(data.qnaList[i][j].question_id === "SAQ") {
+							qnaHtml += "<div class='input_list item' draggable='true'>";
+							qnaHtml += "<input type='hidden' class='serial' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>";
+							/* qnaHtml += "<input type='text' class='serial' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>"; */
+							qnaHtml += "<div>문제: " + data.qnaList[i][j].question_content + "</div>";
+						    qnaHtml += "<div>정답: " + data.qnaList[i][j].question_ans + "</div>";
+						    qnaHtml += "</div>";
+						} else if(data.qnaList[i][j].question_id === "CP") {
+							qnaHtml += "<div class='input_list item' draggable='true'>";
+							qnaHtml += "<input type='hidden' class='serial' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>";
+							/* qnaHtml += "<input type='text' class='serial' name='serial[]' value='" + data.qnaList[i][j].question_serial + "'>"; */
+							/* qnaHtml += "<div>문제: " + data.qnaList[i][j].question_content + "</div>"; */
+							content = data.qnaList[i][j].question_content.split("|★|");
+							let formattedContent = content.map(function(content, index) {
+								if(index == 0) {
+							        return "<div>문제: " + content + "</div>";
+								} else {
+									return "<p class='answerCheckBox'><textarea class='answerCheckText' rows='10' cols='50' readonly>" + content + "</textarea>";
+								}
+						    }).join(" ");
+							qnaHtml += formattedContent;
+						    qnaHtml += "<div>정답: " + data.qnaList[i][j].question_ans + "</div>";
+						    qnaHtml += "</div>";
+						}
 					}
 				}
 			}

@@ -203,7 +203,7 @@ public class TestRepositoryImpl implements TestRepository {
 		try {
 			conn = DBConnection.getConnection();
 			//SQL쿼리 전송
-			String sql = "SELECT * FROM Test WHERE test_num=?";
+			String sql = "SELECT *, (select mem_nickName from Member M WHERE M.mem_id = T.mem_id) AS mem_nickName FROM Test T WHERE test_num=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1,test_num);
 			rs = pstmt.executeQuery();
@@ -217,8 +217,12 @@ public class TestRepositoryImpl implements TestRepository {
 				test.setSub_name(rs.getString(6));
 				test.setSub_chap(rs.getString(7));
 				test.setTest_hit(rs.getInt(8));
+				
 				String serial=rs.getString(9);
 				test.setSerial(serial.split(","));
+				
+				test.setVisible(rs.getBoolean(10));
+				test.setMem_nickName(rs.getString(11));
 			}	
 		} catch(Exception e) {
 			e.printStackTrace();
