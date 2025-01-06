@@ -202,9 +202,15 @@ public class Question_Controller {
 	
 	//모든 문제를 확인할 수 있는 페이지로 이동
 	@GetMapping("/Q_all")
- 	public String Q_all(Model model){
+ 	public String Q_all(Model model, HttpServletRequest request){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_all() 도착");
+		HttpSession session = request.getSession(false);
+		Member member = (Member) session.getAttribute("member");
+		if(member==null) {
+			System.out.println("컨트롤러 | Q_all() 로그인 페이지로 이동");
+			return "redirect:/member/login";
+		}
 		//question에서 mem_serial을 통해 mem_nickName의 값을 설정한 후에 model에 담는다.
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
 		

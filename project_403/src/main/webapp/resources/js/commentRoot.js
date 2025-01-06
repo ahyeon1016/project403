@@ -25,10 +25,10 @@ function goodUp(isClicked, qnaNum){
 	console.log(isClicked);
 	if(isClicked){
 		goodBtn.setAttribute("onclick", "goodUp(false, "+qnaNum+")");
-		goodBtn.style.backgroundColor='gray';
+		goodBtn.style.backgroundColor='#F78181';
 	}else{
 		goodBtn.setAttribute("onclick", "goodUp(true, "+qnaNum+")");
-		goodBtn.style.backgroundColor='white';
+		goodBtn.style.backgroundColor='#F8E0E0';
 	}	
 	
 	/* comment_good true/false 설정 */
@@ -66,10 +66,10 @@ function badUp(isClicked, qnaNum){
 	console.log(isClicked);
 	if(isClicked){
 		badBtn.setAttribute("onclick", "badUp(false, "+qnaNum+")");
-		badBtn.style.backgroundColor='gray';
+		badBtn.style.backgroundColor='#81BEF7';
 	}else{
 		badBtn.setAttribute("onclick", "badUp(true, "+qnaNum+")");
-		badBtn.style.backgroundColor='white';
+		badBtn.style.backgroundColor='#CEE3F6';
 	}	
 	
 	/* comment_bad true/false 설정 */
@@ -121,36 +121,39 @@ function comment_load(){
 				    timeZone: "Asia/Seoul"
 				});
 				if(list[i].comment_content=="pDel"){
-					comment.innerHTML += 
+					comment.innerHTML +=
+						"<hr>"+ 
 						"<li>"+
-							"삭제된 댓글 입니다."+
+							"삭제된 댓글 입니다.<br>"+
 							"<ul></ul>"+
 						"</li>";
 				}else if(list[i].comment_content=="cDel"){
 					comment.lastElementChild.lastElementChild.innerHTML +=
-						"<li>삭제된 댓글 입니다.</li><br>"
+						"<br><li>삭제된 댓글 입니다.</li><br>"
 				}else if(list[i].comment_child==0){
-					comment.innerHTML += 
+					comment.innerHTML +=
+						"<hr>"+ 
 						"<li>"+
-							"<p>작성자 : "+list[i].mem_nickName+" | 작성시간 : "+formattedDate+"<br>"+
+							"<p class='commentPa'>작성자 : "+list[i].mem_nickName+" | 작성시간 : "+formattedDate+"<br><br>"+
 							list[i].comment_content+"</p>"+
-							"<textarea></textarea>"+
-							"<button onclick='child_input(this, `"+
+							"<textarea></textarea><br>"+
+							"<button class='addBtn' onclick='child_input(this, `"+
 								list[i].question_serial+"`, "+list[i].comment_root+","+
 								list[i].comment_parent+", `"+list[i].mem_id+
 							"`)'>댓글쓰기</button>"+
-							"<button onclick='deleteParent(this, "+
+							"<button class='delBtn' onclick='deleteParent(this, "+
 								list[i].comment_root+", "+list[i].comment_parent+", `"+
 								list[i].question_serial+
-							"`)'>삭제하기</button>"+
+							"`)'>삭제하기</button><br>"+
 							"<ul></ul>"+
 						"</li>";
 				}else{
 					comment.lastElementChild.lastElementChild.innerHTML += 
+						"<br>"+
 						"<li>"+
-							"<p>작성자 : "+list[i].mem_nickName+" | 작성시간 : "+formattedDate+"<br>"+
+							"<p>작성자 : "+list[i].mem_nickName+" | 작성시간 : "+formattedDate+"<br><br>"+
 							list[i].comment_content+"</p>"+
-							"<button onclick='deleteChild(this, "+
+							"<button class='delBtn' onclick='deleteChild(this, "+
 							list[i].comment_root+", "+list[i].comment_parent+", `"+
 							list[i].question_serial+"`, "+list[i].comment_child+
 							")'>삭제하기</button>"+
@@ -206,17 +209,17 @@ function comment_submit(root, q_serial,	 mem_id){
 				alert("댓글 작성에 성공했습니다.");
 				comment.innerHTML += 
 					"<li>"+
-						"<p>작성자 : "+nickName+" | 작성시간 : "+date_format+"<br>"+
+						"<p>작성자 : "+nickName+" | 작성시간 : "+date_format+"<br><br>"+
 						comment_input.value+"</p>"+
-						"<textarea></textarea>"+
-						"<button onclick='child_input(this, `"+
+						"<textarea></textarea><br>"+
+						"<button class='addBtn' class='addBtn' onclick='child_input(this, `"+
 							data.question_serial+"`,"+data.comment_root+","+
 							data.comment_parent+", `"+mem_id+
 						"`)'>댓글쓰기</button>"+
-						"<button onclick='deleteParent(this, "+
+						"<button class='delBtn' onclick='deleteParent(this, "+
 						data.comment_root+", "+data.comment_parent+", `"+
 						data.question_serial+
-						"`)'>삭제하기</button>"+
+						"`)'>삭제하기</button><br>"+
 						"<ul></ul>"+
 					"</li>";
 			} else{
@@ -257,9 +260,9 @@ function child_input(element, q_serial, root, parent, mem_id){
 			console.log(data);
 			element.parentElement.lastElementChild.innerHTML+=
 				"<li>"+
-					"<p>작성자 : "+nickName+" | 작성시간 : "+date_format+"</p>"+
+					"<p>작성자 : "+nickName+" | 작성시간 : "+date_format+"</p><br>"+
 					child+
-					"<button onclick='deleteChild(this, "+
+					"<button class='delBtn' onclick='deleteChild(this, "+
 					data.comment_root+", "+data.comment_parent+", `"+
 					data.question_serial+"`, "+data.comment_child+
 					")'>삭제하기</button>"+
@@ -294,7 +297,7 @@ function deleteParent(element, root, parent, q_serial){
 				}
 			
 				let newChild = document.createElement('li');
-		        newChild.innerHTML = '삭제된 댓글 입니다.';
+		        newChild.innerHTML = '삭제된 댓글 입니다.<br>';
 		  
 				element.parentElement.replaceChild(newChild ,element.parentElement.children[0]);
 			}else {
@@ -326,7 +329,7 @@ function deleteChild(element, root, parent, q_serial, child){
 		}),
 		success: function(data){
 			if(data.success){
-				element.parentElement.innerHTML="<li>삭제된 댓글 입니다.</li>"
+				element.parentElement.innerHTML="<li>삭제된 댓글 입니다.</li><br>"
 			}else {
 				alert("작성자만 삭제 가능합니다.");
 			}

@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.domain.Member;
 import com.spring.domain.QnA;
+import com.spring.domain.Question;
 import com.spring.service.Favorite_Service;
 import com.spring.service.MemberService;
 import com.spring.service.QnA_Service;
+import com.spring.service.Question_Service;
 
 @Controller
 @RequestMapping("/QnA")
@@ -35,6 +37,9 @@ public class QnAController {
 
 	@Autowired
 	Favorite_Service favoriteService;
+	
+	@Autowired
+	Question_Service questionService;
 	
 	//comment_root작성 페이지로 이동
 	@GetMapping("/addCommentRoot")
@@ -145,9 +150,9 @@ public class QnAController {
 		//isGood_btn의 값에 따라 goodColor의 값을 설정
 		String goodColor = "";
 		if(isGood_btn) {
-			goodColor = "gray";
+			goodColor = "#F78181";
 		}else {
-			goodColor = "white";
+			goodColor = "#F8E0E0";
 		}
 		
 		//세션에 저장된 Member DTO의 mem_id가 해당 질문에 싫어요를 눌렀는지 확인하기 위함
@@ -162,9 +167,9 @@ public class QnAController {
 		//isGood_btn의 값에 따라 goodColor의 값을 설정
 		String badColor = "";
 		if(isBad_btn) {
-			badColor = "gray";
+			badColor = "#81BEF7";
 		}else {
-			badColor = "white";
+			badColor = "#CEE3F6";
 		}
 		//mem_id를 통해 mem_nickName을 구하고 QnA DTO의 변수에 설정한다.
 		System.out.println("컨트롤러 | 작성자의 nickName을 구하기 위해 memberService로 이동");
@@ -173,11 +178,20 @@ public class QnAController {
 			qna.setMem_nickName(member.getMem_nickName());
 		}
 		
+		//question의 정보를 가지고 이동 URL을 문자열의 형태로 가공한다.
+		Question question = questionService.getQuestionBySerial(qna.getQuestion_serial());
+		String question_id = question.getQuestion_id();
+		String question_url = "Q_read"+question_id+"/"+qna.getQuestion_serial();
+		System.out.println(question_url);
+		
+		
+		
 		model.addAttribute("qna", qna);
 		model.addAttribute("isGood_btn", !isGood_btn);	//View에서 함수의 파라미터로 사용하기 때문에 !을 사용
 		model.addAttribute("goodColor", goodColor);
 		model.addAttribute("isBad_btn", !isBad_btn);	//View에서 함수의 파라미터로 사용하기 때문에 !을 사용
 		model.addAttribute("badColor", badColor);
+		model.addAttribute("question_url", question_url);
 		return "QnA_commentRoot";
 	}
 

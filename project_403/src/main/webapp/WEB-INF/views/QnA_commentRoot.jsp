@@ -96,7 +96,6 @@
             border-radius: 4px;
             resize: vertical;
             min-height: 100px;
-            margin-bottom: 1rem;
         }
 
         .comment-list {
@@ -158,13 +157,36 @@
             font-weight: 500;
             color: #495057;
         }
+        
+        .comment-section textarea{
+        	resize: none;
+        }
+        
+        #comment>li {
+        	border-radius: 5px;
+        	box-shadow: 0 0px 2px rgba(0,0,0,0.3);: 
+        	margin: 5px;
+        	padding: 10px;
+        }
+        
+        #comment textarea{
+        	width: 500px;
+        	height: 120px;
+        	border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
+		        
+		hr {
+		    background-color: gray;
+		}
+        
     </style>
 </head>
 <body>
     <%@include file="/WEB-INF/views/member_home.jsp"%>
     <div class="hidden" id="isClicked_btn">${isClicked_btn}</div>
     <div class="hidden" id="nickName">${member.getMem_nickName()}</div>
-    
+    	
     <div class="main-container">
         <div class="content">
             <div class="post-header">
@@ -173,12 +195,13 @@
                     <span>작성자: ${qna.getMem_nickName()}</span> |
                     <span>문제 번호: ${qna.getQuestion_serial()}</span> |
                     <span id="root" class="hidden">${qna.getComment_root()}</span>
-                    <span id="comment_date">작성일: ${qna.getComment_date()}</span>
+                    <span id="comment_date">${qna.getComment_date()}</span>
                 </div>
             </div>
 
             <div class="post-content">
-                ${qna.getComment_content()}
+            	<p><a href="/project_403/Q/${question_url}">문제 보기</a></p>
+                <p>${qna.getComment_content()}</p>
             </div>
 
             <div class="post-stats">
