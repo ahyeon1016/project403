@@ -114,7 +114,7 @@
                 <div class="qna-meta">
                     <span>작성자: <%=qna.getMem_nickName()%></span>
                     <span>문제 번호: <%=qna.getQuestion_serial()%></span>
-                    <span>게시글 번호: <%=i+1%></span>
+                    <span>게시글 번호: <%=rootAll.size()-i%></span>
                 </div>
                 
                 <div class="qna-title"><%=qna.getComment_title()%></div>

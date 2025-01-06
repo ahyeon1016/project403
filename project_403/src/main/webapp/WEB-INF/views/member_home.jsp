@@ -251,6 +251,7 @@
                     <ul>
                         <li>
                             <span><b class="<%= mi.getMem_color() %>"><%= member.getMem_nickName() %></b>님, 환영합니다!</span>
+                            <p id="mem_serial"><%=member.getMem_serial()%></p>
                         </li>
                         <li>
                             <span>경험치: <%= member.getMem_exp() %></span>

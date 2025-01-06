@@ -67,7 +67,7 @@ public class QnAController {
 		//qna와 mem_id를 가지고 DB로 이동
 		qnaService.addCommentRoot(qna, mem_id);
 		
-		return "redirect:/QnA/main";
+		return "redirect:/QnA/commentRootAll?page=1";
 	}
 	
 	//모든 comment_root정보를 가져오기 위해 DB로 이동하는 함수

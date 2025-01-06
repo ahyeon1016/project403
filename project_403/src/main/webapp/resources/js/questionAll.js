@@ -3,6 +3,7 @@ let sub_chap = document.querySelector("#chap_selector");
 let question_container = document.querySelector("#question_container");
 let myQuestion = document.querySelector("#myQuestion");
 let question_id = document.querySelectorAll(".question_id");
+let mem_serial = document.querySelector("#mem_serial").textContent;
 
 for(let i=0; i<question_id.length; i++){
 	question_id[i].addEventListener("change", chapSearch);
@@ -117,6 +118,7 @@ function chapSearch(){
 						"/"+question[i].question_serial+"'>문제 보기</a> | "+
 						"<a href='Q_update"+question[i].question_id+
 						"/"+question[i].question_serial+"'>문제 수정 하기</a> | "+
+						"<button onclick='Q_delete("+question[i].question_serial+", "+question[i].mem_serial+", "+mem_serial+")'>문제 삭제 하기</button>"+
 						"<a href='Q_delete"+"/"+question[i].question_serial+"'>문제 삭제 하기</a>"+
 						"<hr>";
 						
@@ -160,4 +162,12 @@ function resetSub(){
 	
 	nameSearch();
 	chapSearch();
+}
+
+function Q_delete(serial, member_serial, actor_serial){
+	if(member_serial==actor_serial){
+		window.location.href="Q_delete/"+serial;	
+	}else{
+		alert("작성자만 삭제 가능합니다.");
+	}
 }

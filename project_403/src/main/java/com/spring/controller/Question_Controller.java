@@ -85,7 +85,7 @@ public class Question_Controller {
 		System.out.println("컨트롤러 | addMCQ() 호출");
 		questionService.addMCQ(question, mem_serial);
 		
-		return "Question_view";
+		return "redirect:/Q/Q_all";
 	}
 	
 	//주관식 문제 작성 폼 페이지로 이동
@@ -128,7 +128,7 @@ public class Question_Controller {
 		System.out.println("컨트롤러 | addSAQ() 호출");
 		questionService.addSAQ(question, mem_serial);
 		
-		return "Question_view";
+		return "redirect:/Q/Q_all";
 	}
 	
 	//코딩 문제를 만드는 폼 페이지로 이동
@@ -187,7 +187,7 @@ public class Question_Controller {
 		System.out.println("컨트롤러 | addCP() 호출");
 		questionService.addCP(question, mem_serial); 
 		
-		return "Question_view";
+		return "redirect:/Q/Q_all";
 	}
 	
 	//문제 작성 페이지에서 sub_name에 해당하는 sub_chap을 가져오는 함수

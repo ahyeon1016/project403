@@ -297,7 +297,6 @@
                 <p class="section-title">문제 이미지</p>
                 <form:input type="file" path="question_img" id="imageInput"/>
             </div>
-			<button onclick="validateMCQForm(event)">왜 안됨</button>
             <input type="submit" value="문제 등록">
         </form:form>
     </div>
