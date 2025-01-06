@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.spring.domain.Member"%>
 <%@ page import="java.util.*"%>
-<%@ page import="com.spring.domain.Member_Item"%>
+<%@ page import="com.spring.domain.Member_Item" %>
 <!DOCTYPE html>
 <html>
 <head>

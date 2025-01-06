@@ -2,7 +2,7 @@
 <%@ page import="com.spring.domain.Member"%>
 <%@ page import="com.spring.domain.Member_Item" %>
 <%@ page import="javax.servlet.http.HttpSession"%>
-
+<%@ page errorPage="/errorPage"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>

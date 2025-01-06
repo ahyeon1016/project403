@@ -38,4 +38,41 @@
   		<filter-name>encodingFilter</filter-name>
   		<url-pattern>/*</url-pattern>
   	</filter-mapping>
+  	
+    <!-- 400 Bad Request -->
+    <error-page>
+        <error-code>400</error-code>
+        <location>/errorPage</location>
+    </error-page>
+
+    <!-- 401 Unauthorized -->
+    <error-page>
+        <error-code>401</error-code>
+        <location>/errorPage</location>
+    </error-page>
+
+    <!-- 403 Forbidden -->
+    <error-page>
+        <error-code>403</error-code>
+        <location>/errorPage</location>
+    </error-page>
+
+    <!-- 404 Not Found -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/errorPage</location>
+    </error-page>
+
+    <!-- 500 Internal Server Error -->
+    <error-page>
+        <error-code>500</error-code>
+        <location>/errorPage</location>
+    </error-page>
+
+    <!-- 503 Service Unavailable -->
+    <error-page>
+        <error-code>503</error-code>
+        <location>/errorPage</location>
+    </error-page>
+
 </web-app>

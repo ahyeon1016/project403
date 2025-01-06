@@ -96,7 +96,6 @@
     </style>
 </head>
 <body>
-
     <%@include file="/WEB-INF/views/member_home.jsp" %>
     <!-- 메인박스 -->
     <div class="about d-flex align-items-center justify-content-center text-center">
