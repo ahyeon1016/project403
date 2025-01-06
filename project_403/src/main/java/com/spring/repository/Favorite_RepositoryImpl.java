@@ -20,7 +20,7 @@ public class Favorite_RepositoryImpl implements Favorite_Repository{
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송(존재 여부에 따라 다른 쿼리문 전송)
+			//쿼리전송(DB상 comment_good의 존재 여부에 따라 다른 쿼리문 전송)
 			if(hasFeedBack("comment_good", mem_id, qnaNum)) {
 				System.out.println("리파지토리 | goodEnable() 좋아요 활성화");
 				String SQL = 
@@ -95,14 +95,14 @@ public class Favorite_RepositoryImpl implements Favorite_Repository{
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송
+			//쿼리전송 질문글에 포함된 comment_good의 값이 1인 데이터의 갯수를 파악하는 쿼리문
 			String SQL = 
 					"SELECT COUNT(comment_good) FROM Favorite "
 					+ "WHERE comment_num=? AND comment_good=1";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, qnaNum);
 
-			//COUNT값을 totalGood에 대입한다.
+			//COUNT의 값을 totalGood에 대입한다.
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
 				totalGood = rs.getInt(1);
@@ -171,7 +171,7 @@ public class Favorite_RepositoryImpl implements Favorite_Repository{
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송(존재 여부에 따라 다른 쿼리문 전송)
+			//쿼리전송(DB상 comment_bad의 존재 여부에 따라 다른 쿼리문 전송)
 			if(hasFeedBack("comment_bad", mem_id, qnaNum)) {
 				System.out.println("리파지토리 | badEnable() 좋아요 활성화");
 				String SQL = 
@@ -247,14 +247,14 @@ public class Favorite_RepositoryImpl implements Favorite_Repository{
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송
+			//쿼리전송 질문글에서 comment_bad의 값이 1인 데이터의 갯수를 가져오는 쿼리문 
 			String SQL = 
 					"SELECT COUNT(comment_bad) FROM Favorite "
 					+ "WHERE comment_num=? AND comment_bad=1";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, qnaNum);
 
-			//COUNT값을 totalBad에 대입한다.
+			//COUNT()의 값을 totalBad에 대입한다.
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
 				totalBad = rs.getInt(1);
@@ -325,7 +325,7 @@ public class Favorite_RepositoryImpl implements Favorite_Repository{
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송
+			//쿼리전송 | SELECT할 데이터는 동적 처리가 불가능하기 때문에 변수를 집어넣었음.
 			String SQL = 
 					"SELECT "+type+" FROM Favorite WHERE mem_id=? AND comment_num=?";
 			pstmt = conn.prepareStatement(SQL);

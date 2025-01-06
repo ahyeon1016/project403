@@ -25,7 +25,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송(Create)
+			//쿼리전송 
 			qna.setComment_root(getCommentDepth("comment_root"));
 			String SQL = "INSERT INTO QnA VALUES(NULL, ?, ?, ?, 0, 0, ?, ?, ?, 0)";
 			pstmt = conn.prepareStatement(SQL);
@@ -34,7 +34,8 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			pstmt.setInt(3, qna.getComment_root());
 			pstmt.setString(4, qna.getComment_title());
 			pstmt.setString(5, qna.getComment_content());
-			pstmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
+			pstmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));  //현재시간을 넣는다.
+			
 			pstmt.executeUpdate();
 			System.out.println("리파지토리 | INSERT 성공");
 		} catch (Exception e) {
@@ -106,8 +107,9 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송
+			//페이지가 로드되었을 때 조회수를 상승시키는 함수로 이동 
 			commentHitUp(comment_root);
+			//쿼리전송
 			String SQL = 
 					"SELECT * FROM QnA "
 					+ "WHERE comment_root=? AND comment_parent=0 AND comment_child=0";
@@ -138,7 +140,8 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		}
 		return qna;
 	}
-
+	
+	//View 페이지에서 작성된 댓글을 비동기 POST 요청으로 받아 데이터를 DB에 넣는 함수(Read, Create)
 	//comment_parent를 DB에 추가하는 함수 (Create) 
 	@Override
 	public HashMap<String, Object> addCommentParent(HashMap<String, Object> map) {
@@ -150,12 +153,13 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송(Read)
+			//쿼리전송(Read) 질문글을 남기면 comment_parent의 값은 0으로 들어가기 때문에 최대값에서 +1을 한 결과를 가져온다. 
 			String SQL_SELECT ="SELECT MAX(comment_parent)+1 FROM QnA WHERE comment_root=?";
 			pstmt = conn.prepareStatement(SQL_SELECT);
 			pstmt.setInt(1, (Integer) map.get("comment_root"));
 			
 			rs = pstmt.executeQuery();
+			//comment_parent 변수 설정
 			int parent = 0;
 			if(rs.next()) {
 				parent = rs.getInt(1);
@@ -170,14 +174,14 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			pstmt.setInt(3, (Integer) map.get("comment_root"));
 			pstmt.setInt(4, parent);
 			pstmt.setString(5, (String) map.get("comment_content"));
-			pstmt.setTimestamp(6, stamp);
+			pstmt.setTimestamp(6, stamp);	//현재 시간
 			
 			pstmt.executeUpdate();
 			
 			System.out.println("리파지토리 | addCommentParent() comment_parent 추가 완료");
 			map.put("time", stamp.toString());
 			map.put("comment_parent", parent);
-			map.put("success", true);
+			map.put("success", true);			//성공 여부를 확인하여 JavaScript에서 조건식으로 사용하기 위함
 		} catch (Exception e) {
 			map.put("success", false);
 			e.printStackTrace();
@@ -189,7 +193,8 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		
 		return map;
 	}
-
+	
+	//DB에서 comment_root에 해당하는 모든 댓글과 대댓글의 데이터를 가지고 돌아가는 함수 (Read)
 	//comment_root의 comment_parent, comment_child들을 ArrayList에 담고 맵에 넣어 리턴하는 함수(Read)
 	@Override
 	public HashMap<String, ArrayList<QnA>> getCommentParent(int comment_root) {
@@ -203,7 +208,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송(Read)
+			//쿼리전송(Read)  comment_root에 해당하고 comment_parent의 값이 0인 모든 데이터를 가져오는 쿼리문 
 			String SQL =
 					"SELECT * FROM QnA "
 					+ "WHERE comment_root=? AND NOT comment_parent=0 "
@@ -236,7 +241,8 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		returnMap.put("list", list);
 		return returnMap;
 	}
-
+	
+	//View 페이지에서 작성된 대댓글을 비동기 POST 요청으로 받아 데이터를 DB에 넣는 함수(Read, Create)
 	//commit_child를 DB에 추가하는 함수 (Create)
 	@Override
 	public HashMap<String, Object> addCommentChild(HashMap<String, Object> map) {
@@ -248,7 +254,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송(Read)
+			//쿼리전송(Read) 질문글이나 댓글을 남기면 comment_child의 값은 0으로 들어가기 때문에 최대값에서 +1을 한 결과를 가져온다. 
 			String SQL_SELECT =
 					"SELECT MAX(comment_child)+1 "
 					+ "FROM QnA "
@@ -258,6 +264,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			pstmt.setInt(2, (Integer) map.get("comment_parent"));
 			
 			rs = pstmt.executeQuery();
+			//comment_child값 설정
 			int child = 0;
 			if(rs.next()) {
 				child = rs.getInt(1);
@@ -274,7 +281,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			pstmt.setInt(4, (Integer) map.get("comment_parent"));
 			pstmt.setInt(5, child);
 			pstmt.setString(6, (String) map.get("comment_content"));
-			pstmt.setTimestamp(7, stamp);
+			pstmt.setTimestamp(7, stamp);		//현재 시간
 			
 			pstmt.executeUpdate();
 			
@@ -293,7 +300,8 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		
 		return map;
 	}
-
+	
+	//사용자가 댓글의 삭제를 요청했을 때 DB에서 제거되는 것이 아닌 comment_content의 데이터를 변경하기 위함(Update)
 	//DB에서 comment_parent의 content 값을 변경하므로써 지우는 함수(Update)
 	@Override
 	public HashMap<String, Object> removeCommentParent(HashMap<String, Object> map) {
@@ -306,7 +314,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			System.out.println(map.get("mem_id"));
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송(Read)
+			//쿼리전송(Read) Update 전에 해당 데이터가 DB에 존재하는지 먼저 확인한다.
 			String SQL_SELECT = 
 					"SELECT * "
 					+ "FROM QnA "
@@ -320,7 +328,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
-				//쿼리전송(Update)
+				//쿼리전송(Update) 기존 댓글의 내용인 comment_content의 데이터를 pDel로 수정한다.
 				String SQL_UPDATE =
 						"UPDATE QnA "
 						+ "SET comment_content='pDel' "
@@ -349,6 +357,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		return map;
 	}
 	
+	//사용자가 대댓글의 삭제를 요청했을 때 DB에서 제거되는 것이 아닌 comment_content의 데이터를 변경하기 위함(Update)
 	//DB에서 comment_child의 content 값을 변경하므로써 지우는 함수(Update)
 	@Override
 	public HashMap<String, Object> removeCommentChild(HashMap<String, Object> map) {
@@ -360,7 +369,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송(Read)
+			//쿼리전송(Read)  Update 전에 해당 데이터가 DB에 존재하는지 먼저 확인한다.
 			String SQL_SELECT = 
 					"SELECT * "
 					+ "FROM QnA "
@@ -375,7 +384,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 			
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
-				//쿼리전송(Update)
+				//쿼리전송(Update) 기존 대댓글의 내용인 comment_content의 데이터를 cDel로 수정한다.
 				String SQL_UPDATE = "UPDATE QnA "
 						+ "SET comment_content='cDel' "
 						+ "WHERE mem_id=? AND question_serial=? AND comment_root=? "
@@ -406,6 +415,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		
 	}
 	
+	//comment_root의 값을 설정하는 함수
 	//comment_root, comment_parent, comment_child의 최대값을 구하는 함수
 	private int getCommentDepth(String name) {
 		System.out.println("리파지토리 | getCommentDepth() 도착 "+name+"의 값 설정 시작");
@@ -417,13 +427,15 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();;
-			//쿼리전송
+			//쿼리전송	                  변수처리
 			String SQL = "SELECT MAX("+name+") FROM QnA";
 			pstmt = conn.prepareStatement(SQL);
 			rs = pstmt.executeQuery();
 			if(!rs.next()) {
+				//최초 작성시
 				depth = 1;
 			}else {
+				//데이터가 존재한다면
 				depth = rs.getInt(1)+1;
 			}
 			System.out.println("리파지토리 | SELECT 성공 "+name+"의 값을 "+depth+"으로 설정 완료");
@@ -438,7 +450,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		return depth;
 	}
 
-	//comment_hit(조회수) 추가 함수
+	//comment_hit(조회수) 추가 함수 (Update)
 	private void commentHitUp(int comment_root) {
 		System.out.println("리파지토리 | commentHitUp() 도착");
 		Connection conn = null;
@@ -446,7 +458,7 @@ public class QnA_RepositoryImpl implements QnA_Repository{
 		try {
 			//DB연결
 			conn = DBConnection.getConnection();
-			//쿼리전송
+			//쿼리전송 comment_hit 값에 +1을 한다.
 			String SQL = 
 					"UPDATE QnA "
 					+ "SET comment_hit=comment_hit+1 "

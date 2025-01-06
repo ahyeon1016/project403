@@ -27,7 +27,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 			//쿼리 전송
 			String SQL = "INSERT INTO Subject(sub_name_code , sub_chap_code, sub_name) VALUES(?, 0, ?)";
 			pstmt = conn.prepareStatement(SQL);			
-			pstmt.setInt(1, subNameCodeValue());
+			pstmt.setInt(1, subNameCodeValue());	//sub_name_code의 값을 연산하여 가져옴
 			pstmt.setString(2,name);
 			pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -260,7 +260,7 @@ public class Subject_RepositoryImpl implements Subject_Repository{
 		return sum;
 	}
 	
-	//Subject 작성 폼에서 입력된 sub_chap이 DB에 존재하는지 확인하는 함수
+	//Subject 작성 폼에서 입력된 sub_name에 해당하는 sub_chap이 DB에 존재하는지 확인하는 함수
 	@Override
 	public HashMap<String, Object> subChapCheck(HashMap<String, Object> map) {
 		System.out.println("리파지토리 | subChapCheck() 도착");

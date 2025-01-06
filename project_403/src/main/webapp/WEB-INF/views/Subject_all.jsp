@@ -10,13 +10,45 @@
     <meta charset="UTF-8">
     <title>과목 목록</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
-        .list-container { max-width: 800px; margin: 0 auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .subject-item { border: 1px solid #ddd; margin: 10px 0; padding: 15px; border-radius: 4px; }
-        .subject-item h3 { margin: 0 0 10px 0; }
-        .action-links a { color: #007bff; text-decoration: none; margin-right: 10px; }
-        .action-links a:hover { text-decoration: underline; }
-        .empty-message { text-align: center; color: #666; }
+        body {
+        	margin: 20px; 
+        	background-color: #f5f5f5; 
+        }
+        
+        .list-container { 
+        	max-width: 800px; 
+        	margin: 0 auto; 
+        	padding: 20px; 
+        	background: white; 
+        	border-radius: 8px; 
+        	box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subject-item {
+        	border: 1px solid #ddd; 
+        	margin: 10px 0; 
+        	padding: 15px; 
+        	border-radius: 4px; 
+        }
+        
+        .subject-item h3 { 
+        	margin: 0 0 10px 0; 
+        }
+        
+        .action-links a { 
+        	color: #007bff; 
+        	text-decoration: none; 
+        	margin-right: 10px; 
+        }
+        
+        .action-links a:hover { 
+       		text-decoration: underline; 
+        }
+        
+        .empty-message { 
+	        text-align: center; 
+	        color: #666; 
+        }
     </style>
 </head>
 <body>
@@ -33,9 +65,15 @@
                     <p>과목 번호: <%=sub.getSub_num()%></p>
                     <div class="action-links">
                         <a href="updateSubName?sub_name=<%=sub.getSub_name()%>">과목명 수정</a>
-                        <a href="deleteSubName?sub_name=<%=sub.getSub_name()%>">과목 삭제</a>
                         <a href="updateSubChap?sub_name=<%=sub.getSub_name()%>&sub_chap=<%=sub.getSub_chap()%>">챕터 수정</a>
-                        <a href="deleteSubChap?sub_name=<%=sub.getSub_name()%>&sub_chap=<%=sub.getSub_chap()%>">챕터 삭제</a>
+                        <button class="btn-sm btn-danger border-0 rounded"
+                        		onclick="deleteSubName('deleteSubName?sub_name=<%=sub.getSub_name()%>')">
+                        		과목 삭제
+                        </button>
+                        <button class="btn-sm btn-warning border-0 rounded"
+                        		onclick="deleteSubChap('deleteSubChap?sub_name=<%=sub.getSub_name()%>&sub_chap=<%=sub.getSub_chap()%>')">
+                        		챕터 삭제
+                        </button>
                     </div>
                 </div>
             <% }
@@ -44,5 +82,18 @@
         <% } %>
     </div>
     <%@include file="/WEB-INF/views/footer.jsp" %>
+    <script>
+    	function deleteSubName(url){
+    		if(confirm("과목을 정말 삭제 하시겠습니까?\n!!!치명적인 문제가 발생할 수 있습니다!!!")){
+    			window.location.href=url;
+    		}
+    	}
+    	
+    	function deleteSubChap(url){
+    		if(confirm("챕터를 정말 삭제 하시겠습니까?\n!!!치명적인 문제가 발생할 수 있습니다!!!")){
+    			window.location.href=url;
+    		}
+    	}
+    </script>
 </body>
 </html>

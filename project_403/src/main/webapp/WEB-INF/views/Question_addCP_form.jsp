@@ -20,7 +20,6 @@
         }
 
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
             background-color: #f5f5f5;
             color: #333;
         }

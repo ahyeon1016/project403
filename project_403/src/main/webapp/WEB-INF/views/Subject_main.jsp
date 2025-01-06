@@ -6,14 +6,55 @@
     <meta charset="UTF-8">
     <title>과목 관리 시스템</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
-        .main-container { max-width: 800px; margin: 0 auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .menu-item { margin: 15px 0; }
-        .menu-item a { color: #007bff; text-decoration: none; }
-        .menu-item a:hover { text-decoration: underline; }
-        .search-form { margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 4px; }
-        input[type="text"] { padding: 8px; width: 100%; margin: 5px 0; }
-        input[type="submit"] { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+		body { 
+		    margin: 20px; 
+		    background-color: #f5f5f5; 
+		} 
+		
+		.main-container { 
+		    max-width: 800px; 
+		    margin: 0 auto; 
+		    padding: 20px; 
+		    background: white; 
+		    border-radius: 8px; 
+		    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+		} 
+		
+		.menu-item { 
+		    margin: 15px 0; 
+		} 
+		
+		.menu-item a { 
+		    color: #007bff; 
+		    text-decoration: none; 
+		} 
+		
+		.menu-item a:hover { 
+		    text-decoration: underline; 
+		} 
+		
+		.search-form { 
+		    margin-top: 20px; 
+		    padding: 15px; 
+		    border: 1px solid #ddd; 
+		    border-radius: 4px; 
+		} 
+		
+		input[type="text"] { 
+		    padding: 8px; 
+		    width: 100%; 
+		    margin: 5px 0; 
+		} 
+		
+		input[type="submit"] { 
+		    background: #007bff; 
+		    color: white; 
+		    border: none; 
+		    padding: 10px 20px; 
+		    border-radius: 4px; 
+		    cursor: pointer; 
+		}
+
     </style>
 </head>
 <body>

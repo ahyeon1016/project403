@@ -45,7 +45,7 @@ public class Question_Controller {
 	@GetMapping("/Q_addMCQ")
 	public String Q_addMCQ_form(@ModelAttribute Question question, Model model) {
 		System.out.println("==========================================");
-		//과목과 챕터를 선택하기 위해 subject를 가져옴.
+		//과목과 챕터를 선택하기 위해 Subject를 가져와 Model에 넣는다.
 		ArrayList<Subject> sub_all = subjectService.getSubAll();
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
 		model.addAttribute("sub_all", sub_all);
@@ -93,7 +93,7 @@ public class Question_Controller {
 	public String Q_addSAQ_form(@ModelAttribute Question question, Model model) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addSAQ() 도착");
-		//과목과 챕터를 선택하기 위해 subject를 가져옴.
+		//과목과 챕터를 선택하기 위해 Subject를 가져와 Model에 넣는다.
 		ArrayList<Subject> sub_all = subjectService.getSubAll();
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
 		model.addAttribute("sub_all", sub_all);
@@ -136,7 +136,7 @@ public class Question_Controller {
 	public String Q_addCP_form(@ModelAttribute Question question, Model model){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_addCP_form() 도착");
-		//과목과 챕터를 선택하기 위해 subject를 가져옴.
+		//과목과 챕터를 선택하기 위해 Subject를 가져와 Model에 넣는다.
 		ArrayList<Subject> sub_all = subjectService.getSubAll();
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
 		model.addAttribute("sub_all", sub_all);
@@ -151,6 +151,7 @@ public class Question_Controller {
 				+ "    }\n"
 				+ "}";
 		System.out.println(content);
+		//작성된 양식을 Question DTO의 question_content 값으로 설정한다.
 		question.setQuestion_content(content);
 		return "Question_addCP_form";
 	}
@@ -196,7 +197,7 @@ public class Question_Controller {
 	public HashMap<String, Object> Q_subNameByChap(@RequestBody HashMap<String, Object> map){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_subNameByChap() 도착");
-		HashMap<String, Object> a = new HashMap<String, Object>();
+		//Subject_Service에 접근하여 DB에서 sub_name에 해당하는 sub_chap을 가져온 값을 리턴한다.
 		return subjectService.subNameByValue(map);
 	}
 	
@@ -205,12 +206,14 @@ public class Question_Controller {
  	public String Q_all(Model model, HttpServletRequest request){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_all() 도착");
+		//사용자 로그인 여부 확인
 		HttpSession session = request.getSession(false);
 		Member member = (Member) session.getAttribute("member");
 		if(member==null) {
 			System.out.println("컨트롤러 | Q_all() 로그인 페이지로 이동");
 			return "redirect:/member/login";
 		}
+		
 		//question에서 mem_serial을 통해 mem_nickName의 값을 설정한 후에 model에 담는다.
 		ArrayList<Subject> sub_all_name = subjectService.getSubAllName();
 		
@@ -265,6 +268,7 @@ public class Question_Controller {
 		int minIndex = 0;
 		System.out.println("컨트롤러 | Q_search() page: "+page);
 		
+		//페이지의 갯수를 설정
 		if(index%5 == 0) {
 			totalPage = index/5;
 		}else {
@@ -272,6 +276,7 @@ public class Question_Controller {
 		}
 		System.out.println("컨트롤러 | Q_search() totalPage: "+totalPage);
 		
+		//반복문을 사용할 때 시작 index값을 설정
 		if(page == 1) {
 			minIndex = 0;
 		}else {
@@ -279,6 +284,7 @@ public class Question_Controller {
 		}
 		System.out.println("컨트롤러 | Q_search() minIndex: "+minIndex);
 		
+		//반복문을 사용할 때 끝 index값을 설정
 		if(totalPage==page) {
 			maxIndex = index;
 		}else {
@@ -286,7 +292,7 @@ public class Question_Controller {
 		}
 		System.out.println("컨트롤러 | Q_search() maxIndex: "+maxIndex);
 		
-		
+		//처리한 데이터들을 HashMap에 담아 리턴
 		HashMap<String, Object> search = new HashMap<String, Object>();
 		search.put("question", question);
 		search.put("totalPage", totalPage);
@@ -295,7 +301,7 @@ public class Question_Controller {
 		return search;
 	}
 	
-	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 뷰로 이동하는 함수
+	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 View로 이동하는 함수
 	@GetMapping("/Q_readMCQ/{question_serial}")
 	public String Q_readMCQ(@PathVariable String question_serial, Model model) {
 		System.out.println("==========================================");
@@ -313,13 +319,15 @@ public class Question_Controller {
 		
 		//배열로 들어가있는 정답을 split 메서드로 잘라 배열에 담는다.
 		String[] ans = question.getQuestion_ans().split("\\|★\\|");
+		
+		//처리한 데이터를 Model에 담는다.
 		model.addAttribute("ans", ans);
 		model.addAttribute("question", question);
 		System.out.println("컨트롤러 | Q_readMCQ() 뷰로 이동");
 		return "Question_MCQ_view";
 	}
 	
-	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 뷰로 이동하는 함수
+	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 View로 이동하는 함수
 	@GetMapping("/Q_readSAQ/{question_serial}")
 	public String Q_readSAQ(@PathVariable String question_serial, Model model) {
 		System.out.println("==========================================");
@@ -335,12 +343,13 @@ public class Question_Controller {
 			question.setMem_nickName(nickName);
 		}
 		
+		//처리한 데이터를 Model에 담는다.
 		model.addAttribute("question", question);
 		System.out.println("컨트롤러 | Q_readSAQ() 뷰로 이동");
 		return "Question_SAQ_view";
 	}
 	
-	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 뷰로 이동하는 함수
+	//파라미터로 받은 question_serial을 통해 얻은 DTO를 Model에 저장후 View로 이동하는 함수
 	@GetMapping("/Q_readCP/{question_serial}")
 	public String Q_readCP(
 			@PathVariable String question_serial, 
@@ -360,6 +369,8 @@ public class Question_Controller {
 		//배열로 들어가있는 정답을 split 메서드로 잘라 배열에 담는다.
 		String[] ans = question.getQuestion_content().split("\\|★\\|");
 		System.out.println(ans[1]);
+		
+		//처리한 데이터를 Model에 담는다.
 		model.addAttribute("ans", ans);
 		model.addAttribute("question", question);
 		System.out.println("컨트롤러 | Q_readCP() 뷰로 이동");
@@ -371,7 +382,7 @@ public class Question_Controller {
 	public String Q_plusCount(HttpServletRequest request){
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_plusCount() 도착");
-		//전처리
+		//전처리 HttpServletRequest 객체에서 데이터를 가져온다.
 		String question_serial = request.getParameter("serial");
 		int question_count = Integer.parseInt(request.getParameter("count"));
 		int plus = Integer.parseInt(request.getParameter("plus"));
@@ -401,35 +412,45 @@ public class Question_Controller {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Compile() 도착");
 		System.out.println(map.get("ans_input"));
-		//전처리
-        String code = (String) map.get("ans_input"); // 요청에서 코드 가져오기
-        HashMap<String, Object> returnMap = new HashMap<>();
+		// 전처리: 클라이언트에서 전송된 코드 문자열 추출
+	    String code = (String) map.get("ans_input"); // 요청에서 코드 가져오기
+	    HashMap<String, Object> returnMap = new HashMap<>(); // 결과를 저장할 Map 객체 생성
 
-        try {
-            SimpleCompiler compiler = new SimpleCompiler();
-            compiler.cook(code); // 코드 컴파일
+	    try {
+	        // SimpleCompiler 인스턴스 생성
+	        SimpleCompiler compiler = new SimpleCompiler();
+	        compiler.cook(code); // 전달받은 코드를 컴파일
 
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            PrintStream printStream = new PrintStream(outputStream);
-            PrintStream originalOut = System.out;
-            System.setOut(printStream);
+	        // 실행 결과를 캡처하기 위해 출력 스트림 변경
+	        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();	// 결과를 저장할 출력 스트림
+	        PrintStream printStream = new PrintStream(outputStream);			// 출력 스트림을 PrintStream으로 래핑
+	        PrintStream originalOut = System.out;								// 기존 System.out 저장
+	        System.setOut(printStream);											// System.out을 새로운 PrintStream으로 변경
 
-            try {
-                Class<?> clazz = compiler.getClassLoader().loadClass("test");
-                clazz.getDeclaredMethod("main", String[].class).invoke(null, (Object) new String[]{});
-            } finally {
-                System.setOut(originalOut);
-            }
+	        try {
+	            // 컴파일된 클래스 로드 및 main 메서드 실행
+	            Class<?> clazz = compiler.getClassLoader().loadClass("test"); // "test" 클래스 로드
+	            clazz.getDeclaredMethod("main", String[].class).invoke(null, (Object) new String[]{}); 
+	            // main 메서드 실행, String 배열 전달
+	        } finally {
+	            // 실행 후 System.out 복구
+	            System.setOut(originalOut); 
+	        }
 
-            returnMap.put("success", true);
-            returnMap.put("output", outputStream.toString(StandardCharsets.UTF_8));
-        } catch (CompileException e) {
-            returnMap.put("success", false);
-            returnMap.put("output", "컴파일 오류: " + e.getMessage());
-        } catch (Exception e) {
-            returnMap.put("success", false);
-            returnMap.put("output", "실행 오류: " + e.getMessage());
-        }
+	        // 성공적으로 실행된 경우 결과 저장
+	        returnMap.put("success", true); // 성공 상태 저장
+	        returnMap.put("output", outputStream.toString(StandardCharsets.UTF_8)); 
+	        // 캡처된 출력 결과 저장
+	    } catch (CompileException e) {
+	        // 컴파일 오류 발생 시 처리
+	        returnMap.put("success", false);						// 실패 상태 저장
+	        returnMap.put("output", "컴파일 오류: " + e.getMessage()); // 오류 메시지 저장
+	    } catch (Exception e) {
+	        // 실행 중 오류 발생 시 처리
+	        returnMap.put("success", false);						// 실패 상태 저장
+	        returnMap.put("output", "실행 오류: " + e.getMessage());	// 오류 메시지 저장
+	    }
+
 
         return returnMap; // 결과 반환
     }
@@ -507,7 +528,7 @@ public class Question_Controller {
 			return "redirect:/Q/Q_all";
 		}
 		
-		//model에 추가
+		//Model에 추가
 		model.addAttribute("question", question);
 		
 		//업데이트 폼 페이지 이동
@@ -552,7 +573,7 @@ public class Question_Controller {
 			return "redirect:/Q/Q_all";
 		}
 		
-		//ans가 아닌 content를 split함
+		//코딩문제는 content에 데이터가 여러개 담겨있기 때문에 ans가 아닌 content를 split함
 		String[] content = question.getQuestion_content().split("\\|★\\|");
 		question.setQuestion_content(content[1]);
 		
@@ -569,7 +590,7 @@ public class Question_Controller {
 	public String Q_updateCP(@ModelAttribute Question question, HttpServletRequest request) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | Q_updateCP() 도착");
-		//content 처리
+		//전처리
 		String text = request.getParameter("question_content_text");
 		question.setQuestion_content(text+"|★|"+question.getQuestion_content());
 		

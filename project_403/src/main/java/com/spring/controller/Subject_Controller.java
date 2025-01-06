@@ -23,17 +23,10 @@ import com.spring.service.Subject_Service;
 @RequestMapping("/sub")
 public class Subject_Controller {
 	
-	/*
-	 * 일단 개발 과정에서 요청 파라미터를 확인 하고 싶어 GET방식으로 요청을 받았으나,
-	 * 이후에 POST방식으로 변경하는 것을 고민해볼 것 
-	 * */
-	
-	//Subject_Service주입
 	@Autowired
 	private Subject_Service subjectService;
 	
 	//기본 매핑
-	//main 페이지에서 폼을 작성하는 경우도 있기 때문에 DTO를 들고감
 	@RequestMapping
 	public String Sub_main(@ModelAttribute Subject subject) { 
 		return "Subject_main";
@@ -59,11 +52,12 @@ public class Subject_Controller {
 		return "redirect:/sub";
 	}
 	
-	//Subject name 중복 확인
+	//sub name의 중복 확인을 위한 비동기 처리
 	@ResponseBody
 	@PostMapping("/subNameCheck")
 	public HashMap<String, Object> subNameCheck(@RequestBody HashMap<String, Object> map) {
 		System.out.println("==========================================");
+		//DB에 sub_name이 존재하는지 확인하기 위해 이동
 		HashMap<String, Object> sum = subjectService.subNameCheck(map);
 		System.out.println(sum.get("check"));
 		return sum;
@@ -81,18 +75,19 @@ public class Subject_Controller {
 	@PostMapping("/sub_chap_form")
 	public String Sub_add_chap(@ModelAttribute Subject subject, Model model) {
 		System.out.println("==========================================");
-		System.out.println("컨트롤러 | model을 가지고 서비스로 이동");
-		
+		System.out.println("컨트롤러 | addSubChap() 로 이동");
+		//폼 페이지에서 작성된 subject를 가지고 서비스로 이동
 		subjectService.addSubChap(subject);
 		
 		return "redirect:/sub";
 	}
 	
-	//Subject_chap 중복 확인
+	//sub_chap의 중복 확인을 위한 비동기 처리
 	@ResponseBody
 	@PostMapping("/subChapCheck")
 	public HashMap<String, Object> subChapCheck(@RequestBody HashMap<String, Object> map) {
 		System.out.println("==========================================");
+		//DB에 sub_name에 해당하는 sub_chap이 존재하는지 확인하기 위해 이동
 		HashMap<String, Object> sum = subjectService.subChapCheck(map);
 		System.out.println(sum.get("check"));
 		return sum;
@@ -102,7 +97,8 @@ public class Subject_Controller {
 	@RequestMapping("/sub_all")
 	public String getSubAll(Model model) {
 		System.out.println("==========================================");
-		System.out.println("컨트롤러 | Sub_chap_all 함수 호출");
+		System.out.println("컨트롤러 | getSubAll 함수 호출");
+		//DB에서 Subject 테이블의 모든 데이터를 ArrayList에 담아 가져온 후에 Model에 넣는다.
 		ArrayList<Subject> sub_all = subjectService.getSubAll();
 		model.addAttribute("sub_all", sub_all);
 		return "Subject_all";
@@ -113,7 +109,7 @@ public class Subject_Controller {
 	public String getSubByName(@RequestParam String sub_name, Model model) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | sub_name_search() 호출");
-		System.out.println(sub_name);
+		//DB의 Subject 테이블에서 sub_name과 일치하는 모든 데이터를 ArrayList에 담아 가져온 후에 Model에 넣는다.
 		ArrayList<Subject> sub_name_arr = subjectService.getSubByName(sub_name);
 		model.addAttribute("sub_name_arr", sub_name_arr);
 		return "Subject_name_search_view";
@@ -124,9 +120,10 @@ public class Subject_Controller {
 	public String getSubByChap(@ModelAttribute Subject subject, Model model) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | getSubByChap() 호출");
+		//DB에서 가져온 Subject DTO와 폼에서 받은 Subject DTO를 Model에 넣는다.
 		Subject subByChap = subjectService.getSubByChap(subject);
 		model.addAttribute("subByChap", subByChap);
-		model.addAttribute("inputSub",subject);
+		model.addAttribute("inputSub", subject);
 		return "Subject_chap_search_view";
 	}
 	
@@ -144,6 +141,7 @@ public class Subject_Controller {
 	public String updateSubName(@RequestParam String old_sub_name, @RequestParam String new_sub_name) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | old_sub_name : "+old_sub_name+" / new_sub_name : "+new_sub_name);
+		//DB에서 기존 sub_name을 찾기 위한 데이터와 수정된 sub_name을 파라미터로 가지고 이동 
 		subjectService.updateSubName(old_sub_name, new_sub_name);
 		return "redirect:/sub/sub_all";
 	}

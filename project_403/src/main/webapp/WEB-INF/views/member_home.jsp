@@ -8,16 +8,18 @@
     <meta charset="UTF-8">
     <title>Navigation</title>
     <!-- 폰트 -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Orbit&display=swap" rel="stylesheet">   
     <!-- 부트스트랩 적용 -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
 	<!-- Font Awesome 적용 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://kit.fontawesome.com/0ae4c75b50.js" crossorigin="anonymous"></script>
-    
-    <style>
+
+	<style>
     * {
-        font-family: 'Open Sans', sans-serif;
+        font-family: 'Gowun Dodum', sans-serif;
         list-style: none;
         text-decoration: none;
         box-sizing:border-box;

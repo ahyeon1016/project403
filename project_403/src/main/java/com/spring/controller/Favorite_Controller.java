@@ -36,15 +36,6 @@ public class Favorite_Controller {
 		Member member = (Member)session.getAttribute("member");
 		String mem_id = member.getMem_id();
 		
-		//String mem_id="";
-		//로그인 하지 않고 좋아요 버튼을 눌렀을 때 mem_id를 guest로 설정하는 조건문
-		//if(member!=null) {
-		//	mem_id = member.getMem_id();
-		//}else {
-		//	System.out.println("컨트롤러 | favoriteGood() 게스트입니다.");
-		//	mem_id = "guest";
-		//}
-		
 		//map에 저장된 Boolean값과 qnaNum값을 꺼내 변수에 담고 Boolean값을 활용해 
 		//조건문으로 좋아요 활성화 비활성화 여부를 판단하여 DB로 이동한다.
 		Boolean isClicked = (Boolean)map.get("isClicked");
@@ -75,15 +66,6 @@ public class Favorite_Controller {
 		HttpSession session = request.getSession(false);
 		Member member = (Member)session.getAttribute("member");
 		String mem_id = member.getMem_id();
-		
-		//String mem_id="";
-		//로그인 하지 않고 싫어요 버튼을 눌렀을 때 mem_id를 guest로 설정하는 조건문
-		//if(member!=null) {
-		//	mem_id = member.getMem_id();
-		//}else {
-		//	System.out.println("컨트롤러 | favoriteBad() 게스트입니다.");
-		//	mem_id = "guest";
-		//}
 		
 		//map에 저장된 Boolean값과 qnaNum값을 꺼내 변수에 담고 Boolean값을 활용해 
 		//조건문으로 싫어요 활성화 비활성화 여부를 판단하여 DB로 이동한다.

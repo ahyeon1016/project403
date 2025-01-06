@@ -74,9 +74,17 @@ public class QnAController {
 	@GetMapping("/commentRootAll")
 	public String getCommentRootAll(
 			Model model, 
+			HttpServletRequest request, 
 			@RequestParam int page) {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | getCommentRootAll() 도착");
+		//사용자의 로그인 여부 확인
+		HttpSession session = request.getSession(false);
+		Member mem = (Member) session.getAttribute("member");
+		if(mem==null) {
+			System.out.println("컨트롤러 | getCommentRootAll() 로그인 페이지로 이동");
+			return "redirect:/member/login";
+		}
 		
 		//DB로 이동하여 모든 comment_root 정보를 가져옴
 		ArrayList<QnA> rootAll = qnaService.getCommentRootAll();		
@@ -107,7 +115,7 @@ public class QnAController {
 			totalPage=(rootAll.size()/5)+1;
 		}
 		
-		//모델에 저장		
+		//처리한 데이터를 모델에 저장		
 		model.addAttribute("rootAll", rootAll);
 		model.addAttribute("index", index);
 		model.addAttribute("maxPage", maxPage);
@@ -134,7 +142,7 @@ public class QnAController {
 		int totalBad = favoriteService.getTotalBad(qnaNum);
 		qna.setComment_totalBad(totalBad);
 
-		//세션 연결
+		//세션을 연결하여 안에서 Member DTO를 가져온다.
 		HttpSession session = request.getSession(false);
 		Member user = (Member)session.getAttribute("member");
 		
@@ -147,12 +155,12 @@ public class QnAController {
 			isGood_btn = false;
 		}
 		
-		//isGood_btn의 값에 따라 goodColor의 값을 설정
+		//isGood_btn의 값에 따라 버튼의 색상인 goodColor의 값을 설정
 		String goodColor = "";
 		if(isGood_btn) {
-			goodColor = "#F78181";
+			goodColor = "#FA5858";
 		}else {
-			goodColor = "#F8E0E0";
+			goodColor = "white";
 		}
 		
 		//세션에 저장된 Member DTO의 mem_id가 해당 질문에 싫어요를 눌렀는지 확인하기 위함
@@ -164,12 +172,12 @@ public class QnAController {
 			isBad_btn = false;
 		}
 		
-		//isGood_btn의 값에 따라 goodColor의 값을 설정
+		//isGood_btn의 값에 따라 버튼의 색상인 badColor의 값을 설정
 		String badColor = "";
 		if(isBad_btn) {
-			badColor = "#81BEF7";
+			badColor = "#58ACFA";
 		}else {
-			badColor = "#CEE3F6";
+			badColor = "white";
 		}
 		//mem_id를 통해 mem_nickName을 구하고 QnA DTO의 변수에 설정한다.
 		System.out.println("컨트롤러 | 작성자의 nickName을 구하기 위해 memberService로 이동");
@@ -185,7 +193,7 @@ public class QnAController {
 		System.out.println(question_url);
 		
 		
-		
+		//처리한 데이터를 모델에 넣는다.
 		model.addAttribute("qna", qna);
 		model.addAttribute("isGood_btn", !isGood_btn);	//View에서 함수의 파라미터로 사용하기 때문에 !을 사용
 		model.addAttribute("goodColor", goodColor);
@@ -233,6 +241,8 @@ public class QnAController {
 		System.out.println("==========================================");
 		System.out.println("컨트롤러 | getCommentParent() 도착");
 		System.out.println(map.get("comment_root"));
+		//map에서 comment_root의 데이터를 꺼내 파라미터로 사용하여 
+		//DB에서 comment_root에 해당하는 QnA DTO를 ArrayList에 담고 HashMap에 담은 후에 가져온다.
 		HashMap<String, ArrayList<QnA>> returnMap = qnaService.getCommentParent((Integer)map.get("comment_root"));
 		
 		//mem_id를 통해 mem_nickName을 구하고 ArrayList안에 있는 QnA DTO의 변수에 설정한다.
@@ -270,7 +280,7 @@ public class QnAController {
 		return map;
 	}
 
-	//ajax로 parent를 지우기 위한 데이터를 받고 DB로 이동하는 함수
+	//ajax로 parent를 지우기(수정) 위한 데이터를 받고 DB로 이동하는 함수
 	@ResponseBody
 	@PostMapping("removeCommentParent")
 	public HashMap<String, Object> removeCommentParent(
@@ -289,7 +299,7 @@ public class QnAController {
 		return map;
 	}
 	
-	//ajax로 child를 지우기 위한 데이터를 받고 DB로 이동하는 함수
+	//ajax로 child를 지우기(수정) 위한 데이터를 받고 DB로 이동하는 함수
 	@ResponseBody
 	@PostMapping("removeCommentChild")
 	public HashMap<String, Object> removeCommentChild(

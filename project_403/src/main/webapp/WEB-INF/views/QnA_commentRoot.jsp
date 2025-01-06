@@ -7,7 +7,6 @@
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background-color: #f8f9fa;
             color: #333;
         }
@@ -28,6 +27,7 @@
 
         .post-header {
             margin-bottom: 2rem;
+            border-bottom: 1px solid lightgray; 
         }
 
         .post-title {
@@ -40,7 +40,7 @@
         .post-meta {
             color: #868e96;
             font-size: 0.9rem;
-            margin-bottom: 1rem;
+            margin-bottom: 5px;
         }
 
         .post-content {
@@ -55,26 +55,50 @@
             margin: 1.5rem 0;
         }
 
+
         button {
-            padding: 0.5rem 1rem;
+            padding: 5px 10px;
             border: 1px solid #dee2e6;
-            background: white;
+            background: #FAFAFA;
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        button:hover:not(:disabled) {
+        .reaction-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        #goodBtn:hover {
+            background-color: #F78181 !important;
+        }
+	
+     	#badBtn:hover {
+            background-color: #81BEF7 !important;
+        }
+		
+		#comment_input_btn:hover {
             background-color: #228be6;
             color: white;
-            border-color: #228be6;
+        }
+        
+		.addBtn:hover {
+            background-color: #228be6;
+            color: white;
         }
 
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
+        .delBtn:hover {
+            background-color: #FA5858;
+            color: white;
         }
-
+		
         .comment-section {
             margin-top: 3rem;
         }
@@ -87,30 +111,25 @@
 
         .comment-input {
             width: 100%;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
         }
 
         .comment-input textarea {
             width: 100%;
+            height: 140px;
             padding: 1rem;
             border: 1px solid #dee2e6;
-            border-radius: 4px;
+            border-radius: 10px;
             resize: vertical;
             min-height: 100px;
         }
 
         .comment-list {
+			margin: 0 auto;        	
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid lightgray;
             list-style: none;
-            padding: 0;
-        }
-
-        .comment-item {
-            padding: 1rem;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .comment-item:last-child {
-            border-bottom: none;
         }
 
         .comment-meta {
@@ -119,39 +138,8 @@
             margin-bottom: 0.5rem;
         }
 
-        .comment-actions {
-            margin-top: 0.5rem;
-        }
-
-        .comment-reply {
-            margin-left: 2rem;
-            margin-top: 1rem;
-        }
-
-        .comment-reply textarea {
-            width: calc(100% - 2rem);
-            padding: 0.5rem;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            resize: vertical;
-            min-height: 60px;
-            margin-bottom: 0.5rem;
-        }
-
         .hidden {
             display: none;
-        }
-
-        .reaction-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s;
         }
 
         .reaction-count {
@@ -165,9 +153,13 @@
         
         #comment>li {
         	border-radius: 5px;
-        	box-shadow: 0 0px 2px rgba(0,0,0,0.3);: 
+        	box-shadow: 0 0px 2px rgba(0,0,0,0.3); 
         	margin: 5px;
-        	padding: 10px;
+        	padding: 30px;
+        }
+        
+        #comment>ul{
+        	border-left: 1px solid;
         }
         
         #comment textarea{
@@ -180,6 +172,14 @@
 		hr {
 		    background-color: gray;
 		}
+        
+        #comment_hit{
+        	color: black;
+        	margin-left: 580px;
+        	padding: 2px 15px;
+        	border-radius: 5px;
+        	box-shadow: 0 0px 2px rgba(0,0,0,0.5);
+        }
         
     </style>
 </head>
@@ -197,35 +197,34 @@
                     <span>문제 번호: ${qna.getQuestion_serial()}</span> |
                     <span id="root" class="hidden">${qna.getComment_root()}</span>
                     <span id="comment_date">${qna.getComment_date()}</span>
+                    <span id="comment_hit">조회수 ${qna.getComment_hit()}</span>
                 </div>
             </div>
-
             <div class="post-content">
             	<p><a href="/project_403/Q/${question_url}">문제 보기</a></p>
                 <p>${qna.getComment_content()}</p>
             </div>
 
             <div class="post-stats">
-                <span>조회수 ${qna.getComment_hit()}</span>
                 <button id="goodBtn" class="reaction-button" 
                         style="background-color: ${goodColor}" 
                         onclick="goodUp(${isGood_btn}, ${qna.getComment_num()})">
-                    좋아요 <span id="good" class="reaction-count">${qna.getComment_totalGood()}</span>
+                    	좋아요 <span id="good" class="reaction-count">${qna.getComment_totalGood()}</span>
                 </button>
                 <button id="badBtn" class="reaction-button"
                         style="background-color: ${badColor}" 
                         onclick="badUp(${isBad_btn}, ${qna.getComment_num()})">
-                    싫어요 <span id="bad" class="reaction-count">${qna.getComment_totalBad()}</span>
+						싫어요 <span id="bad" class="reaction-count">${qna.getComment_totalBad()}</span>
                 </button>
             </div>
 
             <div class="comment-section">
-                <h3 class="comment-header">댓글</h3>
+                <h5 class="comment-header">전체 댓글 (<span id="comment-count">0</span>개)</h5>
                 <div class="comment-input">
                     <textarea id="comment_input" placeholder="내용을 입력해 주세요."></textarea>
                     <button id="comment_input_btn" 
                             onclick="comment_submit(${qna.getComment_root()}, '${qna.getQuestion_serial()}', '${qna.getMem_id()}')">
-                        댓글 작성
+                        	댓글 작성
                     </button>
                 </div>
                 <ul id="comment" class="comment-list">

@@ -6,13 +6,49 @@
     <title>과목명 등록</title>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
-        .form-container { max-width: 500px; margin: 0 auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .form-group { margin: 15px 0; }
-        .form-group input[type="text"] { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-        .error-message { color: #dc3545; display: none; margin-top: 5px; }
-        input[type="submit"] { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
-        input[type="submit"]:disabled { background: #ccc; }
+		body { 
+		    margin: 20px; 
+		    background-color: #f5f5f5; 
+		} 
+		
+		.form-container { 
+		    max-width: 500px; 
+		    margin: 0 auto; 
+		    padding: 20px; 
+		    background: white; 
+		    border-radius: 8px; 
+		    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+		} 
+		
+		.form-group { 
+		    margin: 15px 0; 
+		} 
+		
+		.form-group input[type="text"] { 
+		    width: 100%; 
+		    padding: 8px; 
+		    border: 1px solid #ddd; 
+		    border-radius: 4px; 
+		} 
+		
+		.error-message { 
+		    color: #dc3545; 
+		    display: none; 
+		    margin-top: 5px; 
+		} 
+		
+		input[type="submit"] { 
+		    background: #007bff; 
+		    color: white; 
+		    border: none; 
+		    padding: 10px 20px; 
+		    border-radius: 4px; 
+		    cursor: pointer; 
+		} 
+		
+		input[type="submit"]:disabled { 
+		    background: #ccc; 
+		}
     </style>
 </head>
 <body>

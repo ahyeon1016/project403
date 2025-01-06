@@ -110,16 +110,24 @@ function chapSearch(){
 				for(let i=minIndex; i<maxIndex; i++){
 					let div = document.createElement("div");
 					div.classList.add(question[i].question_id, "question_div");
+					/* question_id의 값을 바탕으로 View에 보여질 문자열을 설정 */
+					let questionId = "";
+					if(question[i].question_id=="MCQ"){
+						questionId = "객관식";
+					}else if(question[i].question_id=="SAQ"){
+						questionId = "주관식"
+					}else{
+						questionId = "코딩"
+					}
 					div.innerHTML = 
 						"<p>작성자명 : "+question[i].mem_nickName+"</p>"+
+						"<p>문제 유형 : "+questionId+"</p>"+
 						"<p>문제 난이도 : "+question[i].question_level+"단계</p>"+
-						"<p>"+question[i].question_id+"</p>"+
 						"<a href='Q_read"+question[i].question_id+
 						"/"+question[i].question_serial+"'>문제 보기</a> | "+
 						"<a href='Q_update"+question[i].question_id+
-						"/"+question[i].question_serial+"'>문제 수정 하기</a> | "+
-						"<button onclick='Q_delete("+question[i].question_serial+", "+question[i].mem_serial+", "+mem_serial+")'>문제 삭제 하기</button>"+
-						"<a href='Q_delete"+"/"+question[i].question_serial+"'>문제 삭제 하기</a>"+
+						"/"+question[i].question_serial+"'>문제 수정 하기</a>     "+
+						"<button class='btn-sm btn-danger border-0 rounded-pill ml-3' onclick='Q_delete("+question[i].question_serial+", "+question[i].mem_serial+", "+mem_serial+")'>문제 삭제 하기</button>"+
 						"<hr>";
 						
 					question_container.append(div);
@@ -166,7 +174,9 @@ function resetSub(){
 
 function Q_delete(serial, member_serial, actor_serial){
 	if(member_serial==actor_serial){
-		window.location.href="Q_delete/"+serial;	
+		if(confirm("정말 삭제 하시겠습니까?")){
+			window.location.href="Q_delete/"+serial;	
+		}
 	}else{
 		alert("작성자만 삭제 가능합니다.");
 	}

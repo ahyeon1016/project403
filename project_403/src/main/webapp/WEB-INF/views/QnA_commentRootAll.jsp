@@ -15,7 +15,6 @@
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background-color: #f8f9fa;
             color: #333;
         }
