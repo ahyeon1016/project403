@@ -84,7 +84,24 @@ public class FnoteRepositoryImpl implements FnoteRepository {
 		}catch(Exception e) {e.printStackTrace();}
 		return fnote;
 	}
-	
+	//test_num과 id가 일치하는 정리노트가 이미 있을 경우,false를 반환하는 함수
+	public boolean is_my_note(int test_num,String mem_id) {
+		boolean is_exist=false;
+		try {
+			conn=DBConnection.getConnection();
+			String sql="select * from Fnote where test_num=? and mem_id=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, test_num);
+			pstmt.setString(2, mem_id);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				is_exist=true;
+			}
+			
+			}catch(Exception e) {e.printStackTrace();}
+			return is_exist;
+			
+	}
 	//테스트번호와 mem_id가 맞는 로우에 note 쓰기
 	@Override
 	public void note_update(String mem_id,int test_num,String note) {

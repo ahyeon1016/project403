@@ -85,7 +85,7 @@
                 <% } %>
             </ul>
         </nav>
-        <a href="./" class="btn btn-primary">홈</a>
+        <a href="../" class="btn btn-primary">홈</a>
     </div>
     <% } %>
    <%@include file="/WEB-INF/views/footer.jsp" %>

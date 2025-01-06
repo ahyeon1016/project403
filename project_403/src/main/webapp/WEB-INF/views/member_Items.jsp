@@ -128,7 +128,7 @@
             function nick_button(event) {
                 event.preventDefault();
                 if (confirm("구매시 50포인트가 소모됩니다.")) {
-                    if (<%= member.getMem_point() %> >= 100) {
+                    if (<%= member.getMem_point() %> >= 50) {
                         alert("구매되었습니다.");
                         document.querySelector("#purchase_nick").submit();
                     } else {
