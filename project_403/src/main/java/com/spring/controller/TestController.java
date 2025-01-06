@@ -135,7 +135,11 @@ public class TestController {
 	
 	// 시험지 수정하기 DB 연결
 	@PostMapping("/testUpdate")
-	public String testUpdateSubmit(@ModelAttribute("UpdateTest") Test test) {
+	public String testUpdateSubmit(@ModelAttribute("UpdateTest") Test test, HttpSession session) {
+		
+		// testAdd 페이지에서 넘어온 mem_id 값 변경(mem_nickName -> mem_id)
+		Member member = (Member) session.getAttribute("member");
+		test.setMem_id(member.getMem_id());
 		
 		// Update: 기존 데이터 보존을 위해 Insert 작업 진행
 		testService.setUpdateTest(test);
@@ -187,22 +191,6 @@ public class TestController {
 	   
 	    return rusultMap;
 	}
-	   
-//	//시험시작하기 버튼을 눌렀을때 기능
-//	@RequestMapping(value="/callQuestion", method=RequestMethod.POST)
-//	@ResponseBody
-//	public Map<String, Object> callQuestion(@RequestParam("test_num") Integer test_num) {
-//        
-//		Map<String, Object> rusultMap = new HashMap<>();
-//		
-//		Test test = testService.getOneTestList(test_num);
-//		List<Question> allQuestion = testService.getQuestion(test);
-////		List<String[]> answerValue = testService.ansSelectValue(subCodeSum);
-//		
-//		rusultMap.put("allQuestion", allQuestion);
-//	
-//		return rusultMap;
-//	}
 	
 	// 시험지 상세보기 비밀번호 입력 AJAX
 	@RequestMapping(value="/testValue", method=RequestMethod.POST)
