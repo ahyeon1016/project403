@@ -13,13 +13,14 @@
         }
 
         .main-container {
+        	background-color: #FAFAFA;
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
 
         .content {
-            background: white;
+        	background-color: white;
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             padding: 2rem;
