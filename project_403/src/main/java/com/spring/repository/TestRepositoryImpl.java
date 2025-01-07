@@ -24,16 +24,14 @@ public class TestRepositoryImpl implements TestRepository {
 	@Override
 	public List<Test> getBoardList(Integer pageNum, int limit) {
 		
-//		int total_record = getListCount();
 	    int start = (pageNum - 1) * limit;
-//	    int index = start + 1;
 	    String[] serial_split = null;
 	    List<Test> list = new ArrayList<Test>();	    
 	    
 	    try {
 	    	conn = DBConnection.getConnection();
 	    	//SQL쿼리 전송
-	    	String sql = "SELECT *, (select mem_nickName from Member M WHERE M.mem_id = T.mem_id) AS mem_nickName FROM Test T WHERE visible = 1 ORDER BY test_num DESC LIMIT ? OFFSET ?";		    	
+	    	String sql = "SELECT *, (SELECT mem_nickName FROM Member M WHERE M.mem_id = T.mem_id) AS mem_nickName FROM Test T WHERE visible = 1 ORDER BY test_num DESC LIMIT ? OFFSET ?";		    	
 	        pstmt = conn.prepareStatement(sql);
 	        pstmt.setInt(1, limit);
 	        pstmt.setInt(2, start);
@@ -60,12 +58,6 @@ public class TestRepositoryImpl implements TestRepository {
 				test.setVisible(rs.getBoolean(10));
 				test.setMem_nickName(rs.getString(11));
                 list.add(test);
-                
-//                if (index < (start + limit) && index <= total_record) {
-//					index++;
-//                } else {
-//					break;
-//                }
 	        }
 	    } catch(Exception e) {
 			e.printStackTrace();
@@ -203,7 +195,7 @@ public class TestRepositoryImpl implements TestRepository {
 		try {
 			conn = DBConnection.getConnection();
 			//SQL쿼리 전송
-			String sql = "SELECT *, (select mem_nickName from Member M WHERE M.mem_id = T.mem_id) AS mem_nickName FROM Test T WHERE test_num=?";
+			String sql = "SELECT *, (SELECT mem_nickName FROM Member M WHERE M.mem_id = T.mem_id) AS mem_nickName FROM Test T WHERE test_num=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1,test_num);
 			rs = pstmt.executeQuery();
@@ -300,7 +292,7 @@ public class TestRepositoryImpl implements TestRepository {
 			pstmt.setInt(1, test_num);
 			pstmt.executeUpdate();
 			//SQL쿼리 전송: test_num에 해당하는 상세 내용 가져오기
-			String sql = "SELECT *, (select mem_nickName from Member M WHERE M.mem_id = T.mem_id) AS mem_nickName FROM Test T WHERE test_num=?";
+			String sql = "SELECT *, (SELECT mem_nickName FROM Member M WHERE M.mem_id = T.mem_id) AS mem_nickName FROM Test T WHERE test_num=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, test_num);
 			rs = pstmt.executeQuery();			
@@ -513,36 +505,6 @@ public class TestRepositoryImpl implements TestRepository {
 		return list;
 	}
 
-	/*
-	 * @Override public List<Question> qnaSelectValue(String subCodeSum) {
-	 * 
-	 * List<Question> list = new ArrayList<Question>();
-	 * 
-	 * try { conn = DBConnection.getConnection(); //SQL쿼리 전송 String sql =
-	 * "SELECT * FROM Question WHERE sub_code_sum=?"; pstmt =
-	 * conn.prepareStatement(sql); pstmt.setString(1, subCodeSum); rs =
-	 * pstmt.executeQuery();
-	 * 
-	 * while(rs.next()) { Question question = new Question();
-	 * question.setQuestion_num(rs.getInt(1));
-	 * question.setQuestion_content(rs.getString(2));
-	 * question.setQuestion_ans(rs.getString(3));
-	 * question.setQuestion_img_name(rs.getString(4));
-	 * question.setQuestion_level(rs.getInt(5));
-	 * question.setQuestion_count(rs.getInt(6));
-	 * question.setSub_code_sum(rs.getString(7));
-	 * question.setMem_serial(rs.getInt(8));
-	 * question.setQuestion_serial(rs.getString(9));
-	 * question.setQuestion_id(rs.getString(10));
-	 * 
-	 * list.add(question); } } catch(Exception e) { e.printStackTrace(); } finally {
-	 * try { if (rs != null) { rs.close(); } if (pstmt != null) { pstmt.close(); }
-	 * if (conn != null) { conn.close(); } } catch (Exception e) {
-	 * e.printStackTrace(); } }
-	 * 
-	 * return list; }
-	 */
-
 	// sub_code_sum(과목챕터코드) 값에 해당하는 question_ans(정답) 값을 Question 테이블에서 가져오기
 	@Override
 	public List<String[]> ansSelectValue(String subCodeSum) {
@@ -592,12 +554,6 @@ public class TestRepositoryImpl implements TestRepository {
 		List<Question> list = new ArrayList<Question>();
 		
 		String[] serial = test.getSerial();
-//		String serials = serial[0];
-//		for(int i =1; i<serial.length; i++) {
-//			serials = serials+","+serial[i];
-//		}
-//		
-//		String[] serial_split = serials.split(",");
 	
 		try {
 			conn = DBConnection.getConnection();
@@ -657,20 +613,20 @@ public class TestRepositoryImpl implements TestRepository {
 			conn = DBConnection.getConnection();
 			//SQL쿼리 전송
 			if("title".equals(searchType)) {
-				sql = "SELECT *, if(mem_id = ?, 'Y', 'N') as updateBtn FROM Test WHERE test_name LIKE ? AND visible = 1 ORDER BY test_num DESC LIMIT ? OFFSET ?";
+				sql = "SELECT *, IF(mem_id = ?, 'Y', 'N') AS updateBtn FROM Test WHERE test_name LIKE ? AND visible = 1 ORDER BY test_num DESC LIMIT ? OFFSET ?";
 			} else if("subject".equals(searchType)) {
-				sql = "SELECT *, if(mem_id = ?, 'Y', 'N') as updateBtn FROM Test WHERE sub_name LIKE ? AND visible = 1 ORDER BY test_num DESC LIMIT ? OFFSET ?";
+				sql = "SELECT *, IF(mem_id = ?, 'Y', 'N') AS updateBtn FROM Test WHERE sub_name LIKE ? AND visible = 1 ORDER BY test_num DESC LIMIT ? OFFSET ?";
 			} else if("name".equals(searchType)) {
 				sql = "SELECT T.*, \r\n"
-						+ "       (SELECT M.mem_nickName \r\n"
-						+ "        FROM Member M \r\n"
-						+ "        WHERE M.mem_id = T.mem_id) AS mem_nickName, \r\n"
-						+ "       IF(T.mem_id = ?, 'Y', 'N') AS updateBtn \r\n"
+						+ "(SELECT M.mem_nickName \r\n"
+						+ "FROM Member M \r\n"
+						+ "WHERE M.mem_id = T.mem_id) AS mem_nickName, \r\n"
+						+ "IF(T.mem_id = ?, 'Y', 'N') AS updateBtn \r\n"
 						+ "FROM Test T \r\n"
 						+ "WHERE (SELECT M.mem_nickName \r\n"
-						+ "       FROM Member M \r\n"
-						+ "       WHERE M.mem_id = T.mem_id) LIKE ? \r\n"
-						+ "  AND T.visible = 1 \r\n"
+						+ "FROM Member M \r\n"
+						+ "WHERE M.mem_id = T.mem_id) LIKE ? \r\n"
+						+ "AND T.visible = 1 \r\n"
 						+ "ORDER BY T.test_num DESC LIMIT ? OFFSET ?";
 			}
 			pstmt = conn.prepareStatement(sql);				
@@ -770,10 +726,4 @@ public class TestRepositoryImpl implements TestRepository {
 		
 		return count;
 	}
-
-	
-	
-	
-	
-	
 }

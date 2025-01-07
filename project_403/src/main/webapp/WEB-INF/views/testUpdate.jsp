@@ -10,7 +10,7 @@
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>시험지 수정 페이지</title>
 </head>
 <style>
 	* {
