@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>과목 챕터 수정</title>
+    <title>챕터 수정</title>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <style>
         .update-container {
@@ -82,16 +82,19 @@
 <body>
 	<%@include file="/WEB-INF/views/member_home.jsp" %>
     <div class="update-container">
-        <h1 class="update-title">과목 챕터 수정</h1>
+        <h1 class="update-title">챕터 수정</h1>
         <form action="updateSubChap" method="POST">
+        	<!-- 과목 -->
             <div class="update-form-group">
                 <label class="update-label">과목</label>
                 <input type="text" name="sub_name" value="${sub_name}" readonly id="u2_sub_name" class="update-input">
             </div>
+            <!-- 기존 챕터 -->
             <div class="update-form-group">
                 <label class="update-label">기존 챕터</label>
                 <input type="text" value="${sub_chap}" name="old_sub_chap" readonly class="update-input">
             </div>
+            <!-- 수정 챕터 -->
             <div class="update-form-group">
                 <label class="update-label">수정 챕터</label>
                 <input type="text" name="new_sub_chap" id="u2_sub_chap" required class="update-input">
@@ -106,13 +109,15 @@
         var u2_sub_name = document.querySelector("#u2_sub_name");
         var u2_duplication = document.querySelector("#u2_duplication");
         var u2_sub_submit = document.querySelector("#u2_sub_submit");
-
+	
+        /* 이벤트 */
         u2_sub_chap.addEventListener("input", u2_chap);
 
         function u2_chap() {
             var u2_sub_chap_value = u2_sub_chap.value;
             var u2_sub_name_value = u2_sub_name.value;
-
+			
+            /* 입력한 데이터가 존재하는지 확인하고 존재한다면 전송버튼 숨김 처리 */
             $.ajax({
                 url: "subChapCheck",
                 type: "POST",

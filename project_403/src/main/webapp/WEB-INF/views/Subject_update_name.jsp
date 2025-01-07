@@ -56,10 +56,12 @@
     <div class="form-container">
         <h2>과목명 수정</h2>
         <form action="updateSubName" method="POST">
+        	<!-- 현재 과목 -->
             <div class="form-group">
                 <label>현재 과목명</label>
                 <input type="text" name="old_sub_name" value="${sub_name}" readonly>
             </div>
+            <!-- 새로운 과목 입력 필드 -->
             <div class="form-group">
                 <label>새 과목명</label>
                 <input type="text" name="new_sub_name" id="u_sub_name" required>
@@ -73,7 +75,10 @@
 		var u_sub_name = document.querySelector("#u_sub_name");
 		var	u_duplication = document.querySelector("#u_duplication");
 		var	u_submit = document.querySelector("#u_sub_submit");
+		/* 이벤트 */
 		u_sub_name.addEventListener("input", u_name);
+		
+		/* 과목 이름 중복검사 */
 		function u_name(){
 			var u_sub_name_value = u_sub_name.value;
 			console.log(u_sub_name_value);
@@ -83,6 +88,7 @@
 				contentType : "application/json",
 				data : JSON.stringify({"input_name":u_sub_name_value}),
 				success : function(data){
+					/* 데이터가 존재한다면 true 없다면 false */
 					if(data.check=="true"){
 						console.log("true");
 						u_duplication.style.display = "inline";

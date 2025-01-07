@@ -5,6 +5,7 @@ let myQuestion = document.querySelector("#myQuestion");
 let question_id = document.querySelectorAll(".question_id");
 let mem_serial = document.querySelector("#mem_serial").textContent;
 
+/* 이벤트 */
 for(let i=0; i<question_id.length; i++){
 	question_id[i].addEventListener("change", chapSearch);
 }
@@ -12,14 +13,17 @@ sub_name.addEventListener("change", nameSearch);
 sub_chap.addEventListener("change", chapSearch);
 myQuestion.addEventListener("change", resetSub);
 
+/* 과목 선택시 해당 과목과 일치하는 챕터 조회 */
 function nameSearch(){
 	let sub_name_value = sub_name.value;
+	/* 초기화 */
 	question_id[0].checked = true;
 	question_id[0].value = "ALL";
 	for(let i=0; i<question_id.length; i++){
 		question_id[i].setAttribute("disabled", true);
 	}
 	console.log(sub_name_value);
+	
 	$.ajax({
 		url : "Q_subNameByChap",
 		type : "POST",
@@ -29,7 +33,9 @@ function nameSearch(){
 		}),
 		success : function(data){
 			let list = data.list;
+			/* 자식 요소 초기화 */
 			sub_chap.replaceChildren();
+			/* option 태그를 생성하고 안에 가져온 데이터를 추가 */
 			let choice = document.createElement("option");
 			choice.text = "선택";
 			sub_chap.appendChild(choice);
@@ -37,6 +43,7 @@ function nameSearch(){
 				let option = document.createElement("option");
 				console.log(list[i]);
 				option.text = list[i];
+				/* select 태그 안에 자식요소로 삽입 */
 		        sub_chap.appendChild(option);
 			}
 		},
@@ -46,11 +53,13 @@ function nameSearch(){
 	});
 }
 
+/* 챕터을 선택했을 때 해당하는 챕터인 문제들을 조회 */
 function chapSearch(){
 	let	name_value = sub_name.value;
 	let chap_value = sub_chap.value;
 	let page_div = document.querySelector("#question_paging");
 	let page = document.querySelector(".page_btn");
+	/* 체크된 문제 유형의 값을 가져온다. */
 	let id = '';
 	for(let i=0; i<question_id.length; i++){
 		if(question_id[i].checked){
@@ -82,6 +91,7 @@ function chapSearch(){
 	}
 	console.log(page); 
 	console.log(name_value+"|"+chap_value);
+	
 	$.ajax({
 		url : "Q_search",
 		type : "POST",
@@ -107,7 +117,7 @@ function chapSearch(){
 			if(question.length!=0){
 				console.log("문제의 갯수: "+data.question.length);
 				/* 가져온 question을 view에 뿌리는 작업 */
-				for(let i=minIndex; i<maxIndex; i++){
+				for(let i=minIndex; i<maxIndex; i++){		/* 페이징 처리 */
 					let div = document.createElement("div");
 					div.classList.add(question[i].question_id, "question_div");
 					/* question_id의 값을 바탕으로 View에 보여질 문자열을 설정 */
@@ -119,6 +129,7 @@ function chapSearch(){
 					}else{
 						questionId = "코딩"
 					}
+					/* 생성된 div에 가져온 데이터를 추가 이후 div를 컨테이너의 자식요소로 삽입 */
 					div.innerHTML = 
 						"<p>작성자명 : "+question[i].mem_nickName+"</p>"+
 						"<p>문제 유형 : "+questionId+"</p>"+
@@ -134,6 +145,7 @@ function chapSearch(){
 					console.log(div);
 				}
 				
+				/* 페이징 처리 */
 				for(let i=0; i<totalPage; i++){
 					let btn = document.createElement("button");
 					btn.classList.add("page_btn");
@@ -143,10 +155,12 @@ function chapSearch(){
 					page_div.append(btn);
 				}
 			}else if(name_value=="선택"||chap_value=="선택"){
+				/* 과목과 챕터를 선택하지 않았을 때 */
 				let div = document.createElement("div");
 				div.textContent="과목과 챕터를 선택 해주세요.";
 				question_container.append(div);
 			}else{
+				/* 과목과 챕터, 문제 유형에 해당하는 문제가 존재하지 않을 때 */
 				let div = document.createElement("div");
 				div.textContent="과목과 챕터, 문제유형에 해당하는 문제가 없습니다.";
 				question_container.append(div);
@@ -158,6 +172,7 @@ function chapSearch(){
 	});
 }
 
+/* 사용자가 낸 문제를 확인하기 위해 체크박스를 클릭했을 때 호출되는 함수로 모든 항목을 초기 상태로 되돌림 */
 function resetSub(){
 	sub_name.value = "선택";
 	sub_chap.value = "선택";
@@ -172,6 +187,7 @@ function resetSub(){
 	chapSearch();
 }
 
+/* 문제 삭제 유효성 검사 */
 function Q_delete(serial, member_serial, actor_serial){
 	if(member_serial==actor_serial){
 		if(confirm("정말 삭제 하시겠습니까?")){

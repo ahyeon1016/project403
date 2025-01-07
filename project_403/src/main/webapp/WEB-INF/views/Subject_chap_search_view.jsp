@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>과목 챕터 검색</title>
+    <title>챕터 검색</title>
     <style>
         .chap-container {
             max-width: 800px;
@@ -70,7 +70,7 @@
 <body>
 	<%@include file="/WEB-INF/views/member_home.jsp" %>
     <div class="chap-container">
-        <h1 class="chap-title">과목 챕터 검색 결과</h1>
+        <h1 class="chap-title">챕터 검색 결과</h1>
         <% if(sub_chap.getSub_name() != null) { %>
             <div class="chap-info">
                 <h3 class="chap-subtitle">과목 정보</h3>

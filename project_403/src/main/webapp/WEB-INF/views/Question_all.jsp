@@ -186,11 +186,13 @@
     <%@include file="/WEB-INF/views/member_home.jsp" %>
     
     <div class="main-container">
+    	<!-- 사이드 바 -->
         <div class="question_aside">
             <%@include file="/WEB-INF/views/Question_asidebar.jsp" %>
         </div>
 
         <div class="content">
+        	<!-- 문제 선택 항목 -->
             <div class="filter-section">
                 <div class="filter-row">
                     <select name="name_select" id="name_selector">
@@ -236,10 +238,12 @@
                 </div>
             </div>
 
+			<!-- 문제 출력 영역 -->
             <div id="question_container">
                 <div class="question-item">과목과 챕터를 선택해 주세요</div>
             </div>
-
+			
+			<!-- 페이징 처리 -->
             <div id="question_paging"></div>
         </div>
     </div>

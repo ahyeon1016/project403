@@ -176,12 +176,15 @@
     <%@include file="/WEB-INF/views/member_home.jsp" %>
     
     <div class="question_main">
+    	<!-- 사이드바 -->
         <div class="question_aside">
             <%@include file="/WEB-INF/views/Question_asidebar.jsp" %>
         </div>
-
+		
+		<!-- 스프링 폼태그 -->
         <form:form class="question_form" modelAttribute="question" action="../Q_updateMCQ" method="post" enctype="multipart/form-data" onsubmit="return validateMCQForm(event)">
             <div class="question_content">
+            	<!-- 과목, 챕터, 문제 유형 -->
                 <div class="question_info">
                     <form:hidden path="mem_serial"/>
                     <p>과목 코드: <form:input path="sub_code_sum" readonly="true"/></p>
@@ -196,10 +199,11 @@
                 </div>
 
                 <hr>
-
+				<!-- 문제 내용 -->
                 <h5 class="section-title">문제 내용</h5>
                 <form:textarea name="question_content" path="question_content" class="content-input"/>
-
+				
+				<!-- 선택지 -->
                 <div class="question_choice">
                     <p>1 : <form:input name="question_ans" path="question_ans" value="${ans[0]}"/></p>
                     <p>2 : <form:input name="question_ans" path="question_ans" value="${ans[1]}"/></p>
@@ -208,7 +212,7 @@
                 </div>
 
                 <hr>
-
+				<!-- 정답 -->
                 <div class="question_ans">
                     <p class="section-title">정답</p>
                     <div class="radio-group">
@@ -232,7 +236,7 @@
                 </div>
 
                 <hr>
-
+				<!-- 난이도 -->
                 <div>
                     <p class="section-title">문제 난이도</p>
                     <div class="radio-group">
@@ -260,7 +264,7 @@
                 </div>
 
                 <hr>
-
+				<!-- 이미지 -->
                 <div class="question_image">
                     <p class="section-title">현재 문제 이미지</p>
                     <img src="/project_403/resources/images/${question.getQuestion_img_name()}" alt="문제 이미지">

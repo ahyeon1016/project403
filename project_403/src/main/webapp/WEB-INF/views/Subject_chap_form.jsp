@@ -56,11 +56,13 @@
     <div class="form-container">
         <h2>챕터 등록</h2>
         <form:form modelAttribute="subject" method="POST" action="sub_chap_form">
+        	<!-- 과목 입력 필드 -->
             <div class="form-group">
                 <label>과목명</label>
                 <form:input path="sub_name" id="c_sub_name" required="true"/>
                 <span class="error-message" id="c1_duplication">존재하지 않는 과목입니다.</span>
             </div>
+            <!-- 챕터 입력 필드 -->
             <div class="form-group">
                 <label>챕터명</label>
                 <form:input path="sub_chap" id="c_sub_chap" required="true"/>
@@ -76,11 +78,17 @@
 		var	c1_duplication = document.querySelector("#c1_duplication");
 		var	c2_duplication = document.querySelector("#c2_duplication");
 		var	c_submit = document.querySelector("#c_sub_submit");
+		
+		/*이벤트*/
+		c_sub_name.addEventListener("input", c_name);
 		c_sub_chap.addEventListener("input", c_chap);
+		
+		/* sub_chap 중복검사 */
 		function c_chap(){
 			var c_sub_chap_value = c_sub_chap.value;
 			var c_sub_name_value = c_sub_name.value;
 			console.log(c_sub_name_value);
+			/*  */
 			$.ajax({
 				url : "subChapCheck",
 				type : "POST",
@@ -90,6 +98,7 @@
 					"input_name":c_sub_name_value
 					}),
 				success : function(data){
+					/* 데이터가 존재한다면 true 없다면 false */
 					if(data.check=="true"){
 						console.log("true");
 						c2_duplication.style.display = "inline";
@@ -106,8 +115,7 @@
 			}); 
 		}
 		
-		
-		c_sub_name.addEventListener("input", c_name);
+		/* sub_name 존재 여부 검사 */
 		function c_name(){
 			var c_sub_name_value = c_sub_name.value;
 			console.log(c_sub_name_value);
@@ -117,6 +125,7 @@
 				contentType : "application/json",
 				data : JSON.stringify({"input_name":c_sub_name_value}),
 				success : function(data){
+					/* 데이터가 존재한다면 false 없다면 true */
 					if(data.check=="true"){
 						console.log("true");
 						c1_duplication.style.display = "none";

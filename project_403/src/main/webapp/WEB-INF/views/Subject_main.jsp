@@ -63,10 +63,12 @@
         <h2>과목 관리 시스템</h2>
         <p>사용자: ${member.getMem_id()}</p>
         
+        <!-- 페이지 이동 -->
         <div class="menu-item"><a href="sub/sub_name_form">과목명 등록</a></div>
         <div class="menu-item"><a href="sub/sub_chap_form">챕터 등록</a></div>
         <div class="menu-item"><a href="sub/sub_all">과목 목록</a></div>
         
+        <!-- 과목 검색 폼 -->
         <div class="search-form"> 
             <form:form action="sub/getSubByName" method="get">
                 <h3>과목명으로 검색</h3>
@@ -75,6 +77,7 @@
             </form:form>
         </div>
         
+        <!-- 챕터 검색 폼 -->
         <div class="search-form">
             <form:form modelAttribute="subject" action="sub/getSubByChap" method="get">
                 <h3>챕터로 검색</h3>

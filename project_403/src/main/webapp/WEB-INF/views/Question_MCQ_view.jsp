@@ -165,11 +165,13 @@
     <%@include file="/WEB-INF/views/member_home.jsp" %>
     
     <div class="main-container">
+    	<!-- 사이드 바 -->
         <div class="question_aside">
             <%@include file="/WEB-INF/views/Question_asidebar.jsp" %>
         </div>
 
         <div class="content">
+        	<!-- 문제 정보 -->
             <div class="question-meta">
                 <p>문제 번호: ${question.question_serial}</p>
                 <p>문제 난이도: ${question.question_level} 단계</p>
@@ -177,13 +179,14 @@
                 <p>문제풀이 시도 횟수 합계: ${question.question_count}<span id="plus"></span></p>
             </div>
 
-
+			<!-- 이미지 존재 여부 확인 -->
             <% if(question.getQuestion_img_name() != null && !question.getQuestion_img_name().isEmpty()) { %>
             <div class="question-image">
                 <img src="/project_403/resources/images/${question.question_img_name}">
             </div>
             <% } %>
-
+			
+			<!-- 문제 내용 -->
             <div class="question-content">
                 <p>${question.question_content}</p>
                 
@@ -196,7 +199,8 @@
                     <% } %>
                 </div>
             </div>
-
+			
+			<!-- 버튼 영역 -->
             <div class="action-buttons">
                 <button onclick="grading(<%=ans[4]%>, '${question.question_serial}', ${question.question_count}, ${question.question_level})">
                     정답 확인
@@ -210,6 +214,7 @@
 
     <script>
         let index = 0;
+        /* 문제풀이 횟수를 추가하는 함수 */
         function grading(ans, question_serial, question_count, question_level){
             let option = document.querySelectorAll(".option");
             let plus = document.querySelector("#plus");
@@ -219,8 +224,8 @@
                 if(option[i].checked){
                     isChecked=true;
                     if(option[i].value==ans){
-                        index++;
                         alert(index+"회만에 정답!");
+                        /* 정답을 맞추면 누적된 횟수를 가지고 이동 */
                         window.location.href=
                             "../Q_plusCount?serial="+question_serial+
                             "&count="+question_count+
@@ -232,6 +237,8 @@
                     }
                 }
             }
+            /* 문제풀이 횟수 갱신 */
+            index++;
             plus.textContent = "+"+index;
             if(isChecked!=true){
                 alert("선택하고 눌러주세요.");

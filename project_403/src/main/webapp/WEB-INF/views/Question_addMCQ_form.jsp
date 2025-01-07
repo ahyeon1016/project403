@@ -197,12 +197,15 @@
     <%@include file="/WEB-INF/views/member_home.jsp" %>
     
     <div class="question_main">
+    	<!-- 사이드 바 -->
         <div class="question_aside">
             <%@include file="/WEB-INF/views/Question_asidebar.jsp" %>
         </div>
-
+		
+		<!-- 스프링 폼태그 -->
         <form:form class="question_form" modelAttribute="question" action="Q_addMCQ" method="post" enctype="multipart/form-data" onsubmit="return validateMCQForm(event)">
             <div class="question_subject_chap">
+            	<!-- 과목과 챕터 선택 -->
                 <span>과목명:</span>
                 <select name="name_select" id="name_selector">
                     <option selected>선택</option>
@@ -211,7 +214,8 @@
                     <% } %>
                 </select>
                 <select name="chap_select" id="chap_selector"></select>
-
+				
+				<!-- 문제 유형 선택 -->
                 <div class="radio-group">
                     <label for="MCQ">
                         <form:radiobutton path="question_id" value="MCQ" checked="checked" id="MCQ" onclick="addQuestion('MCQ')"/>
@@ -227,11 +231,14 @@
                     </label>
                 </div>
             </div>
-
+			
+			<!-- 문제 본문 -->
             <div class="question_content">
+            	<!-- 문제 내용 -->
                 <h5>문제 내용</h5>
                 <form:textarea name="question_content" path="question_content" placeholder="문제의 내용을 입력해 주세요."/>
-
+				
+				<!-- 선택지 -->
                 <div class="question_choice">
                     <p>1 : <form:input name="question_ans" path="question_ans" placeholder="선택지를 입력해 주세요."/></p>
                     <p>2 : <form:input name="question_ans" path="question_ans" placeholder="선택지를 입력해 주세요."/></p>
@@ -240,7 +247,7 @@
                 </div>
 
                 <hr>
-
+				<!-- 정답 -->
                 <div class="question_ans">
                     <p class="section-title">정답</p>
                     <div class="radio-group">
@@ -264,7 +271,7 @@
                 </div>
 
                 <hr>
-
+				<!-- 난이도 -->
                 <div>
                     <p class="section-title">문제 난이도</p>
                     <div class="radio-group">
@@ -292,7 +299,7 @@
                 </div>
 
                 <hr>
-
+				<!-- 이미지 -->
                 <p class="section-title">문제 이미지</p>
                 <form:input type="file" path="question_img" id="imageInput"/>
             </div>

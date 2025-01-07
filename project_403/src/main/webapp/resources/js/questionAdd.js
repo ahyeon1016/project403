@@ -2,10 +2,12 @@ let sub_name = document.querySelector("#name_selector");
 let sub_chap = document.querySelector("#chap_selector");
 sub_name.addEventListener("change", check);
 
+/* 문제를 만드는 페이지로 이동, 파라미터 값을 통해 다른 페이지로 이동 */
 function addQuestion(type){
 	window.location.href="Q_add"+type;
 }
 
+/* 과목 목록을 가져온다. */
 function check(){
 	let sub_name_value = sub_name.value;
 	console.log(sub_name_value);
@@ -18,7 +20,9 @@ function check(){
 		}),
 		success : function(data){
 			let list = data.list;
+			/* 자식요소 초기화 */
 			sub_chap.replaceChildren();
+			/* option 태그 안에 가져온 데이터를 넣어 select 태그의 자식요소로 삽입 */
 			for(let i=0; i<list.length; i++){
 				let option = document.createElement('option');
 				console.log(list[i]);
@@ -32,6 +36,7 @@ function check(){
 	});
 }
 
+/* 객관식 문제 생성시 유효성 검사 */
 function validateMCQForm(event) {
     const nameSelect = document.getElementById("name_selector");
     const questionContent = document.querySelector('textarea[name="question_content"]');
@@ -41,18 +46,21 @@ function validateMCQForm(event) {
 	const imageInput = document.getElementById("imageInput");
     const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
 	
+	/* 과목명 선택 검사 */
     if (nameSelect.value === "선택") {
         alert("과목명을 선택해야 합니다.");
         event.preventDefault();
         return false;
     }
-
+	
+	/* 문제 내용 입력 검사 */
     if (questionContent.value.trim() === "") {
         alert("문제 내용을 입력해야 합니다.");
         event.preventDefault();
         return false;
     }
-	//
+	
+	/* 선택지 입력 검사 */
     let hasAnswer = false;
     answerInputs.forEach(input => {
         if (input.value.trim() === "") {
@@ -64,13 +72,14 @@ function validateMCQForm(event) {
             hasAnswer = true;
         }
     });
-
+	
     if (!hasAnswer) {
 		alert("최소 하나의 선택지를 입력해야 합니다.");
         event.preventDefault();
         return false;
     }
-
+	
+	/* 정답 선택 검사 */
     if (selectedAnswers.length === 0) {
         alert("정답을 선택해야 합니다.");
         event.preventDefault();
@@ -87,7 +96,8 @@ function validateMCQForm(event) {
             return false;
         }
     }
-
+	
+	/* 난이도 설정 검사 */
 	if(questionLevel.length===0){
 		alert("난이도를 선택해야 합니다.");
         event.preventDefault();
@@ -96,6 +106,7 @@ function validateMCQForm(event) {
 
 }
 
+/* 주관식 문제 생성시 유효성 검사 */
 function validateSAQForm(event) {
     const nameSelect = document.getElementById("name_selector");
     const questionContent = document.querySelector('textarea[name="question_content"]');
@@ -146,6 +157,7 @@ function validateSAQForm(event) {
     return true; // 모든 유효성 검사 통과
 }
 
+/* 코딩 문제 생성시 유효성 검사 */
 function validateCPForm(event) {
     const nameSelect = document.getElementById("name_selector");
     const questionContent = document.querySelector('textarea[name="question_content_text"]');

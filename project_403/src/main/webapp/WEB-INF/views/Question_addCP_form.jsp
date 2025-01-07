@@ -183,12 +183,15 @@
     <%@include file="/WEB-INF/views/member_home.jsp" %>
     
     <div class="question_main">
+    	<!-- 사이드 바 -->
         <div class="question_aside">
             <%@include file="/WEB-INF/views/Question_asidebar.jsp" %>
         </div>
-
+		
+		<!-- 스프링 폼태그 -->
         <form:form class="question_form" modelAttribute="question" action="Q_addCP" method="post" enctype="multipart/form-data" onsubmit="return validateCPForm(event)">
             <div class="question_subject_chap">
+            	<!-- 과목 및 챕터 선택 -->
                 <span>과목명:</span>
                 <select name="name_select" id="name_selector">
                     <option selected>선택</option>
@@ -197,7 +200,8 @@
                     <% } %>
                 </select>
                 <select name="chap_select" id="chap_selector"></select>
-
+				
+				<!-- 문제 유형 선택 -->
                 <div class="radio-group">
                     <label for="MCQ">
                         <form:radiobutton path="question_id" value="MCQ" id="MCQ" onclick="addQuestion('MCQ')"/>
@@ -213,23 +217,26 @@
                     </label>
                 </div>
             </div>
-
+			
+			<!-- 문제 본문 -->
             <div class="question_content">
+            	<!-- 문제 내용 -->
                 <h5>문제 내용</h5>
                 <textarea name="question_content_text" placeholder="문제의 내용을 입력해 주세요."></textarea>
-
+				
+				<!-- 코드 내용 -->
                 <h5>코드 내용</h5>
                 <form:textarea name="question_content" path="question_content" placeholder="코드를 입력해 주세요." class="code-editor" rows="10"/>
 
                 <hr>
-
+				<!-- 정답 -->
                 <div class="question_ans">
                     <h5>정답</h5>
                     <form:input name="question_ans" path="question_ans" type="text" placeholder="정답을 입력해 주세요."/>
                 </div>
 
                 <hr>
-
+				<!-- 난이도 -->
                 <div>
                     <h5>문제 난이도</h5>
                     <div class="radio-group">
@@ -257,7 +264,7 @@
                 </div>
 
                 <hr>
-
+				<!-- 이미지 -->
                 <h5>문제 이미지</h5>
                 <form:input name="question_img" type="file" path="question_img" id="imageInput"/>
             </div>
