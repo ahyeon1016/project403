@@ -353,7 +353,7 @@ $(document).on("click", ".answerCheckCP", function() {
 // 시험 종료 버튼 이벤트
 $(document).on("click", "#testEnd", function() {
 	alert("시험이 종료됩니다");
-	window.location.href = "http://localhost:8080/project_403/test/testAll";
+	window.location.href = "testAll";
 });
 </script>
 </html>
