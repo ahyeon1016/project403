@@ -57,6 +57,7 @@
         <h2>과목명 등록</h2>
         <p>사용자: ${member.getMem_id()}</p>
         
+        <!-- 과목 생성 입력 필드 -->
         <form method="POST" action="sub_name_form">
             <div class="form-group">
                 <label>과목명</label>
@@ -71,7 +72,10 @@
 		var n_sub_name = document.querySelector("#n_sub_name");
 		var	n_duplication = document.querySelector("#n_duplication");
 		var	n_submit = document.querySelector("#n_sub_submit");
+		/*이벤트*/
 		n_sub_name.addEventListener("input", name);
+		
+		/* 과목 중복 검사 */
 		function name(){
 			var n_sub_name_value = n_sub_name.value;
 			console.log(n_sub_name_value);
@@ -81,6 +85,7 @@
 				contentType : "application/json",
 				data : JSON.stringify({"input_name":n_sub_name_value}),
 				success : function(data){
+					/*데이터가 존재한다면 true 없다면 false*/
 					if(data.check=="true"){
 						console.log("true");
 						n_duplication.style.display = "inline";

@@ -110,6 +110,7 @@
             <% for(int i=index; i<maxPage; i++) {
                 QnA qna = rootAll.get(i);
             %>
+            <!-- 문제 정보 -->
             <div class="qna-item">
                 <div class="qna-meta">
                     <span>작성자: <%=qna.getMem_nickName()%></span>
@@ -117,14 +118,18 @@
                     <span>게시글 번호: <%=rootAll.size()-i%></span>
                 </div>
                 
+                <!-- 제목 -->
                 <div class="qna-title"><%=qna.getComment_title()%></div>
                 
+                <!-- 날짜 정보 -->
                 <div class="qna-meta">
                     <span>작성일: <%= (qna.getComment_date().getYear() + 1900)+"-"
                         +String.format("%02d", qna.getComment_date().getMonth() + 1)+"-"
-                        +String.format("%02d", qna.getComment_date().getDate()) %></span>
+                        +String.format("%02d", qna.getComment_date().getDate()) %>
+                    </span>
                 </div>
                 
+                <!-- 부가정보 -->
                 <div class="qna-stats">
                     <span>조회수: <%=qna.getComment_hit()%></span>
                     <span>좋아요: <%=qna.getComment_totalGood()%></span>
@@ -136,7 +141,8 @@
                 </a>
             </div>
             <% } %>
-
+			
+			<!-- 페이징 버튼 -->
             <div class="pagination">
                 <% for(int i=1; i<totalPage+1; i++) { %>
                     <a href="commentRootAll?page=<%=i%>"><%=i%></a>

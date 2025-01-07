@@ -185,11 +185,14 @@
 </head>
 <body>
     <%@include file="/WEB-INF/views/member_home.jsp"%>
+    <!-- 숨겨진 요소 -->
     <div class="hidden" id="isClicked_btn">${isClicked_btn}</div>
     <div class="hidden" id="nickName">${member.getMem_nickName()}</div>
-    	
+    
+    <!-- 메인 컨테이너 -->
     <div class="main-container">
         <div class="content">
+        	<!-- 질문글 상단 -->
             <div class="post-header">
                 <h1 class="post-title">${qna.getComment_title()}</h1>
                 <div class="post-meta">
@@ -200,11 +203,14 @@
                     <span id="comment_hit">조회수 ${qna.getComment_hit()}</span>
                 </div>
             </div>
+            
+            <!-- 질문글 메인 내용 -->
             <div class="post-content">
             	<p><a href="/project_403/Q/${question_url}">문제 보기</a></p>
                 <p>${qna.getComment_content()}</p>
             </div>
-
+			
+			<!-- 좋아요 싫어요 버튼 -->
             <div class="post-stats">
                 <button id="goodBtn" class="reaction-button" 
                         style="background-color: ${goodColor}" 
@@ -217,7 +223,8 @@
 						싫어요 <span id="bad" class="reaction-count">${qna.getComment_totalBad()}</span>
                 </button>
             </div>
-
+			
+			<!-- 댓글 영역 -->
             <div class="comment-section">
                 <h5 class="comment-header">전체 댓글 (<span id="comment-count">0</span>개)</h5>
                 <div class="comment-input">

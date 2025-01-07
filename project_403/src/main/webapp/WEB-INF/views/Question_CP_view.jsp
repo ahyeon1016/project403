@@ -174,11 +174,13 @@
     <%@include file="/WEB-INF/views/member_home.jsp" %>
     
     <div class="main-container">
+    	<!-- 사이드바 -->
         <div class="question_aside">
             <%@include file="/WEB-INF/views/Question_asidebar.jsp" %>
         </div>
 
         <div class="content">
+        	<!-- 문제 정보 -->
             <div class="question-meta">
                 <p>문제 번호: ${question.question_serial}</p>
                 <p>문제 난이도: ${question.question_level} 단계</p>
@@ -186,7 +188,8 @@
                 <p>과목: ${question.sub_code_sum}</p>
                 <p>문제풀이 시도 횟수 합계: ${question.question_count}<span id="plus"></span></p>
             </div>
-
+			
+			<!-- 이미지 존재 여부 확인 -->
             <% if(request.getAttribute("question") != null) { 
                 Question question = (Question)request.getAttribute("question");
                 if(question.getQuestion_img_name() != null && !question.getQuestion_img_name().isEmpty()) { %>
@@ -194,14 +197,16 @@
                     <img src="/project_403/resources/images/${question.question_img_name}">
                 </div>
             <% }} %>
-
+			
+			<!-- 문제 내용 -->
             <div class="question-content">
                 <p>${ans[0]}</p>
                 
                 <textarea id="ans_input" class="code-input" rows="15">${ans[1]}</textarea>
                 <textarea id="ans_error" class="error-output" rows="10" readonly></textarea>
             </div>
-
+			
+			<!-- 버튼 영역 -->
             <div class="action-buttons">
                 <button onclick="grading('${question.question_ans}', '${question.question_serial}', ${question.question_count}, ${question.question_level})">
                     정답 확인
@@ -215,6 +220,7 @@
     
 	<script>
 		let index = 0;
+		/* 문제풀이 횟수를 추가하는 함수 */
 		function grading(ans, question_serial, question_count, question_level){
 			let ans_input = document.querySelector("#ans_input");
 			let ans_error = document.querySelector("#ans_error");
@@ -230,6 +236,7 @@
 						console.log(data.output+"|"+ans);
 						if(data.output==ans){
 							alert(index+"회만에 정답!");
+							/* 정답을 맞추면 누적된 횟수를 가지고 이동 */
 							window.location.href=
 								"../Q_plusCount?serial="+question_serial+
 								"&count="+question_count+
@@ -248,6 +255,7 @@
 					console.log("오류");
 				}
 			});
+			/* 문제풀이 횟수 갱신 */
 			index++;
 			plus.textContent = "+"+index;
 		}

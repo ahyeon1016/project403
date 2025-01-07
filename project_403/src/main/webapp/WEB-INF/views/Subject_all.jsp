@@ -55,6 +55,7 @@
 	<%@include file="/WEB-INF/views/member_home.jsp" %>
     <div class="list-container">
         <h2>과목 목록</h2>
+        <!-- 모든 과목과 챕터 조회 -->
         <% if(sub_all.size()!=0) {
             for(Subject sub : sub_all) { %>
                 <div class="subject-item">
@@ -83,12 +84,14 @@
     </div>
     <%@include file="/WEB-INF/views/footer.jsp" %>
     <script>
+    	/* 과목삭제 경고알림 */
     	function deleteSubName(url){
     		if(confirm("과목을 정말 삭제 하시겠습니까?\n!!!치명적인 문제가 발생할 수 있습니다!!!")){
     			window.location.href=url;
     		}
     	}
     	
+    	/* 챕터삭제 경고알림 */
     	function deleteSubChap(url){
     		if(confirm("챕터를 정말 삭제 하시겠습니까?\n!!!치명적인 문제가 발생할 수 있습니다!!!")){
     			window.location.href=url;

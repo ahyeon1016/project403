@@ -190,11 +190,14 @@
     <%@include file="/WEB-INF/views/member_home.jsp" %>
     
     <div class="question_main">
+    	<!-- 사이드바 -->
         <div class="question_aside">
             <%@include file="/WEB-INF/views/Question_asidebar.jsp" %>
         </div>
-
+		
+		<!-- 스프링 폼태그 -->
         <form:form class="question_form" modelAttribute="question" action="../Q_updateCP" method="post" enctype="multipart/form-data" onsubmit="return validateCPForm(event)">
+            <!-- 과목과 챕터, 문제 유형 -->
             <div class="question_info">
                 <form:hidden path="mem_serial"/>
                 <p>과목 코드: <form:input path="sub_code_sum" readonly="true"/></p>
@@ -207,21 +210,24 @@
                     </label>
                 </div>
             </div>
-
+			
+			<!-- 문제 본문 -->
             <div class="question_content">
+            	<!-- 문제 내용 -->
                 <h5>문제 내용</h5>
                 <textarea name="question_content_text" rows="10">${content[0]}</textarea>
-
+				
+				<!-- 코드 내용 -->
                 <h5>코드 내용</h5>
 				<form:textarea name="question_content" path="question_content" rows="20" cols="70" class="code-editor"/>
 				
 				<hr>
-
+				<!-- 정답 -->
                 <h5>정답</h5>
                 <form:input name="question_ans" path="question_ans" type="text"/>
 		
 				<hr>
-
+				<!-- 난이도 -->
                 <div class="radio-group">
                     <label for="level_1">
                         <form:radiobutton name="question_level" path="question_level" value="1" id="level_1"/>
@@ -244,6 +250,8 @@
                         5단계
                     </label>
                 </div>
+                
+                <!-- 이미지 -->
                 <div class="question_image">
                     <h5>현재 문제 이미지</h5>
                     <img src="/project_403/resources/images/${question.getQuestion_img_name()}" alt="문제 이미지">
@@ -251,7 +259,7 @@
                     <h5>새 문제 이미지 업로드</h5>
                     <form:input id="imageInput" type="file" path="question_img"/>
                 </div>
-
+                
                 <div style="margin-top: 1.5rem;">
                     <h5>문제풀이 횟수</h5>
                     <form:input path="question_count" disabled="true" style="min-height: auto; background-color: #f8f9fa;"/>
