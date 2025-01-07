@@ -21,7 +21,7 @@ public class MemberItemRepositoryImpl implements MemberItemRepository{
 		try{
 			System.out.println("아이템 추가요~~~~~~~~~~"+member.getMem_id());
 			conn=DBConnection.getConnection();
-			String sql="insert into member_item(mem_id) values(?)";
+			String sql="INSERT INTO Member_item(mem_id) VALUES(?)";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1,member.getMem_id() );
 			pstmt.executeUpdate();
@@ -36,7 +36,7 @@ public class MemberItemRepositoryImpl implements MemberItemRepository{
 		Member_Item mi=new Member_Item();
 		try {
 			conn=DBConnection.getConnection();
-			String sql="select * from Member_Item where mem_id=?";
+			String sql="SELECT * FROM Member_Item WHERE mem_id=?";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, mem_id);
 			rs=pstmt.executeQuery();
@@ -59,7 +59,7 @@ public class MemberItemRepositoryImpl implements MemberItemRepository{
 	public void nick_change(String mem_id) {
 		try{
 			conn=DBConnection.getConnection();
-			String sql="update Member_Item set mem_itemA=false where mem_id=?";
+			String sql="UPDATE Member_Item SET mem_itemA=false WHERE mem_id=?";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, mem_id);
 			pstmt.executeUpdate();
@@ -73,7 +73,7 @@ public class MemberItemRepositoryImpl implements MemberItemRepository{
 	public void color_change(Member_Item mi) {
 		try {
 		conn=DBConnection.getConnection();
-		String sql="update Member_Item set mem_itemB=false,mem_color=? where mem_id=?";
+		String sql="UPDATE Member_Item SET mem_itemB=false,mem_color=? WHERE mem_id=?";
 		pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, mi.getMem_color());
 		pstmt.setString(2, mi.getMem_id());
@@ -87,7 +87,7 @@ public class MemberItemRepositoryImpl implements MemberItemRepository{
 	public void nick_change_buy(String mem_id) {
 		try {
 		conn=DBConnection.getConnection();
-		String sql="update Member_Item set mem_itemA=true where mem_id=?";
+		String sql="UPDATE Member_Item SET mem_itemA=true WHERE mem_id=?";
 		pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, mem_id);
 		pstmt.executeUpdate();
@@ -102,7 +102,7 @@ public class MemberItemRepositoryImpl implements MemberItemRepository{
 	public void nick_color_buy(String mem_id) {
 		try {
 			conn=DBConnection.getConnection();
-			String sql="update Member_Item set mem_itemB=true where mem_id=?";
+			String sql="UPDATE Member_Item SET mem_itemB=true WHERE mem_id=?";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, mem_id);
 			pstmt.executeUpdate();
@@ -118,7 +118,7 @@ public class MemberItemRepositoryImpl implements MemberItemRepository{
 	public void item_bye(Member member) {
 		try {
 			conn=DBConnection.getConnection();
-			String sql="delete from Member_Item where mem_id=?";
+			String sql="DELETE FROM Member_Item WHERE mem_id=?";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, member.getMem_id());
 			pstmt.executeUpdate();

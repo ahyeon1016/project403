@@ -22,7 +22,7 @@ public class FnoteRepositoryImpl implements FnoteRepository {
 	public void note_create(String mem_id,int test_num) {
 		try {
 			conn=DBConnection.getConnection();
-			String sql="insert into fnote values(?,?,null)";
+			String sql="INSERT INTO Fnote VALUES(?,?,null)";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, mem_id);
 			pstmt.setInt(2, test_num);
@@ -40,7 +40,7 @@ public class FnoteRepositoryImpl implements FnoteRepository {
 		ArrayList<Fnote> arr=new ArrayList<Fnote>();
 		try {
 		conn=DBConnection.getConnection();
-		String sql="select * from fnote where mem_id=?";
+		String sql="SELECT * FROM Fnote WHERE mem_id=?";
 		pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, mem_id);
 		rs=pstmt.executeQuery();
@@ -68,7 +68,7 @@ public class FnoteRepositoryImpl implements FnoteRepository {
 		Fnote fnote=new Fnote();
 		try {
 		conn=DBConnection.getConnection();
-		String sql="select * from Fnote where test_num=?";
+		String sql="SELECT * FROM Fnote WHERE test_num=?";
 		pstmt=conn.prepareStatement(sql);
 		pstmt.setInt(1, test_num);
 		rs=pstmt.executeQuery();
@@ -89,7 +89,7 @@ public class FnoteRepositoryImpl implements FnoteRepository {
 		boolean is_exist=false;
 		try {
 			conn=DBConnection.getConnection();
-			String sql="select * from Fnote where test_num=? and mem_id=?";
+			String sql="SELECT * FORM Fnote WHERE test_num=? AND mem_id=?";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setInt(1, test_num);
 			pstmt.setString(2, mem_id);
@@ -107,7 +107,7 @@ public class FnoteRepositoryImpl implements FnoteRepository {
 	public void note_update(String mem_id,int test_num,String note) {
 		try {
 		conn=DBConnection.getConnection();
-		String sql="update fnote set note=? where mem_id=? and test_num=?";
+		String sql="UPDATE Fnote SET note=? WHERE mem_id=? AND test_num=?";
 		pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, note);
 		pstmt.setString(2, mem_id);
@@ -121,7 +121,7 @@ public class FnoteRepositoryImpl implements FnoteRepository {
 	public void note_delete(String mem_id,int test_num) {
 		try {
 			conn=DBConnection.getConnection();
-			String sql="delete from fnote where mem_id=? and test_num=?";
+			String sql="DELETE FROM Fnote WHERE mem_id=? AND test_num=?";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, mem_id);
 			pstmt.setInt(2, test_num);
@@ -134,7 +134,7 @@ public class FnoteRepositoryImpl implements FnoteRepository {
 	public void all_note_delete(String mem_id) {
 		try {
 			conn=DBConnection.getConnection();
-			String sql="delete from fnote where mem_id=?";
+			String sql="DELETE FROM Fnote WHERE mem_id=?";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, mem_id);
 			pstmt.executeUpdate();

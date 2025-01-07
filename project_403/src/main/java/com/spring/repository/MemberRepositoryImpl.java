@@ -75,7 +75,7 @@ public class MemberRepositoryImpl implements MemberRepository {
          System.out.println("회원가입 ");
          try {
          conn=DBConnection.getConnection();
-         String sql="insert into member(mem_id,mem_pw,mem_nickName,mem_email,mem_date,mem_profile_name) values (?,?,?,?,?,?)";
+         String sql="INSERT INTO Member(mem_id,mem_pw,mem_nickName,mem_email,mem_date,mem_profile_name) VALUES (?,?,?,?,?,?)";
          pstmt=conn.prepareStatement(sql);
          pstmt.setString(1, member.getMem_id());
          if(member.getMem_pw()!=null) {
@@ -103,7 +103,7 @@ public class MemberRepositoryImpl implements MemberRepository {
          ArrayList<String> arr=new ArrayList<String>();
          try{
          conn=DBConnection.getConnection();
-         String sql="select * from member where mem_id=? and mem_pw=?";
+         String sql="SELECT * FROM Member WHERE mem_id=? AND mem_pw=?";
          pstmt=conn.prepareStatement(sql);
          pstmt.setString(1, member.getMem_id());
          pstmt.setString(2, member.getMem_pw());
@@ -145,7 +145,7 @@ public class MemberRepositoryImpl implements MemberRepository {
       public void member_log_date(Member member) {
          try{
          conn=DBConnection.getConnection();
-         String sql="update Member set mem_date=? where mem_id=?";
+         String sql="UPDATE Member SET mem_date=? WHERE mem_id=?";
          pstmt=conn.prepareStatement(sql);
          pstmt.setDate(1, new Date(System.currentTimeMillis()));
          pstmt.setString(2, member.getMem_id());
@@ -165,7 +165,7 @@ public class MemberRepositoryImpl implements MemberRepository {
          System.out.println(member.getMem_email());
          System.out.println(member.getMem_nickName());
          System.out.println(member.getMem_profile_name());
-         String sql="update Member set mem_pw=?,mem_nickName=?,mem_email=?,mem_profile_name=? where mem_id=?";
+         String sql="UPDATE Member SET mem_pw=?,mem_nickName=?,mem_email=?,mem_profile_name=? WHERE mem_id=?";
          pstmt=conn.prepareStatement(sql);
          if(member.getMem_pw()==null) {
             pstmt.setString(1, null);
@@ -197,7 +197,7 @@ public class MemberRepositoryImpl implements MemberRepository {
       public void member_delete(Member member) {
          try {
             conn=DBConnection.getConnection();
-            String sql="delete from Member where mem_id=?";
+            String sql="DELETE FROM Member WHERE mem_id=?";
             pstmt=conn.prepareStatement(sql);
             pstmt.setString(1, member.getMem_id());
             pstmt.executeUpdate();
@@ -215,7 +215,7 @@ public class MemberRepositoryImpl implements MemberRepository {
          boolean is_client=false;
          try {
             conn=DBConnection.getConnection();
-            String sql="select * from Member where mem_id=? and mem_email=?";
+            String sql="SELECT * FROM Member WHERE mem_id=? AND mem_email=?";
             pstmt=conn.prepareStatement(sql);
             pstmt.setString(1, member.getMem_id());
             pstmt.setString(2, member.getMem_email());
@@ -238,7 +238,7 @@ public class MemberRepositoryImpl implements MemberRepository {
          boolean is_client=false;
          try {
          conn=DBConnection.getConnection();
-         String sql="select * from Member where mem_id=?";
+         String sql="SELECT * FROM Member WHERE mem_id=?";
          pstmt=conn.prepareStatement(sql);
          pstmt.setString(1, member.getMem_id());
          rs=pstmt.executeQuery();
@@ -262,7 +262,7 @@ public class MemberRepositoryImpl implements MemberRepository {
          ArrayList<Member> al=new ArrayList<Member>();
          try {
          conn=DBConnection.getConnection();
-         String sql2="select * from Member order by mem_serial asc limit ?,10";
+         String sql2="SELECT * FROM Member ORDER BY mem_serial ASC LIMIT ?,10";
          pstmt=conn.prepareStatement(sql2);
          pstmt.setInt(1, limit_num);
          rs=pstmt.executeQuery();
@@ -290,7 +290,7 @@ public class MemberRepositoryImpl implements MemberRepository {
          int num=0;
          try {
             conn=DBConnection.getConnection();
-            String sql="select count(*) from member";
+            String sql="SELECT COUNT(*) FROM Member";
             pstmt=conn.prepareStatement(sql);
             rs=pstmt.executeQuery();
             if(rs.next()) {
@@ -311,7 +311,7 @@ public class MemberRepositoryImpl implements MemberRepository {
          int mem_serial=0;
          try {
          conn=DBConnection.getConnection();
-         String sql="select mem_serial from Member where mem_email=? and mem_id=?";
+         String sql="SELECT mem_serial FORM Member WHERE mem_email=? AND mem_id=?";
          pstmt=conn.prepareStatement(sql);
          pstmt.setString(1, user_mail);
          pstmt.setString(2, user_id);
@@ -332,7 +332,7 @@ public class MemberRepositoryImpl implements MemberRepository {
       public void mem_confirm(int mem_serial) {
          try {
             conn=DBConnection.getConnection();
-            String sql="update Member set mem_confirmed=true where mem_serial=?";
+            String sql="UPDATE Member SET mem_confirmed=true WHERE mem_serial=?";
             pstmt=conn.prepareStatement(sql);
             pstmt.setInt(1, mem_serial);
             pstmt.executeUpdate();
@@ -346,7 +346,7 @@ public class MemberRepositoryImpl implements MemberRepository {
       public void mem_nickname_change(Member member) {
          try{
             conn=DBConnection.getConnection();
-            String sql="update Member set mem_nickName=? where mem_id=?";
+            String sql="UPDATE Member SET mem_nickName=? WHERE mem_id=?";
             pstmt=conn.prepareStatement(sql);
             pstmt.setString(1, member.getMem_nickName());
             pstmt.setString(2, member.getMem_id());
@@ -362,7 +362,7 @@ public class MemberRepositoryImpl implements MemberRepository {
             Member member=getMyInfo(mem_id);
             try {
                conn=DBConnection.getConnection();
-               String sql="update member set mem_alarm=? where mem_id=?";
+               String sql="UPDATE Member set mem_alarm=? WHERE mem_id=?";
                pstmt=conn.prepareStatement(sql);
                pstmt.setString(1, member.getMem_alarm()+","+root+"번글에서 "+comment_id+"님이 "+mem_id+"님의 글에 댓글을 달았습니다.");
                pstmt.setString(2, mem_id);
@@ -376,7 +376,7 @@ public class MemberRepositoryImpl implements MemberRepository {
          
          try {
             conn=DBConnection.getConnection();
-            String sql="update member set mem_alarm=? where mem_id=?";
+            String sql="UPDATE Member SET mem_alarm=? WHERE mem_id=?";
             pstmt=conn.prepareStatement(sql);
             pstmt.setString(1, member.getMem_alarm());
             pstmt.setString(2, member.getMem_id());
@@ -420,7 +420,7 @@ public class MemberRepositoryImpl implements MemberRepository {
       public void member_lvup(int point,int exp,String mem_id) {
          try {
          conn=DBConnection.getConnection();
-         String sql="update member set mem_point=mem_point+?,mem_exp=mem_exp+? where mem_id=?";
+         String sql="UPDATE Member SET mem_point=mem_point+?,mem_exp=mem_exp+? WHERE mem_id=?";
          pstmt=conn.prepareStatement(sql);
          pstmt.setInt(1, point);
          pstmt.setInt(2, exp);
@@ -436,7 +436,7 @@ public class MemberRepositoryImpl implements MemberRepository {
       public void item_buy(int point,String mem_id) {
          try {
             conn=DBConnection.getConnection();
-            String sql="update member set mem_point=mem_point-? where mem_id=?";
+            String sql="UPDATE Member SET mem_point=mem_point-? WHERE mem_id=?";
             pstmt=conn.prepareStatement(sql);
             pstmt.setInt(1,point);
             pstmt.setString(2, mem_id);
