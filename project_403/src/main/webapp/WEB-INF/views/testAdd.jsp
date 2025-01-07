@@ -8,7 +8,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<meta charset="UTF-8">
-	<title>시험 제출 공간</title>
+	<title>시험지 생성 페이지</title>
 </head>
 <style>
 	* {
