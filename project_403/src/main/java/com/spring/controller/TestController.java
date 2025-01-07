@@ -6,9 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +27,9 @@ import com.spring.service.FnoteService;
 import com.spring.service.MemberService;
 import com.spring.service.Subject_Service;
 import com.spring.service.TestService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/test")
@@ -179,7 +179,9 @@ public class TestController {
 	    HttpSession session=req.getSession(false);	   
 	    Member member=(Member)session.getAttribute("member");
 	    String mem_id=member.getMem_id();
-	    if(!(fnoteservice.is_my_note(test_num, mem_id))){
+	    System.out.println("시험ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ아이딤ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ"+mem_id);
+	    System.out.println("시험지ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ번회ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ"+test_num);
+	    if(fnoteservice.is_my_note(test_num, mem_id)==false){
 	    // 정리노트 생성
 	    fnoteservice.note_create(mem_id, test_num);
 	    }

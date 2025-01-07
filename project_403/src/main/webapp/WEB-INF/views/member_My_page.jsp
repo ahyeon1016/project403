@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.spring.domain.Member"%>
 <%@ page import="com.spring.domain.Member_Item" %>
-<%@ page import="javax.servlet.http.HttpSession"%>
+<%@ page import="jakarta.servlet.http.HttpSession"%>
 <%@ page errorPage="/errorPage"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -77,19 +77,19 @@
         <h5 class="text-center">Navigation</h5>
         <div class="d-flex flex-column align-items-center">
             <!-- Update Info -->
-            <form action="/project_403/member/update?mem_id=<%= member.getMem_id() %>" method="post">
+            <form action="/member/update?mem_id=<%= member.getMem_id() %>" method="post">
                 <button type="submit" class="btn btn-primary btn-custom "><i class="fas fa-user-edit"></i> 정보 수정</button>
             </form>
             <!-- Items -->
-            <form action="/project_403/member/item?mem_id=<%= member.getMem_id() %>" method="post">
+            <form action="/member/item?mem_id=<%= member.getMem_id() %>" method="post">
                 <button type="submit" class="btn btn-primary btn-custom "><i class="fas fa-box"></i> 아이템</button>
             </form>
             <!-- Notes -->
-            <form action="/project_403/fnote/notelist?mem_id=<%= member.getMem_id() %>" method="post">
+            <form action="/fnote/notelist?mem_id=<%= member.getMem_id() %>" method="post">
                 <button type="submit" class="btn btn-primary btn-custom "><i class="fas fa-sticky-note"></i> 정리노트</button>
             </form>
             <!-- Delete Account -->
-            <form action="/project_403/member/delete?mem_id=<%= member.getMem_id() %>" method="post">
+            <form action="/member/delete?mem_id=<%= member.getMem_id() %>" method="post">
                 <button type="submit" class="btn btn-danger btn-custom"><i class="fas fa-user-minus"></i> 회원 탈퇴</button>
             </form>
         </div>
@@ -102,7 +102,7 @@
             <% if (profile != null && profile.startsWith("http")) { %>
                 <img src="<%= profile %>" width="150" height="150" alt="Profile Image">
             <% } else { %>
-                <img src="/project_403/resources/images/<%= profile %>" width="150" height="150" alt="Profile Image">
+                <img src="/resources/images/<%= profile %>" width="150" height="150" alt="Profile Image">
             <% } %>
             <h4><b class="<%= mi.getMem_color() %>"><%= member.getMem_nickName() %></b>님, 환영합니다!</h4>
         </div>
@@ -124,7 +124,7 @@
                     인증 완료
                 <% } %>
             </p>
-                <a href="/project_403/member/alarm" class="btn btn-outline-primary btn-sm mt-2">알림생성</a>
+                <a href="/member/alarm" class="btn btn-outline-primary btn-sm mt-2">알림생성</a>
             
         </div>
     </div>

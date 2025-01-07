@@ -6,9 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.SimpleCompiler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +25,9 @@ import com.spring.domain.Subject;
 import com.spring.service.MemberService;
 import com.spring.service.Question_Service;
 import com.spring.service.Subject_Service;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/Q")

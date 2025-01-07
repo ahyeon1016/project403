@@ -18,7 +18,7 @@
         	width:100%;
         	position:relative;
             height: 1000px;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/project_403/resources/images/high-angle-girl-learning-math-school.jpg");
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/resources/images/high-angle-girl-learning-math-school.jpg");
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -35,7 +35,7 @@
 
         .how {
 			height:1000px;
-            background-image: url("/project_403/resources/images/공부좌우반전.jpg"),url("/project_403/resources/images/na_feb_36.jpg");
+            background-image: url("/resources/images/공부좌우반전.jpg"),url("/resources/images/na_feb_36.jpg");
             background-repeat: no-repeat;
             background-size:contain; 
             background-position: left,right;

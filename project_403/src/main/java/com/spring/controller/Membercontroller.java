@@ -12,9 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -44,6 +41,9 @@ import com.spring.domain.Member_Item;
 import com.spring.service.FnoteService;
 import com.spring.service.MemberItemService;
 import com.spring.service.MemberService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("member")
@@ -193,7 +193,7 @@ public class Membercontroller {
 	    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 	    params.add("grant_type", "authorization_code");
 	    params.add("client_id", "17731f8bc4cf09ad45f06addfd541982");
-	    params.add("redirect_uri", "http://localhost:8080/project_403/member/login/kakao");
+	    params.add("redirect_uri", "http://wjdwoals222.cafe24.com/member/login/kakao");
 	    params.add("code", code);
 
 	    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
@@ -258,10 +258,11 @@ public class Membercontroller {
 	    }else {
 	    	//아닐 경우
 	    	memberservice.addMember(member);
-	    	memberitemservice.addMemItem(member);
-
-	    	HttpSession session=req.getSession();
-	    	session.setAttribute("member", member);
+            memberitemservice.addMemItem(member);
+            Member_Item mi=memberitemservice.mem_item_info(member.getMem_id());
+            HttpSession session=req.getSession();
+            session.setAttribute("member", member);
+            session.setAttribute("mi", mi);
 	    }
 	    
 	    
@@ -530,7 +531,7 @@ public class Membercontroller {
 		String user_mail=(String)map.get("user_mail");
 		String user_id=(String)map.get("user_id");
 		System.out.println("이메일 접속 완료!!!!!!!!!!!!!!!!!"+user_mail);
-		String host="http://localhost:8080/project_403/member/email/checked";
+		String host="http://wjdwoals222.cafe24.com/member/email/checked";
 		String from="rlpl4033@gmail.com";
 		String to=user_mail;
 		int mem_serial=memberservice.mem_serial(user_mail,user_id);

@@ -91,11 +91,12 @@ img {
 	        <form:input path="mem_pw" id="mem_pw" type="password" required="true" /><br>
 	        <button type="submit">로그인</button>
 	        <div class="link-container">
-	            <a href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=dYy4lyrqfeCoc7Q3NRsE&state=STATE_STRING&redirect_uri=http://localhost:8080/project_403/member/login/naver">
-	                <img src="/project_403/resources/images/btnG_축약형.png" width="80px" height="30px"/>
+	            <a href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=dYy4lyrqfeCoc7Q3NRsE&state=STATE_STRING&redirect_uri=http://localhost:8080/member/login/naver">
+	                <img src="/resources/images/btnG_축약형.png" width="80px" height="30px"/>
 	            </a>
-	            <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=17731f8bc4cf09ad45f06addfd541982&redirect_uri=http://localhost:8080/project_403/member/login/kakao">
-	                <img src="/project_403/resources/images/kakao_login_small.png" width="80px" height="30px"/>
+
+	            <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=17731f8bc4cf09ad45f06addfd541982&redirect_uri=http://wjdwoals222.cafe24.com/member/login/kakao">
+	                <img src="/resources/images/kakao_login_small.png" width="80px" height="30px"/>
 	            </a>
 	        </div>
 	        <a href="/project_403">뒤로가기</a>

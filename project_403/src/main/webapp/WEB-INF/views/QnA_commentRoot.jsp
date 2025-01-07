@@ -13,7 +13,7 @@
 
         .main-container {
         	background-color: #FAFAFA;
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 2rem;
         }
@@ -163,7 +163,7 @@
         }
         
         #comment textarea{
-        	width: 500px;
+        	width: 100%;
         	height: 120px;
         	border: 1px solid #dee2e6;
             border-radius: 4px;
@@ -206,7 +206,7 @@
             
             <!-- 질문글 메인 내용 -->
             <div class="post-content">
-            	<p><a href="/project_403/Q/${question_url}">문제 보기</a></p>
+            	<p><a href="/Q/${question_url}">문제 보기</a></p>
                 <p>${qna.getComment_content()}</p>
             </div>
 			
@@ -241,6 +241,6 @@
     </div>
 
     <%@include file="/WEB-INF/views/footer.jsp"%>
-    <script src="/project_403/resources/js/commentRoot.js"></script>
+    <script src="/resources/js/commentRoot.js"></script>
 </body>
 </html>

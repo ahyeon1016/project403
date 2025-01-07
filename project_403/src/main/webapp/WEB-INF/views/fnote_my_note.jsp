@@ -64,7 +64,7 @@
                     </table>
                     <button id="note_pre" class="btn btn-primary">저장하기</button>
                     <button id="note_delete" type="submit" class="btn btn-danger">노트 삭제</button>
-                    <a href="../" class="btn btn-secondary">홈</a>
+                    <a href="/" class="btn btn-secondary">홈</a>
                 <% } else { %>
                     <div class="alert alert-warning text-center" role="alert">
                         자료를 읽어올 수 없습니다.

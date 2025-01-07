@@ -89,7 +89,7 @@ public class FnoteRepositoryImpl implements FnoteRepository {
 		boolean is_exist=false;
 		try {
 			conn=DBConnection.getConnection();
-			String sql="SELECT * FORM Fnote WHERE test_num=? AND mem_id=?";
+			String sql="SELECT * FROM Fnote WHERE test_num=? AND mem_id=?";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setInt(1, test_num);
 			pstmt.setString(2, mem_id);

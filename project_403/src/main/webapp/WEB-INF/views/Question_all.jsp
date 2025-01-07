@@ -249,6 +249,6 @@
     </div>
 	
 	<%@include file="/WEB-INF/views/footer.jsp" %>
-    <script src="/project_403/resources/js/questionAll.js"></script>
+    <script src="/resources/js/questionAll.js"></script>
 </body>
 </html>

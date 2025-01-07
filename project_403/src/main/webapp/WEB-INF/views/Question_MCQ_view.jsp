@@ -182,7 +182,7 @@
 			<!-- 이미지 존재 여부 확인 -->
             <% if(question.getQuestion_img_name() != null && !question.getQuestion_img_name().isEmpty()) { %>
             <div class="question-image">
-                <img src="/project_403/resources/images/${question.question_img_name}">
+                <img src="/resources/images/${question.question_img_name}">
             </div>
             <% } %>
 			
@@ -205,7 +205,7 @@
                 <button onclick="grading(<%=ans[4]%>, '${question.question_serial}', ${question.question_count}, ${question.question_level})">
                     정답 확인
                 </button>
-                <a href="/project_403/QnA/addCommentRoot?question_serial=${question.question_serial}" class="question-link">
+                <a href="/QnA/addCommentRoot?question_serial=${question.question_serial}" class="question-link">
                     질문하기
                 </a>
             </div>
@@ -224,6 +224,7 @@
                 if(option[i].checked){
                     isChecked=true;
                     if(option[i].value==ans){
+                    	index++;
                         alert(index+"회만에 정답!");
                         /* 정답을 맞추면 누적된 횟수를 가지고 이동 */
                         window.location.href=
@@ -232,13 +233,12 @@
                             "&plus="+index+
                             "&level="+question_level;
                     } else {
-                        index++;
+                    	index++;
                         alert("땡!");
                     }
                 }
             }
             /* 문제풀이 횟수 갱신 */
-            index++;
             plus.textContent = "+"+index;
             if(isChecked!=true){
                 alert("선택하고 눌러주세요.");

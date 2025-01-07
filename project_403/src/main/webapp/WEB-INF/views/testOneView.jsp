@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -353,7 +353,7 @@ $(document).on("click", ".answerCheckCP", function() {
 // 시험 종료 버튼 이벤트
 $(document).on("click", "#testEnd", function() {
 	alert("시험이 종료됩니다");
-	window.location.href = "http://localhost:8080/project_403/test/testAll";
+	window.location.href = "testAll";
 });
 </script>
 </html>

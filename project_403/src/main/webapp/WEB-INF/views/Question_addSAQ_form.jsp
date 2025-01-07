@@ -255,6 +255,6 @@
     </div>
 
     <%@include file="/WEB-INF/views/footer.jsp" %>
-    <script src="/project_403/resources/js/questionAdd.js"></script>
+    <script src="/resources/js/questionAdd.js"></script>
 </body>
 </html>

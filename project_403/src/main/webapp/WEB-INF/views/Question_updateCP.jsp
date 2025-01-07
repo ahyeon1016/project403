@@ -254,7 +254,7 @@
                 <!-- 이미지 -->
                 <div class="question_image">
                     <h5>현재 문제 이미지</h5>
-                    <img src="/project_403/resources/images/${question.getQuestion_img_name()}" alt="문제 이미지">
+                    <img src="/resources/images/${question.getQuestion_img_name()}" alt="문제 이미지">
                     
                     <h5>새 문제 이미지 업로드</h5>
                     <form:input id="imageInput" type="file" path="question_img"/>
@@ -271,6 +271,6 @@
 	</div>
 	
 	<%@include file="/WEB-INF/views/footer.jsp" %>
-	<script src="/project_403/resources/js/questionUpdate.js"></script>
+	<script src="/resources/js/questionUpdate.js"></script>
 </body>
 </html>

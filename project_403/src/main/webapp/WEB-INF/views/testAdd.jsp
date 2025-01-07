@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -189,7 +189,7 @@
 	</form:form>
 	
 	<div class="test">
-		<p><a href="../Q/main" onclick="window.open(this.href, '_blank', 'width=1000px, height=600px'); return false;">문제추가하기</a>
+		<p><a href="../Q/Q_addMCQ" onclick="window.open(this.href, '_blank', 'width=1000px, height=600px'); return false;">문제추가하기</a>
 		<p>기존 문제 불러오기
 		<div id="qnaSelect" class="input_wrap list">
 			<!-- 문제 불러오기 공간 -->

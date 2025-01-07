@@ -5,15 +5,14 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.domain.Question;
-import com.spring.domain.Subject;
 import com.spring.repository.Question_Repository;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class Question_ServiceImpl implements Question_Service{

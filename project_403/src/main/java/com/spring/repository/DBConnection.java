@@ -7,12 +7,12 @@ import java.sql.SQLException;
 public class DBConnection {
 	
 
-	  public static Connection getConnection() throws SQLException,
-	  ClassNotFoundException {
+	 public static Connection getConnection() throws SQLException,
+	 ClassNotFoundException {
 	  
 		Connection conn = null;		
-	
-		String url = "jdbc:mariadb://wjdwoals222.cafe24.com:3306/wjdwoals222?useUnicode=true&characterEncoding=utf8";
+		//wjdwoals222.cafe24.com | localhost
+		String url = "jdbc:mariadb://localhost:3306/wjdwoals222";
 		String user = "wjdwoals222";
 		String password = "rlpl403!";
 

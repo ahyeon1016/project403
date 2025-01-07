@@ -28,7 +28,7 @@
             <h4 class="alert-heading">에러가 발생했습니다.</h4>
             <p>홈으로 이동해주세요.</p>
             <hr>
-            <a href="/project_403/" class="btn btn-primary">홈으로 이동</a>
+            <a href="/" class="btn btn-primary">홈으로 이동</a>
         </div>
     </div>
 

@@ -44,11 +44,9 @@
    <!-- 파일 업로드 객체 생성-->
                 <!-- 참조변수 -->
    <beans:bean id="multipartResolver" 
-             class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> <!-- 클래스 -->
-      <!-- 생성자의 파라미터로 사용할 변수 -->
-      <!-- 업로드 파일의 최대 크기를 설정 -->
-      <beans:property name="maxUploadSize" value="10000000000000"/>
-   </beans:bean>   
+             class="org.springframework.web.multipart.support.StandardServletMultipartResolver"> <!-- 클래스 -->
+   </beans:bean>
+   
   <!-- 이메일 전송 객체 -->
     <beans:bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <beans:property name="host" value="smtp.gmail.com" />

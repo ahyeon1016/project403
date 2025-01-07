@@ -20,6 +20,10 @@
             <param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size> <!-- 10MB -->
+            <max-request-size>20971520</max-request-size> <!-- 20MB -->
+        </multipart-config>
     </servlet>   
     <servlet-mapping> <!-- 모든 요청에 대해서 작동하도록 설정 -->
         <servlet-name>appServlet</servlet-name>

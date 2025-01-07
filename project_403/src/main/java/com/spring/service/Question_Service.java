@@ -2,9 +2,9 @@ package com.spring.service;
 
 import java.util.ArrayList;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.spring.domain.Question;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface Question_Service {
 	void addMCQ(Question question, int mem_serial);

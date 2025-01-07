@@ -20,7 +20,7 @@
                 <small class="form-text text-muted">변경할 닉네임을 써주세요.</small>
             </div>
             <button type="submit" class="btn btn-primary btn-custom">변경하기</button>
-            <a href="/project_403/member/mypage" class="btn btn-secondary btn-custom">취소하기</a>
+            <a href="/member/mypage" class="btn btn-secondary btn-custom">취소하기</a>
         </form>
     </div>
 

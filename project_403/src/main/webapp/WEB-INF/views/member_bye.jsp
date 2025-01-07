@@ -28,7 +28,7 @@
             </div>
             <div class="button-group">
                 <button type="submit" class="btn btn-danger" id="but">탈퇴하기</button>
-                <a href="/project_403/member/mypage" class="btn btn-secondary">취소하기</a>
+                <a href="/member/mypage" class="btn btn-secondary">취소하기</a>
             </div>
         </form>
     </div>

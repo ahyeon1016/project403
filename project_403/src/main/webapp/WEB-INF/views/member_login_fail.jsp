@@ -26,7 +26,7 @@
             <h4 class="alert-heading">로그인에 실패하셨습니다.</h4>
             <p>계정을 다시 확인해 주세요.</p>
             <hr>
-            <a href="/project_403/" class="btn btn-primary">뒤로가기</a>
+            <a href="/" class="btn btn-primary">뒤로가기</a>
         </div>
     </div>
 
