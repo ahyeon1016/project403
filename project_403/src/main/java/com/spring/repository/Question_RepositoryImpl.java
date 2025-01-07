@@ -26,7 +26,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+addQuestionNum();
 			question.setQuestion_serial(question_serial);
-			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, ?, 0, ?, ?, ?, 'MCQ', true)";
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, ?, 0, ?, ?, ?, 'MCQ', 1)";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, question.getQuestion_content());
 			pstmt.setString(2, question.getQuestion_ans());
@@ -58,7 +58,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+addQuestionNum();
 			question.setQuestion_serial(question_serial);
-			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, ?, 0, ?, ?, ?, 'SAQ', true)";
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, ?, 0, ?, ?, ?, 'SAQ', 1)";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, question.getQuestion_content());
 			pstmt.setString(2, question.getQuestion_ans());
@@ -90,7 +90,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			//question_serial 변수 생성
 			String question_serial = question.getSub_code_sum()+"_"+addQuestionNum();
 			question.setQuestion_serial(question_serial);
-			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, ?, 0, ?, ?, ?, 'CP', true)";
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, ?, 0, ?, ?, ?, 'CP', 1)";
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, question.getQuestion_content());
 			pstmt.setString(2, question.getQuestion_ans());
@@ -171,7 +171,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 				SQL = 
 					"SELECT * FROM Question "
 					+ "WHERE BINARY sub_code_sum=? AND question_visible=1 "
-					+ "ORDER BY sub_code_sum ASC";
+					+ "ORDER BY question_num DESC";
 				
 				pstmt = conn.prepareStatement(SQL);
 				pstmt.setString(1, sub_code);
@@ -182,7 +182,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 					"SELECT * FROM Question "
 					+ "WHERE BINARY sub_code_sum=? AND question_visible=1 "
 					+ "AND question_id=? "
-					+ "ORDER BY sub_code_sum ASC";
+					+ "ORDER BY question_num DESC";
 				
 				pstmt = conn.prepareStatement(SQL);
 				pstmt.setString(1, sub_code);
@@ -293,7 +293,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 			conn = DBConnection.getConnection();
 			//쿼리 전송
 			String question_serial = question.getSub_code_sum()+"_"+addQuestionNum(); 
-			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, ?, ?, NULL, ?, ?, true)";
+			String SQL = "INSERT INTO Question VALUES(NULL, ?, ?, ?, 0, ?, ?, NULL, ?, ?, 1)";
 			pstmt = conn.prepareStatement(SQL);
 			System.out.println(question.getQuestion_content());
 			pstmt.setString(1, question.getQuestion_content());
@@ -357,7 +357,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 				SQL = 
 					"SELECT * FROM Question "
 					+ "WHERE BINARY sub_code_sum=? AND mem_serial=? AND question_visible=1 "
-					+ "ORDER BY sub_code_sum ASC";
+					+ "ORDER BY question_num DESC";
 				
 				pstmt = conn.prepareStatement(SQL);
 				pstmt.setString(1, sub_code);
@@ -369,7 +369,7 @@ public class Question_RepositoryImpl implements Question_Repository{
 					"SELECT * FROM Question "
 					+ "WHERE BINARY sub_code_sum=? AND mem_serial=? AND question_visible=1 "
 					+ "AND question_id=? "
-					+ "ORDER BY sub_code_sum ASC";
+					+ "ORDER BY question_num DESC";
 				
 				pstmt = conn.prepareStatement(SQL);
 				pstmt.setString(1, sub_code);
